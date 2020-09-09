@@ -23,5 +23,9 @@ Route::get('/login', function () {
 });
 
 Route::get('/colis', function () {
-    return view('colis');
+    return view(' colis');
+});
+
+Route::get('/profil', function () {
+    return view(' profil');
 });

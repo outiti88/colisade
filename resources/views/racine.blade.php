@@ -32,7 +32,9 @@
         <div class="page-wrapper">
 
             @yield('content')
-
+            <footer class="footer text-center">
+                Copyright © 2020 Quickoo Delivery. Tous les droits sont réservés.
+            </footer>
         </div>
 
     </div>

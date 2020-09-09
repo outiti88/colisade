@@ -13,17 +13,13 @@
             <div class="d-flex align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Library</li>
+                        <li class="breadcrumb-item"><a href="#">Quickoo</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                     </ol>
                 </nav>
             </div>
         </div>
-        <div class="col-7">
-            <div class="text-right upgrade-btn">
-                <a href="https://wrappixel.com/templates/xtremeadmin/" class="btn btn-danger text-white" target="_blank">Upgrade to Pro</a>
-            </div>
-        </div>
+
     </div>
 </div>
 <!-- ============================================================== -->
@@ -339,15 +335,7 @@
     <!-- Recent comment and chats -->
     <!-- ============================================================== -->
 </div>
-<!-- ============================================================== -->
-<!-- End Container fluid  -->
-<!-- ============================================================== -->
-<!-- ============================================================== -->
-<!-- footer -->
-<!-- ============================================================== -->
-<footer class="footer text-center">
-    All Rights Reserved by Xtreme Admin. Designed and Developed by <a href="https://wrappixel.com">WrapPixel</a>.
-</footer>
+
 @endsection
 
 @section('javascript')
