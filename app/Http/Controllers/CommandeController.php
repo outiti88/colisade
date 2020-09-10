@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Commande;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreCommande;
+
 
 class CommandeController extends Controller
 {
@@ -35,18 +37,9 @@ class CommandeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCommande $request)
     {
 
-        $validatedData = request()->validate([
-            'telephone' =>'required|min:10|max:10',
-            'ville' =>'required',
-            'adresse' =>'required',
-            'montant' =>'required',
-            'colis' =>'required',
-            'poids' =>'required',
-            'nom' =>'required'
-        ]);
 
         $commande = new Commande() ;
         $commande->telephone = $request->telephone;
@@ -97,9 +90,22 @@ class CommandeController extends Controller
      * @param  \App\Commande  $commande
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Commande $commande)
+    public function update(StoreCommande $request, Commande $commande)
     {
-        //
+        $commande->telephone = $request->telephone;
+        $commande->ville = $request->ville;
+        $commande->adresse = $request->adresse;
+        $commande->montant = $request->montant;
+        $commande->prix = 17 ;
+        $commande->colis = $request->colis;
+        $commande->poids = $request->poids;
+        $commande->nom = $request->nom;
+
+        $commande->save();
+
+        $request->session()->flash('statut', 'modifié');
+
+        return redirect()->route('commandes.show',['commande' => $commande->id]);
     }
 
     /**
@@ -108,8 +114,12 @@ class CommandeController extends Controller
      * @param  \App\Commande  $commande
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Commande $commande)
+    public function destroy(Request $request,Commande $commande)
     {
-        //
+        $numero = $commande->numero;
+        \App\Commande::destroy($commande->id);
+        $request->session()->flash('delete', $numero);
+
+        return redirect('/commandes');
     }
 }

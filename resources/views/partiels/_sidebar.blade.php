@@ -71,7 +71,7 @@
                                 <div class="form-group">
                                     <label class="col-md-12">Nom et Prénom du destinataire :</label>
                                     <div class="col-md-12">
-                                        <input   name="nom" type="text" placeholder="Nom & Prénom" class="form-control form-control-line">
+                                        <input  value="{{ old('nom') }}" name="nom" type="text" placeholder="Nom & Prénom" class="form-control form-control-line">
                                     </div>
                                 </div>
                                
@@ -79,7 +79,7 @@
                                     <div class="form-group col-md-4">
                                         <label for="example-email" class="col-md-12">Nombre de Colis :</label>
                                         <div class="col-md-12">
-                                            <input   type="number" class="form-control form-control-line" name="colis" id="example-email">
+                                            <input  value="{{ old('colis') }}" type="number" class="form-control form-control-line" name="colis" id="example-email">
                                         </div>
                                     </div>
     
@@ -109,7 +109,7 @@
                                       <div class="form-group col-md-4">
                                         <label for="example-email" class="col-md-12">Montant (MAD) :</label>
                                         <div class="col-md-12">
-                                            <input   type="number" class="form-control form-control-line" name="montant" id="example-email">
+                                            <input  value="{{ old('montant') }}" type="number" class="form-control form-control-line" name="montant" id="example-email">
                                         </div>
                                     </div>
                                     
@@ -118,13 +118,13 @@
                                 <div class="form-group">
                                     <label class="col-md-12">Téléphone :</label>
                                     <div class="col-md-12">
-                                        <input   name="telephone" type="text" placeholder="+212 5393-07566" class="form-control form-control-line">
+                                        <input value="{{ old('telephone') }}"  name="telephone" type="text" placeholder="+212 5393-07566" class="form-control form-control-line">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Adresse :</label>
                                     <div class="col-md-12">
-                                        <textarea   name="adresse" rows="5" class="form-control form-control-line"></textarea>
+                                        <textarea  name="adresse" rows="5" class="form-control form-control-line">{{ old('adresse') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">

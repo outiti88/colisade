@@ -47,6 +47,13 @@
         <strong>Succés !</strong> La commande à été bien enregister <a  href="commandes/{{session()->get('statut')}}" class="alert-link">(Voir la commande)</a>.
           </div>
         @endif
+
+        @if (session()->has('delete'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Succés !</strong> La commande numero {{session()->get('delete')}} à été bien supprimée !!
+          </div>
+        @endif
         
         <div class="col-12">
             <div class="card">
