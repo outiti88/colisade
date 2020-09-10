@@ -1,5 +1,6 @@
 <header class="topbar" data-navbarbg="skin5">
-    <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+    <nav class="navbar top-navbar navbar-expand-md navbar-dark" style="border-bottom-style: solid;
+    border-bottom-color: #e85f03;">
         <div class="navbar-header" data-logobg="skin5">
             <!-- ============================================================== -->
             <!-- Logo -->

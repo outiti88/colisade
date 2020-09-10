@@ -27,7 +27,11 @@
                     </div>
                     <!-- End User Profile-->
                 </li>
-                <li class="p-15 m-t-10"><a href="javascript:void(0)" class="btn btn-block create-btn text-white no-block d-flex align-items-center"><i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Nouvelle Commande</span> </a></li>
+                
+           
+                <li class="p-15 m-t-10"><a href="javascript:void(0)" class="btn btn-block create-btn text-white no-block d-flex align-items-center" data-toggle="modal" data-target="#modalSubscriptionForm">
+                    <i class="fa fa-plus-square"></i> 
+                    <span class="hide-menu m-l-5">Nouvelle Commande</span> </a></li>
                 <!-- User Profile-->
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/profil" aria-expanded="false"><i class="mdi mdi-account-network"></i><span class="hide-menu">Profile</span></a></li>
@@ -45,3 +49,100 @@
     </div>
     <!-- End Sidebar scroll-->
 </aside>
+<div class="container my-4">    
+<div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header text-center">
+                      <h4 class="modal-title w-100 font-weight-bold">Nouvelle Commande</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body mx-3">
+                        <form class="form-horizontal form-material">
+                            <div class="form-group">
+                                <label class="col-md-12">Nom et Prénom du destinataire :</label>
+                                <div class="col-md-12">
+                                    <input type="text" placeholder="Nom & Prénom" class="form-control form-control-line">
+                                </div>
+                            </div>
+                           
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="example-email" class="col-md-12">Nombre de Colis :</label>
+                                    <div class="col-md-12">
+                                        <input type="number" class="form-control form-control-line" name="example-email" id="example-email">
+                                    </div>
+                                </div>
+
+
+                                <fieldset class="form-group col-md-4">
+                                    <div class="row">
+                                      <legend class="col-form-label  pt-0">Poids :</legend>
+                                      <div class="col-sm-12">
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="poids" id="normal" value="normal" checked>
+                                          <label class="form-check-label" for="normal">
+                                            P. Normal
+                                          </label>
+                                        </div>
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="poids" id="voluminaux" value="voluminaux">
+                                          <label class="form-check-label" for="voluminaux">
+                                            P. Volumineux
+                                          </label>
+                                        </div>
+                                    
+                                      </div>
+                                    </div>
+                                  </fieldset>
+
+
+                                  <div class="form-group col-md-4">
+                                    <label for="example-email" class="col-md-12">Montant (MAD) :</label>
+                                    <div class="col-md-12">
+                                        <input type="number" class="form-control form-control-line" name="example-email" id="example-email">
+                                    </div>
+                                </div>
+                                
+                            </div>
+            
+                            <div class="form-group">
+                                <label class="col-md-12">Téléphone :</label>
+                                <div class="col-md-12">
+                                    <input type="text" placeholder="+212 5393-07566" class="form-control form-control-line">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12">Adresse :</label>
+                                <div class="col-md-12">
+                                    <textarea rows="5" class="form-control form-control-line"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-12">Ville :</label>
+                                <div class="col-sm-12">
+                                    <select class="form-control form-control-line">
+                                        <option>Tanger</option>
+                                        <option>Marrakech</option>
+                                        <option>Kénitra</option>
+                                        <option>Casablanca</option>
+                                        <option>Rabata</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button class="btn btn-success">Ajouter</button>
+                                </div>
+                            </div>
+                        </form>
+              
+                    </div>
+        
+                  </div>
+                </div>
+              </div>
+            </div>

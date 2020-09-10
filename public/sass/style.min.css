@@ -2962,7 +2962,7 @@ fieldset:disabled a.btn {
 .btn-danger:hover {
     color: #fff;
     background-color: #d65600;
-    border-color: #e85d65600f03
+    border-color: #d65600
 }
 
 .btn-danger.focus,
@@ -10574,14 +10574,14 @@ html[dir=ltr] body .p-l-0 {
 
 #main-wrapper[data-layout=horizontal] .topbar .top-navbar .navbar-header[data-logobg=skin5],
 #main-wrapper[data-layout=vertical] .topbar .top-navbar .navbar-header[data-logobg=skin5] {
-    background: #eef5f9
+    background: #ffffff
 }
 
 #main-wrapper[data-layout=horizontal] .topbar .navbar-collapse[data-navbarbg=skin5],
 #main-wrapper[data-layout=horizontal] .topbar[data-navbarbg=skin5],
 #main-wrapper[data-layout=vertical] .topbar .navbar-collapse[data-navbarbg=skin5],
 #main-wrapper[data-layout=vertical] .topbar[data-navbarbg=skin5] {
-    background: #eef5f9
+    background: #ffffff
 }
 
 #main-wrapper[data-layout=horizontal] .left-sidebar[data-sidebarbg=skin6],

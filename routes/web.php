@@ -13,18 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+Route::get('/', 'DashboardController@dash')->name('dashboard');
 
 
 Route::get('/login', function () {
     return view('login/login');
 });
 
-Route::get('/colis', function () {
-    return view(' colis');
-});
+Route::get('/colis', 'ColisController@colis')->name('colis');
 
 Route::get('/profil', function () {
     return view(' profil');
