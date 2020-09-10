@@ -12,6 +12,8 @@
     <link href="../sass/style.min.css" rel="stylesheet">
     <link href="../assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
 
+    @yield('style')
+
 
 </head>
 

@@ -14,13 +14,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'DashboardController@dash')->name('dashboard');
+//Route::get('/colis', 'CommandeController@index')->name('colis');
+
+Route::resource('/commandes','CommandeController');
 
 
 Route::get('/login', function () {
     return view('login/login');
 });
 
-Route::get('/colis', 'ColisController@colis')->name('colis');
 
 Route::get('/profil', function () {
     return view(' profil');
