@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreCommande;
 use Illuminate\Support\Facades\DB;
 
-
 class CommandeController extends Controller
 {
     /**
@@ -48,7 +47,9 @@ class CommandeController extends Controller
         $commande->ville = $request->ville;
         $commande->adresse = $request->adresse;
         $commande->montant = $request->montant;
-        $commande->prix = 17 ;
+        $prixVille = ($request->ville==="tanger") ? 17 : 25 ;
+        $prixPoids = (($request->poids==="normal") ? 0 : 9);
+        $commande->prix = $prixVille + $prixPoids;
         $commande->statut = "expidié";
         $commande->colis = $request->colis;
         $commande->poids = $request->poids;
@@ -61,6 +62,7 @@ class CommandeController extends Controller
 
         return redirect('/commandes');
     }
+    
 
     /**
      * Display the specified resource.
@@ -72,6 +74,159 @@ class CommandeController extends Controller
     {
         //return $commande;
         return view('commande.show', ['commande'=>$commande]);
+    }
+
+
+
+    public function content(Commande $commande){
+        $content = '';
+        for ($i=1; $i <= $commande->colis ; $i++) { 
+            $content .= '
+            <div class="container">
+                        
+                <h1>
+                    Ticket de Commande
+                </h1>
+                <div class="tableau">
+                                        
+                    <table id="customers">
+                    <tr>
+                        <th>Commande Numero: </th>
+                        <td>' .$commande->numero.'</td>
+                    </tr>
+                    <tr>
+                        <th>Entreprise:  </th>
+                        <td>DECATHLON TANGER MEDINA(Tanger - 150620) - ECOM</td>
+                    </tr>
+                    </table>
+                </div>
+                <div class="tableau">
+                    <table id="customers">
+                        <tr>
+                            <th>
+                                Nom & Prénom:
+                            </th>
+                            <td>
+                                '.$commande->nom.'
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Ville:
+                            </th>
+                            <td>
+                                '.$commande->ville.'
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Adresse:
+                            </th>
+                            <td>
+                                '.$commande->adresse.'
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Téléphone:
+                            </th>
+                            <td>
+                                '.$commande->telephone.'
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                    <div class="tableau">
+                                        
+                    <table id="customers">
+                    <tr>
+                        <th>Livreur: </th>
+                        <td>Quickoo Delivery</td>
+                    </tr>
+                    <tr>
+                        <th>Site web:  </th>
+                        <td>www.quickoo.ma</td>
+                    </tr>
+                    </table>
+                </div>
+                <h2>colis: '.$i.'/'.$commande->colis.' </h2>
+            </div>' ; }
+            
+            
+        return $content;
+
+    }
+
+    public function gen($id){
+
+        $commande = Commande::findOrFail($id);
+        $pdf = \App::make('dompdf.wrapper');
+        $style = '
+            <style>
+                    *{
+                        
+                        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+                        font-size : 25px;
+                        padding:2px;
+                        margin:0;
+
+                    }
+
+
+                .container{
+                    box-sizing: border-box;
+                    width:100%
+                    height:auto;
+                    border-color: black;
+                    border-style:solid;
+                    padding-top: 60px !important;
+                    padding-bottom:100px;
+                }
+
+                    .tableau{
+                    padding-top:60px;
+                    
+                }
+                
+
+                    #customers {
+                    text-align:center;
+                    border-collapse: collapse;
+                    width: 100%;
+                    }
+
+                    h1{
+                        text-align : center;
+                        font-size: 2em;
+                    }
+
+                    #customers td, #customers th {
+                    border: 1px solid #ddd;
+                    }
+
+                    #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+                    #customers tr:hover {background-color: #ddd;}
+
+                    #customers th {
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    
+                    color: black;
+                    }
+                </style>';
+
+        $content = $this->content($commande);
+            
+
+        for ($i=1; $i <=$commande->colis ; $i++) { 
+            # code...
+        }
+        $pdf -> loadHTML($style.$content);
+
+
+        return $pdf->stream();
+        //dd($commande) ;
     }
 
     /**
@@ -98,7 +253,9 @@ class CommandeController extends Controller
         $commande->ville = $request->ville;
         $commande->adresse = $request->adresse;
         $commande->montant = $request->montant;
-        $commande->prix = 17 ;
+        $prixVille = ($request->ville==="tanger") ? 17 : 25 ;
+        $prixPoids = (($request->poids==="normal") ? 0 : 9);
+        $commande->prix = $prixVille + $prixPoids;
         $commande->colis = $request->colis;
         $commande->poids = $request->poids;
         $commande->nom = $request->nom;

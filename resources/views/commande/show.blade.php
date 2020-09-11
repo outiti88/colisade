@@ -116,6 +116,11 @@ N: {{$commande->numero}}
     </style>
 @endsection
 
+
+
+
+
+
 @section('content')
 <div class="page-breadcrumb">
     <div class="row align-items-center">
@@ -139,6 +144,7 @@ N: {{$commande->numero}}
                     @if ($commande->statut === "expidié")
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
                      
+                    
                     <form method="POST" action="{{ route('commandes.destroy',['commande'=> $commande->id]) }}">
                                     @csrf
                                     @method('DELETE')
@@ -146,8 +152,9 @@ N: {{$commande->numero}}
                                 </form>
                     @endif
                     
-                    
-                
+
+
+
 
             </div>
         </div>
@@ -189,7 +196,7 @@ N: {{$commande->numero}}
                 </div>
             </div>
             <div class="col-md-2">
-                <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Imprimer"/>
+                <a class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}""><i class="fas fa-print"></i> imprimer</a>
             </div>
         </div>
         <div class="row">

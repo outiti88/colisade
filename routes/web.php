@@ -22,6 +22,7 @@ Route::get('/commandes/{id}/statut', 'CommandeController@changeStatut')->name('c
 
 Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('statut.admin');
 
+Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen');
 
 
 Route::resource('/commandes','CommandeController');
