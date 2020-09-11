@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Commande;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCommande;
+use Illuminate\Support\Facades\DB;
 
 
 class CommandeController extends Controller
@@ -17,7 +18,8 @@ class CommandeController extends Controller
     public function index()
     {
         //
-        $commandes = Commande::all();
+        $commandes= DB::table('commandes')->paginate(3);
+        //$commandes = Commande::all()->paginate(3) ;
         return view('commande.colis',['commandes' => $commandes]);
     }
 

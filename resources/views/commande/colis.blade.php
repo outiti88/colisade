@@ -9,6 +9,21 @@
     Dashboard
 @endsection
 
+@section('style')
+    <style>
+        .page-link {
+            color: #e85f03 !important;
+        }
+        .page-item.active .page-link {
+            
+            background-color: #e85f03 !important;
+            border-color: #e85f03 !important;
+            color: #fff !important;
+        }
+    </style>
+@endsection
+
+
 @section('content')
 <div class="page-breadcrumb">
     <div class="row align-items-center">
@@ -102,7 +117,7 @@
                             <td>{{$commande->montant}} MAD</td>
                             <td>{{$commande->prix}} MAD</td>
                             <td>{{$commande->created_at}}</td>
-                            <td><a href="{{ route('commandeStatut',['id'=> $commande->id]) }}">{{$commande->statut}}  ({{$commande->updated_at->diffForHumans()}}) </a></td>
+                            <td><a href="{{ route('commandeStatut',['id'=> $commande->id]) }}">{{$commande->statut}}  ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}}) </a></td>
                            <td style="font-size: 1.5em"><a style="color: #e85f03" href="commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
 
                         </tr>
@@ -115,7 +130,13 @@
                            @endforelse
                          
                         </tbody>
+                        
                     </table>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            {{$commandes -> links()}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
