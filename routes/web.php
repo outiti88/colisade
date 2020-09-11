@@ -16,6 +16,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'DashboardController@dash')->name('dashboard');
 //Route::get('/colis', 'CommandeController@index')->name('colis');
 
+
+
+Route::get('/commandes/{id}/statut', 'CommandeController@changeStatut')->name('commandeStatut');
+
+Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('statut.admin');
+
+
+
 Route::resource('/commandes','CommandeController');
 
 

@@ -54,6 +54,19 @@
         <strong>Succés !</strong> La commande numero {{session()->get('delete')}} à été bien supprimée !!
           </div>
         @endif
+
+        @if (session()->has('edit'))
+        <div class="alert alert-dismissible alert-info col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Succés !</strong> Le statut de la commande numero {{session()->get('edit')}} à été bien edité !!
+          </div>
+        @endif
+        @if (session()->has('noedit'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Erreur !</strong>vous ne pouvez pas changer le statut La commande numero {{session()->get('noedit')}}
+          </div>
+        @endif
         
         <div class="col-12">
             <div class="card">
@@ -89,7 +102,7 @@
                             <td>{{$commande->montant}} MAD</td>
                             <td>{{$commande->prix}} MAD</td>
                             <td>{{$commande->created_at}}</td>
-                            <td>{{$commande->statut}}  ({{$commande->updated_at->diffForHumans()}}) </td>
+                            <td><a href="{{ route('commandeStatut',['id'=> $commande->id]) }}">{{$commande->statut}}  ({{$commande->updated_at->diffForHumans()}}) </a></td>
                            <td style="font-size: 1.5em"><a style="color: #e85f03" href="commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
 
                         </tr>

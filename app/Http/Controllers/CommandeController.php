@@ -108,6 +108,36 @@ class CommandeController extends Controller
         return redirect()->route('commandes.show',['commande' => $commande->id]);
     }
 
+  
+    public function changeStatut(Request $request, $id)
+    {
+        
+        $commande = Commande::findOrFail($id);
+        if($commande->statut === "expidié")
+        {
+            $commande->statut= "En cours";
+            
+            $commande->save();
+            $request->session()->flash('edit', $commande->numero);
+        }
+        else $request->session()->flash('noedit', $commande->numero);
+
+        return redirect('/commandes');
+    }
+
+    public function statutAdmin(Request $request, $id)
+    {
+        $commande = Commande::findOrFail($id);
+    
+            $commande->statut= $request->statut;
+            $commande->commentaire= $request->commentaire;
+            $commande->save();
+            $request->session()->flash('edit', $commande->numero);
+        
+
+            return redirect()->route('commandes.show',['commande' => $commande->id]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

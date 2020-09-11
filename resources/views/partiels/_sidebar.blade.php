@@ -66,7 +66,7 @@
                           </button>
                         </div>
                         <div class="modal-body mx-3">
-                            <form class="form-horizontal form-material" method="POST" action="commandes">
+                            <form class="form-horizontal form-material" method="POST" action="{{route('commandes.store')}}">
                                 @csrf
                                 <div class="form-group">
                                     <label class="col-md-12">Nom et Prénom du destinataire :</label>

@@ -135,7 +135,7 @@ N: {{$commande->numero}}
         <div class="col-4">
             <div class="row float-right">
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
-                    
+                    <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
                     @if ($commande->statut === "expidié")
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
                      
@@ -163,6 +163,12 @@ N: {{$commande->numero}}
             <strong>Succés !</strong> La commande à été bien Modifier </a>.
               </div>
             @endif
+            @if (session()->has('edit'))
+        <div class="alert alert-dismissible alert-info col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Succés !</strong> Le statut de la commande numero {{session()->get('edit')}} à été bien edité !!
+          </div>
+        @endif
             <div class="col-md-10">
                 <div class="profile-head">
                             <h5>
@@ -312,7 +318,11 @@ N: {{$commande->numero}}
                         <div class="row">
                             <div class="col-md-12">
                                 <label>Commentaire</label><br/>
-                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Consectetur rem non, voluptatibus nemo blanditiis modi maiores nulla in, cum quis sapiente doloribus. Corporis autem facere, corrupti eum modi nemo veniam.</p>
+                                @if ($commande->commentaire)
+                                    <p>{{$commande->commentaire}}</p>
+                                @else
+                                    <p>Sans Commentaire</p>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -412,6 +422,66 @@ N: {{$commande->numero}}
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
                                         <button class="btn btn-warning">Modifier</button>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+                            @if ($errors->any())
+                            <div class="alert alert-dismissible alert-danger">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>
+                                        <strong>{{$error}}</strong>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                              </div>
+                              @endif
+                        </div>
+            
+                      </div>
+                    </div>
+    </div>
+</div>
+
+
+<div class="container my-4">    
+    <div class="modal fade" id="modalSubscriptionFormStatut" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header text-center">
+                          <h4 class="modal-title w-100 font-weight-bold">Changer le statut</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <form class="form-horizontal form-material" method="POST" action="{{route('commandeStatut',['id' => $commande->id])}}">
+                                @csrf
+                                @method('PATCH')
+                                
+                                <div class="form-group">
+                                    <label class="col-sm-12">Statut :</label>
+                                    <div class="col-sm-12">
+                                        <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}">
+                                            <option>Livré</option>
+                                            <option>Retour Complet</option>
+                                            <option>Retour Partiel</option>
+                                            <option>Reporté</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-12">Commentaire :</label>
+                                    <div class="col-sm-12">
+                                        <textarea  name="commentaire" rows="5" class="form-control form-control-line">{{ old('commentaire') }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button class="btn btn-warning">Modifier statut</button>
                                         
                                     </div>
                                 </div>
