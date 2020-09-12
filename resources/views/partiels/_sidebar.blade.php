@@ -15,8 +15,8 @@
                             <a href="javascript:void(0)" class="" id="Userdd" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <h5 style="
                                 font-size: 1.5em;
-                            " class="m-b-0 user-name font-medium">Decathlon Tanger <i class="fa fa-angle-down"></i></h5>
-                                <span class="op-5 user-email">Decathlon.tanger@quickoo.ma</span>
+                            " class="m-b-0 user-name font-medium">{{ Auth::user()->name }}<i class="fa fa-angle-down"></i></h5>
+                                <span class="op-5 user-email">{{ Auth::user()->email }}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="Userdd">
                                 <a class="dropdown-item" href="javascript:void(0)"><i class="ti-user m-r-5 m-l-5"></i> Mon Profil</a>
@@ -25,7 +25,13 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="javascript:void(0)"><i class="ti-settings m-r-5 m-l-5"></i> Parametre</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-power-off m-r-5 m-l-5"></i> Deconexion</a>
+                                <a class="dropdown-item"  href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                                      document.getElementById('logout-form').submit();">
+                        <i class="fa fa-power-off m-r-5 m-l-5"></i> Deconnexion</a>
+                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
                             </div>
                         </div>
                     </div>

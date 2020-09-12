@@ -32,7 +32,7 @@
             <div class="d-flex align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Quickoo</a></li>
+                        <li class="breadcrumb-item"><a href="/">Quickoo</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Colis</li>
                     </ol>
                 </nav>
@@ -87,7 +87,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Gestion des comandes / colis</h4>
-                    <h6 class="card-subtitle">Nombre total des commande : <code>{{count($commandes)}} Commandes</code> .</h6>
+                    <h6 class="card-subtitle">Nombre total des commandes : <code>{{$total}} Commandes</code> .</h6>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered">

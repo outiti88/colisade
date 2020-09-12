@@ -36,3 +36,6 @@ Route::get('/login', function () {
 Route::get('/profil', function () {
     return view(' profil');
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

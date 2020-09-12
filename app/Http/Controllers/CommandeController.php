@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\DB;
 
 class CommandeController extends Controller
 {
+
+     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,10 +27,12 @@ class CommandeController extends Controller
      */
     public function index()
     {
+        
         //
-        $commandes= DB::table('commandes')->paginate(3);
+        $total = DB::table('commandes')->count();
+        $commandes= DB::table('commandes')->orderBy('created_at', 'DESC')->paginate(3);
         //$commandes = Commande::all()->paginate(3) ;
-        return view('commande.colis',['commandes' => $commandes]);
+        return view('commande.colis',['commandes' => $commandes, 'total'=>$total]);
     }
 
     /**

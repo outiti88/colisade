@@ -9,8 +9,8 @@
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon.png">
     <title>@yield('title')</title>
-    <link href="../sass/style.min.css" rel="stylesheet">
-    <link href="../assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
+<link href="{{ url('/sass/style.min.css') }}" rel="stylesheet">
+    <link href="{{ url('/assets/libs/chartist/dist/chartist.min.css') }}" rel="stylesheet">
 
     @yield('style')
 
@@ -43,17 +43,17 @@
 
     
 
-    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="{{ url('/assets/libs/jquery/dist/jquery.min.js') }}"></script>
     <!-- Bootstrap tether Core JavaScript -->
-    <script src="../assets/libs/popper.js/dist/umd/popper.min.js"></script>
-    <script src="../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../js/app-style-switcher.js"></script>
+    <script src="{{ url('/assets/libs/popper.js/dist/umd/popper.min.js') }}"></script>
+<script src="{{ url('/assets/libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url('/js/app-style-switcher.js') }}" ></script>
     <!--Wave Effects -->
-    <script src="../js/waves.js"></script>
+    <script src="{{ url('/js/waves.js"') }}" ></script>
     <!--Menu sidebar -->
-    <script src="../js/sidebarmenu.js"></script>
+    <script src="{{ url('/js/sidebarmenu.js') }}" ></script>
     <!--Custom JavaScript -->
-    <script src="../js/custom.js"></script>
+    <script src="{{ url('/js/custom.js') }}" ></script>
 
     @yield('javascript')
 </body>
