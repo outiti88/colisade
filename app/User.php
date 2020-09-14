@@ -4,11 +4,15 @@ namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+    use SoftDeletes;
+
     use Notifiable;
 
     /**
@@ -54,5 +58,14 @@ class User extends Authenticatable
 
     public function commandes(){
         return $this->hasMany('App\Commande');
+    }
+
+    public static function boot(){
+        parent::boot();
+
+        static::deleting(function(User $user){
+            $user->commandes()->delete();
+        });
+
     }
 }

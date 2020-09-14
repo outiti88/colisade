@@ -35,26 +35,27 @@ class CommandeController extends Controller
         $users = [] ;
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
-            $total = DB::table('commandes')->count();
-            $commandes= DB::table('commandes')->orderBy('created_at', 'DESC')->paginate(5);
+            $total = DB::table('commandes')->where('deleted_at',NULL)->count();
+            $commandes= DB::table('commandes')->where('deleted_at',NULL)->orderBy('created_at', 'DESC')->paginate(5);
             
         }
         else{
-            $commandes= DB::table('commandes')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(5);
-            $total =DB::table('commandes')->where('user_id',Auth::user()->id )->count();
+            $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(5);
+            $total =DB::table('commandes')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
            //dd("salut");
         }
 
       
             foreach($commandes as $commande){
-                $users[] = User::find($commande->user_id);
+                if(!empty(User::find($commande->user_id)))
+                $users[] =  User::find($commande->user_id) ;
             }
          
          
         
        //dd($this->middleware('auth'));
         
-        //dd($total);
+        //dd($commandes);
         //$commandes = Commande::all()->paginate(3) ;
         return view('commande.colis',['commandes' => $commandes, 
                                     'total'=>$total,
@@ -81,7 +82,7 @@ class CommandeController extends Controller
     {
         //dd(!(gmdate("H")+1 <= 18));
         //dd(Auth::user()->id );
-        if(gmdate("H")+1 <= 22 && gmdate("H")+1 > 8 ){
+        if(gmdate("H")+1 <= 24 && gmdate("H")+1 > 8 ){
             $commande = new Commande() ;
             $statut = new Statut();
             
@@ -401,7 +402,11 @@ class CommandeController extends Controller
         if($commande->statut === "expidié") {
 
             $numero = $commande->numero;
+            $statut = DB::table('statuts')->where('commande_id',$commande->id)->get()->first()  ;
+            //dd($statut->id);
+            \App\Statut::destroy($statut->id);
             \App\Commande::destroy($commande->id);
+            
             $request->session()->flash('delete', $numero);
             return redirect('/commandes');
         }

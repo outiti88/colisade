@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\User;
 use App\Role;
+use Illuminate\Support\Facades\DB;
 
 
 use Illuminate\Http\Request;
@@ -24,7 +25,10 @@ class ProfilController extends Controller
 
     public function index(){
         $user = Auth::user();
-        return view('profil' )->with('user',$user);
+        
+        $total =DB::table('commandes')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
+        //dd( Auth::user()->id);
+        return view('profil')->with(['user'=> $user , 'total' => $total]);
     }
 
     /**
