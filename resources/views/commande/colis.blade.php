@@ -5,9 +5,6 @@
    Gestion des Colis
 @endsection
 
-@section('title')
-    Dashboard
-@endsection
 
 @section('style')
     <style>

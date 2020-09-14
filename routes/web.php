@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProfilController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +16,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'DashboardController@dash')->name('dashboard');
-//Route::get('/colis', 'CommandeController@index')->name('colis');
-
-
 
 Route::get('/commandes/{id}/statut', 'CommandeController@changeStatut')->name('commandeStatut');
 
@@ -24,18 +23,25 @@ Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('
 
 Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen');
 
-
 Route::resource('/commandes','CommandeController');
 
+Route::get('/profil', 'ProfilController@index')->name('profil.index');
 
-Route::get('/login', function () {
-    return view('login/login');
-});
+Route::match(['put', 'patch'],'/profil/{user}', 'ProfilController@update')->name('profil.update');
 
-
-Route::get('/profil', function () {
-    return view(' profil');
-});
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
+    Route::resource('/users','UsersController',['except' => ['show','create','store']]);
+
+
+});
+
+
+
+
+
+

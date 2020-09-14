@@ -28,7 +28,7 @@ class CommandeController extends Controller
     public function index()
     {
         
-        //
+       //dd($this->middleware('auth'));
         $total = DB::table('commandes')->count();
         $commandes= DB::table('commandes')->orderBy('created_at', 'DESC')->paginate(3);
         //$commandes = Commande::all()->paginate(3) ;

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','description','telephone','adresse','image','ville',
     ];
 
     /**
@@ -36,4 +37,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function roles(){
+        return $this->BelongsToMany('App\Role');
+    }
+
+    public function hasAnyRoles($roles){
+        if($this->roles()->whereIn('name',$roles)->first()) {return true;}
+        return false;
+    }
+
+    public function hasRole($role){
+        if($this->roles()->where('name',$role)->first()) {return true;}
+        return false;
+    }
 }

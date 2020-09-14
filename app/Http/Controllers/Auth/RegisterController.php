@@ -8,6 +8,8 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Role;
+
 
 class RegisterController extends Controller
 {
@@ -29,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = RouteServiceProvider::USER;
 
     /**
      * Create a new controller instance.
@@ -38,8 +40,13 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
+    }
+   /* public function __construct()
+    {
         $this->middleware('guest');
     }
+    */
 
     /**
      * Get a validator for an incoming registration request.
@@ -64,10 +71,28 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        if(empty($data['image'])) $data['image']="https://quickoo.ma/assets/img/icon4.png";
+            if(empty($data['description'])) $data['description']="Sans Description";
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'description'=>$data['description'],
+            'telephone'=>$data['telephone'],
+            'adresse'=>$data['adresse'],
+            'ville'=>$data['ville'],
+            'image'=>$data['image']
+            
         ]);
+        if(empty($data['roles'])){
+        $role = Role::select('id')->where('name','client')->first();
+        $user->roles()->attach($role);
+        }
+        else {
+            $user->roles()->sync($data['roles']);
+        }
+        //dd($user);
+
+        return $user;
     }
 }

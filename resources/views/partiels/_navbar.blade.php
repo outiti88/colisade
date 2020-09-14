@@ -9,7 +9,7 @@
     
                 <span class="logo-text" style="position: relative; left:20px">
  
-                     <img src="../../assets/images/logo-light-text.png" style="
+                <img src="{{asset('assets/images/logo-light-text.png')}}" style="
                      WIDTH: 110PX;
                  "class="light-logo" alt="homepage" />
                 </span>
@@ -58,7 +58,8 @@
                             @endif
                         @else
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/images/users/1.png" alt="user" class="rounded-circle" width="31"></a>
+                <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="{{Auth::user()->image}}" alt="user" class="rounded-circle" width="31"></a>
                     <div class="dropdown-menu dropdown-menu-right user-dd animated">
                         <a class="dropdown-item" href="javascript:void(0)"><i class="ti-user m-r-5 m-l-5"></i>  {{ Auth::user()->name }} </a>
                         <a class="dropdown-item" href="javascript:void(0)"><i class="ti-email m-r-5 m-l-5"></i> Inbox</a>

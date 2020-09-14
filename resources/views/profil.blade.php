@@ -33,9 +33,9 @@
         <div class="col-lg-4 col-xlg-3 col-md-5">
             <div class="card">
                 <div class="card-body">
-                    <center class="m-t-30"> <img src="../../assets/images/users/1.png" class="rounded-circle" width="150" />
-                        <h4 class="card-title m-t-10">Decathlon Tanger</h4>
-                        <h6 class="card-subtitle">Magasin de sport et de loisirs</h6>
+                <center class="m-t-30"> <img src="{{$user->image}}" class="rounded-circle" width="150" />
+                        <h4 class="card-title m-t-10">{{$user->name}}</h4>
+                        <h6 class="card-subtitle">{{$user->description}}</h6>
                         <div class="row text-center justify-content-md-center">
                             <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-people"></i> <font class="font-medium">33 Colis</font></a></div>
                             <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-picture"></i> <font class="font-medium">2 Factures</font></a></div>
@@ -45,9 +45,9 @@
                 <div>
                     <hr> </div>
                 <div class="card-body"> <small class="text-muted">Addresse email </small>
-                    <h6>Decathlon.tanger@quickoo.ma</h6> <small class="text-muted p-t-30 db">Téléphone</small>
-                    <h6>+212 5393-07566</h6> <small class="text-muted p-t-30 db">Addresse</small>
-                    <h6>Marjane, Tanger PAC, Avenue des Forces Armées Royales, Tanger 90060</h6>
+                    <h6>{{$user->email}}</h6> <small class="text-muted p-t-30 db">Téléphone</small>
+                    <h6>{{$user->telephone}}</h6> <small class="text-muted p-t-30 db">Addresse</small>
+                    <h6>{{$user->adresse}}</h6>
                     <div class="map-box">
                         <iframe src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Marjane,%20Tanger%20PAC,%20Avenue%20des%20Forces%20Arm%C3%A9es%20Royales,%20Tanger%2090060+(Decathlon%20Tanger)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" width="100%" height="150" frameborder="0" style="border:0" allowfullscreen></iframe>
                     </div> <small class="text-muted p-t-30 db">Reseaux Sociaux</small>
@@ -63,52 +63,62 @@
         <div class="col-lg-8 col-xlg-9 col-md-7">
             <div class="card">
                 <div class="card-body">
-                    <form class="form-horizontal form-material">
+                    <form class="form-horizontal form-material" method="POST" action="{{route('profil.update',$user)}}">
+                        @csrf
+                        @method("PUT")
                         <div class="form-group">
-                            <label class="col-md-12">Nom de l'entreprise</label>
+                            <label for="name" class="col-md-12">Nom & Prénom: </label>
+
+                        <div class="col-md-12">
+                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $user->name }}" required  autofocus>
+
+                            @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-md-12">Email: </label>
+
                             <div class="col-md-12">
-                                <input type="text" placeholder="Decathlon Tanger" class="form-control form-control-line">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $user->email }}" required>
+    
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="example-email" class="col-md-12">Email</label>
+                            <label class="col-md-12">Url de l'image</label>
                             <div class="col-md-12">
-                                <input type="email" placeholder="Decathlon.tanger@quickoo.ma" class="form-control form-control-line" name="example-email" id="example-email">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-12">Mot de Passe</label>
-                            <div class="col-md-12">
-                                <input type="password" value="password" class="form-control form-control-line">
+                                <input name="image" type="text" value="{{$user->image}}"class="form-control form-control-line">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-12">Téléphone</label>
                             <div class="col-md-12">
-                                <input type="text" placeholder="+212 5393-07566" class="form-control form-control-line">
+                            <input name="telephone" type="text" value="{{$user->telephone}}" class="form-control form-control-line">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-12">Description</label>
                             <div class="col-md-12">
-                                <textarea rows="5" class="form-control form-control-line"></textarea>
+                            <textarea name="description" rows="5" class="form-control form-control-line">{{$user->description}}</textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-12">Ville</label>
-                            <div class="col-sm-12">
-                                <select class="form-control form-control-line">
-                                    <option>Tanger</option>
-                                    <option>Marrakech</option>
-                                    <option>Kénitra</option>
-                                    <option>Casablanca</option>
-                                    <option>Rabata</option>
-                                </select>
-                            </div>
+                            <div class="col-md-12">
+                                <input name="ville" type="text" value="{{$user->ville}}" class="form-control form-control-line">
+                                </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <button class="btn btn-success">Modifier</button>
+                                <button type="submit" class="btn btn-success">Modifier</button>
                             </div>
                         </div>
                     </form>
