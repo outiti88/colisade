@@ -6,6 +6,7 @@ use App\Commande;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCommande;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class CommandeController extends Controller
 {
@@ -53,9 +54,10 @@ class CommandeController extends Controller
      */
     public function store(StoreCommande $request)
     {
+        //dd(!(gmdate("H")+1 <= 18));
 
-
-        $commande = new Commande() ;
+        if(gmdate("H")+1 <= 18){
+            $commande = new Commande() ;
         $commande->telephone = $request->telephone;
         $commande->ville = $request->ville;
         $commande->adresse = $request->adresse;
@@ -72,6 +74,11 @@ class CommandeController extends Controller
         $commande->save();
 
         $request->session()->flash('statut', $commande->id);
+        }
+
+        else{
+            $request->session()->flash('avant18');
+        }
 
         return redirect('/commandes');
     }
@@ -262,31 +269,47 @@ class CommandeController extends Controller
      */
     public function update(StoreCommande $request, Commande $commande)
     {
-        $commande->telephone = $request->telephone;
-        $commande->ville = $request->ville;
-        $commande->adresse = $request->adresse;
-        $commande->montant = $request->montant;
-        $prixVille = ($request->ville==="tanger") ? 17 : 25 ;
-        $prixPoids = (($request->poids==="normal") ? 0 : 9);
-        $commande->prix = $prixVille + $prixPoids;
-        $commande->colis = $request->colis;
-        $commande->poids = $request->poids;
-        $commande->nom = $request->nom;
 
-        $commande->save();
+        if(Gate::denies('client-admin') || $commande->statut !== "expidié"){
+            //dd( $commande->staut );
+            $request->session()->flash('noupdate', $commande->numero);
+            
+        }
 
-        $request->session()->flash('statut', 'modifié');
+        else
+            {
+                $commande->telephone = $request->telephone;
+                $commande->ville = $request->ville;
+                $commande->adresse = $request->adresse;
+                $commande->montant = $request->montant;
+                $prixVille = ($request->ville==="tanger") ? 17 : 25 ;
+                $prixPoids = (($request->poids==="normal") ? 0 : 9);
+                $commande->prix = $prixVille + $prixPoids;
+                $commande->colis = $request->colis;
+                $commande->poids = $request->poids;
+                $commande->nom = $request->nom;
+                $commande->save();
+                $request->session()->flash('statut', 'modifié');
+            }
 
         return redirect()->route('commandes.show',['commande' => $commande->id]);
     }
 
   
     public function changeStatut(Request $request, $id)
-    {
-        
+    { //changement de statut du expidé à en cours
+        //dd(!Gate::denies('ramassage-commande'));
         $commande = Commande::findOrFail($id);
+        
+        if(Gate::denies('ramassage-commande')){
+            //dd(true);
+            $request->session()->flash('noedit', $commande->numero);
+            return redirect(route('commandes.index'));
+        }
+
         if($commande->statut === "expidié")
         {
+            
             $commande->statut= "En cours";
             
             $commande->save();
@@ -299,12 +322,26 @@ class CommandeController extends Controller
 
     public function statutAdmin(Request $request, $id)
     {
+        
         $commande = Commande::findOrFail($id);
-    
+
+        if(Gate::denies('ramassage-commande') || $commande->statut === 'expidié'){
+            
+            $request->session()->flash('noedit', $commande->numero);
+            return redirect()->route('commandes.show',['commande' => $commande->id]);        }
+
+
+        if($commande->statut === "éxpidié") {
+            $request->session()->flash('noedit', $commande->numero);
+           
+        }
+        else{
+            
             $commande->statut= $request->statut;
             $commande->commentaire= $request->commentaire;
             $commande->save();
             $request->session()->flash('edit', $commande->numero);
+        }
         
 
             return redirect()->route('commandes.show',['commande' => $commande->id]);
@@ -318,10 +355,22 @@ class CommandeController extends Controller
      */
     public function destroy(Request $request,Commande $commande)
     {
-        $numero = $commande->numero;
-        \App\Commande::destroy($commande->id);
-        $request->session()->flash('delete', $numero);
+        if(Gate::denies('client-admin')){
+            $request->session()->flash('nodelete', $commande->numero);
+            return redirect()->route('commandes.show',['commande' => $commande->id]);
+                }
+        if($commande->statut === "expidié") {
 
-        return redirect('/commandes');
+            $numero = $commande->numero;
+            \App\Commande::destroy($commande->id);
+            $request->session()->flash('delete', $numero);
+            return redirect('/commandes');
+        }
+        else {
+            //dd($commande->statut);
+            $request->session()->flash('nodelete', $commande->numero);
+            return redirect()->route('commandes.show',['commande' => $commande->id]);
+        }
+        
     }
 }

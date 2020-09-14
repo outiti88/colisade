@@ -140,7 +140,11 @@ N: {{$commande->numero}}
         <div class="col-4">
             <div class="row float-right">
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
+                    @can('ramassage-commande')
+                    @if ($commande->statut !== "expidié")
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
+                    @endif
+                    @endcan
                     @if ($commande->statut === "expidié")
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
                      
@@ -175,6 +179,25 @@ N: {{$commande->numero}}
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>Succés !</strong> Le statut de la commande numero {{session()->get('edit')}} à été bien edité !!
           </div>
+        @endif
+        @if (session()->has('noedit'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Erreur !</strong>vous ne pouvez pas changer le statut La commande numero {{session()->get('noedit')}}
+          </div>
+        @endif
+        @if (session()->has('nodelete'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Erreur !</strong>vous ne pouvez pas supprimer La commande numero {{session()->get('nodelete')}}
+          </div>
+        @endif
+        @if (session()->has('noupdate'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Erreur !</strong>vous ne pouvez pas modifier La commande numero {{session()->get('noupdate')}} <br>
+                vous pouvez modifier que les commandes qui ont le statut EXPIDIE
+        </div>
         @endif
             <div class="col-md-10">
                 <div class="profile-head">
@@ -346,7 +369,7 @@ N: {{$commande->numero}}
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header text-center">
-                          <h4 class="modal-title w-100 font-weight-bold">Nouvelle Commande</h4>
+                          <h4 class="modal-title w-100 font-weight-bold">Modifier la Commande</h4>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>

@@ -60,6 +60,13 @@
           </div>
         @endif
 
+        @if (session()->has('avant18'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Erreur !</strong> {{gmdate("H")+1 . gmdate(":i:s")}} Vous pouvez pas ajouter une commande après 19h:00 GMT+1 !!
+          </div>
+        @endif
+
         @if (session()->has('delete'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -79,6 +86,7 @@
         <strong>Erreur !</strong>vous ne pouvez pas changer le statut La commande numero {{session()->get('noedit')}}
           </div>
         @endif
+       
         
         <div class="col-12">
             <div class="card">
