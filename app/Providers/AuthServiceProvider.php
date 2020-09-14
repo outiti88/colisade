@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('ramassage-commande', function($user){
-            return $user->hasAnyRoles(['admin','livreur']);
+            return $user->hasAnyRoles(['admin','livreur','personel']);
         });
 
         Gate::define('client-admin', function($user){
@@ -41,7 +41,7 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasRole('admin');
         });
 
-        
+
 
         Gate::define('delete-users', function($user){
             return $user->hasRole('admin');

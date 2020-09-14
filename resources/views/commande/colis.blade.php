@@ -95,9 +95,10 @@
                     <h6 class="card-subtitle">Nombre total des commandes : <code>{{$total}} Commandes</code> .</h6>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered">
+                    <table class="table table-hover table-bordered" style="font-size: 0.85em;">
                         <thead>
                             <tr>
+                                <th scope="col">Client</th>
                                 <th scope="col">Numero Commande</th>
                                 <th scope="col">Nom Complet</th>
                                 <th scope="col">Téléphone</th>
@@ -112,8 +113,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                           @forelse ($commandes as $commande)
+                           @forelse ($commandes as $index => $commande)
                            <tr>
+                            <th scope="row">
+                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
+
+                                    
+                                    
+                                        @if(Auth::user()->id === $users[$index]->id )
+                                            href="/profil"
+                                        @else
+                                            @can('edit-users')
+                                                href="{{route('admin.users.edit',$users[$index]->id)}}"
+                                            @endcan
+
+                                        @endif
+                                   
+                                    
+                                    >
+                                    <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
+                                    
+                                </a>
+                            </th>
                             <th scope="row">{{$commande->numero}}</th>
                             <td>{{$commande->nom}}</td>
                             <td>{{$commande->telephone}}</td>

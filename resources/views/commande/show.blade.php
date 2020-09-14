@@ -320,30 +320,18 @@ N: {{$commande->numero}}
                                         <p>DATE</p>
                                     </div>
                                 </div>
+                                @foreach ($statuts as $statut)
                                 <div class="row">
                                     <div class="col-md-6">
-                                    <label>{{$commande->statut}}</label>
+                                    <label>{{$statut->name}}</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{$commande->created_at}}</p>
+                                        <p>{{$statut->created_at}}</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                    <label>{{$commande->statut}}</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>{{$commande->created_at}}</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                    <label>{{$commande->statut}}</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>{{$commande->created_at}}</p>
-                                    </div>
-                                </div>
+                                @endforeach
+                                
+                              
                                 
                         <div class="row">
                             <div class="col-md-12">

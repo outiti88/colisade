@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Commande;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCommande;
+use App\Statut;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use App\User; 
+use Illuminate\Support\Facades\Auth;
 
 class CommandeController extends Controller
 {
@@ -28,12 +31,34 @@ class CommandeController extends Controller
      */
     public function index()
     {
+        //dd(Auth::user()->id );
+        $users = [] ;
+        if(!Gate::denies('ramassage-commande')) {
+            //session administrateur donc on affiche tous les commandes
+            $total = DB::table('commandes')->count();
+            $commandes= DB::table('commandes')->orderBy('created_at', 'DESC')->paginate(5);
+            
+        }
+        else{
+            $commandes= DB::table('commandes')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(5);
+            $total =DB::table('commandes')->where('user_id',Auth::user()->id )->count();
+           //dd("salut");
+        }
+
+      
+            foreach($commandes as $commande){
+                $users[] = User::find($commande->user_id);
+            }
+         
+         
         
        //dd($this->middleware('auth'));
-        $total = DB::table('commandes')->count();
-        $commandes= DB::table('commandes')->orderBy('created_at', 'DESC')->paginate(3);
+        
+        //dd($total);
         //$commandes = Commande::all()->paginate(3) ;
-        return view('commande.colis',['commandes' => $commandes, 'total'=>$total]);
+        return view('commande.colis',['commandes' => $commandes, 
+                                    'total'=>$total,
+                                    'users'=> $users]);
     }
 
     /**
@@ -55,9 +80,11 @@ class CommandeController extends Controller
     public function store(StoreCommande $request)
     {
         //dd(!(gmdate("H")+1 <= 18));
-
-        if(gmdate("H")+1 <= 18){
+        //dd(Auth::user()->id );
+        if(gmdate("H")+1 <= 22 && gmdate("H")+1 > 8 ){
             $commande = new Commande() ;
+            $statut = new Statut();
+            
         $commande->telephone = $request->telephone;
         $commande->ville = $request->ville;
         $commande->adresse = $request->adresse;
@@ -70,9 +97,12 @@ class CommandeController extends Controller
         $commande->poids = $request->poids;
         $commande->nom = $request->nom;
         $commande->numero = "dkt-".date("mdis");
-
-        $commande->save();
-
+        $commande->user()->associate(Auth::user())->save();
+        //dd($commande->user());
+        //$commande->save();
+        $statut->commande_id = $commande->id;
+        $statut->name = $commande->statut;
+        $statut->save();
         $request->session()->flash('statut', $commande->id);
         }
 
@@ -93,7 +123,9 @@ class CommandeController extends Controller
     public function show(Commande $commande)
     {
         //return $commande;
-        return view('commande.show', ['commande'=>$commande]);
+        $statuts = DB::table('statuts')->where('commande_id',$commande->id)->get();
+        //dd($commande);
+        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts]);
     }
 
 
@@ -289,6 +321,7 @@ class CommandeController extends Controller
                 $commande->poids = $request->poids;
                 $commande->nom = $request->nom;
                 $commande->save();
+               
                 $request->session()->flash('statut', 'modifié');
             }
 
@@ -309,10 +342,12 @@ class CommandeController extends Controller
 
         if($commande->statut === "expidié")
         {
-            
             $commande->statut= "En cours";
-            
             $commande->save();
+            $statut = new Statut();
+            $statut->commande_id = $commande->id;
+            $statut->name = $commande->statut;
+            $statut->save();
             $request->session()->flash('edit', $commande->numero);
         }
         else $request->session()->flash('noedit', $commande->numero);
@@ -340,6 +375,10 @@ class CommandeController extends Controller
             $commande->statut= $request->statut;
             $commande->commentaire= $request->commentaire;
             $commande->save();
+            $statut = new Statut();
+            $statut->commande_id = $commande->id;
+            $statut->name = $commande->statut;
+            $statut->save();
             $request->session()->flash('edit', $commande->numero);
         }
         
