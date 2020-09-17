@@ -25,6 +25,8 @@ Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen');
 
 Route::get('/commandes/search', 'CommandeController@search')->name('commande.search');
 
+Route::get('/commandes/filter', 'CommandeController@filter')->name('commande.filter');
+
 Route::resource('/commandes','CommandeController');
 
 Route::get('/profil', 'ProfilController@index')->name('profil.index');

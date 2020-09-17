@@ -37,7 +37,7 @@ class DashboardController extends Controller
                     'date' => ($c === NULL) ? "" : $c->created_at
                 ),
                 'expidie' => array(
-                    'nbr'=> DB::table('commandes')->where('statut','expidie')->where('deleted_at',NULL)->count(),
+                    'nbr'=> DB::table('commandes')->where('statut','expidié')->where('deleted_at',NULL)->count(),
                     'date' => ($e=== NULL) ? "" : $e->created_at
                 ),
                 'livré' => array(
@@ -45,7 +45,7 @@ class DashboardController extends Controller
                     'date' => ($l === NULL) ? "" : $l->created_at
                 ),
                 'retour' => array(
-                    'nbr'=> DB::table('commandes')->where('statut','retour')->where('deleted_at',NULL)->count(),
+                    'nbr'=> DB::table('commandes')->where('statut','like','retour%')->where('deleted_at',NULL)->count(),
                     'date' => ($r === NULL) ? "" : $r->created_at
                 )
                 );

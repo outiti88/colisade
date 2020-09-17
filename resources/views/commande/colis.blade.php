@@ -8,6 +8,47 @@
 
 @section('style')
     <style>
+
+        .dropdown.dropdown-lg .dropdown-menu {
+            margin-top: -1px;
+            padding: 6px 20px;
+        }
+        .input-group-btn .btn-group {
+            display: flex !important;
+        }
+        .btn-group .btn {
+            border-radius: 0;
+            margin-left: -1px;
+        }
+        .btn-group .btn:last-child {
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        .btn-group .form-horizontal .btn[type="submit"] {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        }
+        .form-horizontal .form-group {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .form-group .form-control:last-child {
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+
+        @media screen and (min-width: 768px) {
+            #adv-search {
+                width: 500px;
+                margin: 0 auto;
+            }
+            .dropdown.dropdown-lg {
+                position: static !important;
+            }
+            .dropdown.dropdown-lg .dropdown-menu {
+                min-width: 500px;
+            }
+        }
         .page-link {
             color: #e85f03 !important;
         }
@@ -36,22 +77,18 @@
             </div>
         </div>
         <div class="col-7">
-            <div class="text-right upgrade-btn">
+        <div class="row float-right d-flex ">
+            <div class=m-r-5" style="margin-right: 10px;">
+                <a  class="btn btn-warning text-white"  data-toggle="modal" data-target="#modalSearchForm"><i class="fa fa-search"></i></a>
+            </div>
+            <div class="m-r-5">
                 <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i> Ajouter une commande</a>
             </div>
         </div>
+        </div>
     </div>
 </div>
-<!-- ============================================================== -->
-<!-- End Bread crumb and right sidebar toggle -->
-<!-- ============================================================== -->
-<!-- ============================================================== -->
-<!-- Container fluid  -->
-<!-- ============================================================== -->
 <div class="container-fluid">
-    <!-- ============================================================== -->
-    <!-- Start Page Content -->
-    <!-- ============================================================== -->
     <div class="row">
         @if (session()->has('search'))
         <div class="alert alert-dismissible alert-warning col-12">
@@ -123,9 +160,6 @@
                            <tr>
                             <th scope="row">
                                 <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
-
-                                    
-                                    
                                         @if(Auth::user()->id === $users[$index]->id )
                                             href="/profil"
                                         @else
@@ -134,11 +168,8 @@
                                             @endcan
 
                                         @endif
-                                   
-                                    
                                     >
                                     <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
-                                    
                                 </a>
                             </th>
                             <th scope="row">{{$commande->numero}}</th>
@@ -150,10 +181,8 @@
                             <td>{{$commande->prix}} MAD</td>
                             <td>{{$commande->created_at}}</td>
                             <td><a href="{{ route('commandeStatut',['id'=> $commande->id]) }}">{{$commande->statut}}  ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}}) </a></td>
-                           <td style="font-size: 1.5em"><a style="color: #e85f03" href="commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
-
+                           <td style="font-size: 1.5em"><a style="color: #e85f03" href="/commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
                         </tr>
-
                         @empty
                         <tr>
                             <td colspan="10" style="text-align: center">Aucune commande enregistrée!</td>
@@ -174,20 +203,92 @@
         </div>
 
     </div>
-    <!-- ============================================================== -->
-    <!-- End PAge Content -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- Right sidebar -->
-    <!-- ============================================================== -->
-    <!-- .right-sidebar -->
-    <!-- ============================================================== -->
-    <!-- End Right sidebar -->
-    <!-- ============================================================== -->
 </div>
 
 
-
+<div class="container my-4">    
+    <div class="modal fade" id="modalSearchForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header text-center">
+                          <h4 class="modal-title w-100 font-weight-bold">Rechercher sur les commandes</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <form class="form-horizontal form-material" method="GET" action="{{route('commande.filter')}}">
+                                @csrf
+                                <div class="form-group row">
+                                    <label class="col-md-4">Nom et Prénom:</label>
+                                    <div class="col-md-8">
+                                        <input  value="{{ old('nom') }}" name="nom" type="text" placeholder="Nom & Prénom" class="form-control form-control-line">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4">Statut de commande:</label>
+                                    <div class="col-sm-8">
+                                        <select name="statut" class="form-control form-control-line">
+                                            <option selected disabled>Choisissez le statut</option>
+                                            <option>Expidié</option>
+                                            <option>Ramassé</option>
+                                            <option>Livré</option>
+                                            <option>Retour Complet</option>
+                                            <option>Retour Partiel</option>
+                                            <option>Reporté</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="example-date-input" class="col-4 col-form-label">Date Min</label>
+                                    <div class="col-8">
+                                      <input class="form-control" name="dateMin" type="date" value="{{now()}}" id="example-date-input">
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <label for="example-date-input" class="col-4 col-form-label">Date Max</label>
+                                    <div class="col-8">
+                                      <input class="form-control" name="dateMax"  type="date" value="{{now()}}" id="example-date-input">
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <label class="col-sm-4">Ville :</label>
+                                    <div class="col-sm-8">
+                                        <select name="ville" class="form-control form-control-line">
+                                            <option selected disabled>Choisissez la ville</option>
+                                            <option value="Tanger">Tanger</option>
+                                            <option value="Marrakech">Marrakech</option>
+                                            <option value="Kénitra">Kénitra</option>
+                                            <option value="Casablanca">Casablanca</option>
+                                            <option value="Rabat">Rabat</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                  <div class="form-group row">
+                                    <label for="example-date-input" class="col-3 col-form-label">Montant Min</label>
+                                    <div class="col-3">
+                                      <input class="form-control" name="prixMin" type="number" value="0" id="example-date-input">
+                                    </div>
+                                    <label for="example-date-input" class="col-3 col-form-label">Montant Max</label>
+                                    <div class="col-3">
+                                      <input class="form-control" type="number" name="prixMax" value="0" id="example-date-input">
+                                    </div>
+                                  </div>
+                                
+                                <div class="form-group">
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-warning"><i class="fa fa-search"></i> Rechercher</button>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+            
+                      </div>
+                    </div>
+    </div>
+</div>
 
 @endsection
 

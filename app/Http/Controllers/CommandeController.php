@@ -50,16 +50,58 @@ class CommandeController extends Controller
                 if(!empty(User::find($commande->user_id)))
                 $users[] =  User::find($commande->user_id) ;
             }
-         
-         
-        
-       //dd($this->middleware('auth'));
-        
-        //dd($commandes);
         //$commandes = Commande::all()->paginate(3) ;
         return view('commande.colis',['commandes' => $commandes, 
                                     'total'=>$total,
                                     'users'=> $users]);
+    }
+
+
+    public function filter(Request $request){
+        $commandes = DB::table('commandes')->where('deleted_at',NULL);
+        $users = [];
+
+        if(Gate::denies('ramassage-commande')) { //session client donc on cherche saulement dans ses propres commandes
+            $commandes->where('user_id',Auth::user()->id );
+        }
+
+        if($request->filled('statut')){
+            //dd("salut");
+            $commandes->where('statut','like','%'.$request->statut.'%');
+           //dd($commandes->count());
+        }
+        
+        if($request->filled('nom')){
+            $commandes->where('nom','like','%'.$request->nom.'%');
+        }
+        if($request->filled('ville')){
+            $commandes->where('ville','like','%'.$request->ville.'%');
+        }
+        
+        if($request->filled('dateMin')){
+            $commandes->where('created_at','>=',$request->dateMin);
+        }
+        if($request->filled('dateMax')){
+            $commandes->where('created_at','<=',$request->dateMax);
+        }
+        if($request->filled('prixMin') && $request->prixMin > 0){
+            $commandes->where('montant','>=',$request->prixMin);
+        }
+        if($request->filled('prixMax') && $request->prixMax > 0){
+            $commandes->where('montant','<=',$request->prixMax);
+        }
+
+        $total = $commandes->count() ;
+        $commandes = $commandes->paginate(15);
+        foreach($commandes as $commande){
+            if(!empty(User::find($commande->user_id)))
+            $users[] =  User::find($commande->user_id) ;
+        }
+
+
+        return view('commande.colis',['commandes' => $commandes, 
+            'total'=>$total,
+            'users'=> $users]);
     }
 
 
@@ -68,7 +110,6 @@ class CommandeController extends Controller
 
        // dd($request->filled('search'));
         $users = [] ;
-        $type_search = 1;
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->count();
@@ -78,7 +119,6 @@ class CommandeController extends Controller
         else{
             $commandes= DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(5);
             $total =DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
-           //dd("salut");
         }
 
         if($total == 0) { //recherche par statut
@@ -91,19 +131,21 @@ class CommandeController extends Controller
             else{
                 $commandes= DB::table('commandes')->where('statut','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(5);
                 $total =DB::table('commandes')->where('statut','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
-               //dd("salut");
             }
         }
-    
+        dd($commandes);
         if($total > 0 ){
             foreach($commandes as $commande){
                 if(!empty(User::find($commande->user_id)))
                 $users[] =  User::find($commande->user_id) ;
+             
             }
-         
+               
             return view('commande.colis',['commandes' => $commandes, 
-                                    'total'=>$total,
-                                    'users'=> $users]);
+            'total'=>$total,
+            'users'=> $users]);
+         
+           
         }
         else {
             $request->session()->flash('search', $request->search);
