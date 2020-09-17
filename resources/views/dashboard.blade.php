@@ -38,13 +38,13 @@
                 <div class="card-body">
                     <div class="d-md-flex align-items-center">
                         <div>
-                            <h4 class="card-title">Sales Summary</h4>
-                            <h5 class="card-subtitle">Overview of Latest Month</h5>
+                            <h4 class="card-title">Les commandes livrés et les retours</h4>
+                            <h5 class="card-subtitle">Statistique par mois</h5>
                         </div>
                         <div class="ml-auto d-flex no-block align-items-center">
                             <ul class="list-inline font-12 dl m-r-15 m-b-0">
-                                <li class="list-inline-item text-info"><i class="fa fa-circle"></i> Iphone</li>
-                                <li class="list-inline-item text-primary"><i class="fa fa-circle"></i> Ipad</li>
+                                <li class="list-inline-item text-info"><i class="fa fa-circle"></i> Livré</li>
+                                <li class="list-inline-item text-primary"><i class="fa fa-circle"></i> Retour</li>
                             </ul>
                         </div>
                     </div>
@@ -61,17 +61,17 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Feeds</h4>
+                    <h4 class="card-title">Statuts des commandes</h4>
                     <div class="feed-widget">
                         <ul class="list-style-none feed-body m-0 p-b-20">
                             <li class="feed-item">
-                                <div class="feed-icon bg-info"><i class="far fa-bell"></i></div> You have 4 pending tasks. <span class="ml-auto font-12 text-muted">Just Now</span></li>
+                                <div class="feed-icon bg-info"><i class="far fa-bell"></i></div> {{$tab['expidie']['nbr']}} Commandes <br> Expidiées. <span class="ml-auto font-12 text-muted">{{$tab['expidie']['date']}}</span></li>
                             <li class="feed-item">
-                                <div class="feed-icon bg-success"><i class="ti-server"></i></div> Server #1 overloaded.<span class="ml-auto font-12 text-muted">2 Hours ago</span></li>
+                                <div class="feed-icon bg-success"><i class="ti-server"></i></div> {{$tab['en_cours']['nbr']}} Commandes <br> Ramassées.<span class="ml-auto font-12 text-muted">{{$tab['en_cours']['date']}}</span></li>
                             <li class="feed-item">
-                                <div class="feed-icon bg-warning"><i class="ti-shopping-cart"></i></div> New order received.<span class="ml-auto font-12 text-muted">31 May</span></li>
+                                <div class="feed-icon bg-warning"><i class="ti-shopping-cart"></i></div> {{$tab['livré']['nbr']}} Commandes <br> Livrées.<span class="ml-auto font-12 text-muted">{{$tab['livré']['date']}}</span></li>
                             <li class="feed-item">
-                                <div class="feed-icon bg-danger"><i class="ti-user"></i></div> New user registered.<span class="ml-auto font-12 text-muted">30 May</span></li>
+                                <div class="feed-icon bg-danger"><i class="ti-user"></i></div> {{$tab['retour']['nbr']}} Retour <br> Commandes.<span class="ml-auto font-12 text-muted">{{$tab['retour']['date']}}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -339,7 +339,74 @@
 @endsection
 
 @section('javascript')
-<script src="../assets/libs/chartist/dist/chartist.min.js"></script>
-<script src="../assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
-<script src="../js/pages/dashboards/dashboard1.js"></script>
+<script src="{{url('/assets/libs/chartist/dist/chartist.min.js')}}"></script>
+<script src="{{url('/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js')}}"></script>
+<script>
+    $(function() {
+    "use strict";
+    // ============================================================== 
+    // Newsletter
+    // ============================================================== 
+
+    var livre = <?php echo $livre; ?> ;
+    var retour = <?php echo $retour; ?> ;
+
+   // console.log("heeeeeeeeeeeeeey",livre );
+    var chart = new Chartist.Line('.campaign', {
+        labels: [1, 2, 3, 4, 5, 6, 7, 8,11,12],
+        series: [ livre, retour]
+
+    }, {
+        low: 0,
+        high: 28,
+
+        showArea: true,
+        fullWidth: true,
+        plugins: [
+            Chartist.plugins.tooltip()
+        ],
+        axisY: {
+            onlyInteger: true,
+            scaleMinSpace: 40,
+            offset: 20,
+            labelInterpolationFnc: function(value) {
+                return (value / 1) + '';
+            }
+        },
+
+    });
+
+    // Offset x1 a tiny amount so that the straight stroke gets a bounding box
+    // Straight lines don't get a bounding box 
+    // Last remark on -> http://www.w3.org/TR/SVG11/coords.html#ObjectBoundingBox
+    chart.on('draw', function(ctx) {
+        if (ctx.type === 'area') {
+            ctx.element.attr({
+                x1: ctx.x1 + 0.001
+            });
+        }
+    });
+
+    // Create the gradient definition on created event (always after chart re-render)
+    chart.on('created', function(ctx) {
+        var defs = ctx.svg.elem('defs');
+        defs.elem('linearGradient', {
+            id: 'gradient',
+            x1: 0,
+            y1: 1,
+            x2: 0,
+            y2: 0
+        }).elem('stop', {
+            offset: 0,
+            'stop-color': 'rgba(255, 255, 255, 1)'
+        }).parent().elem('stop', {
+            offset: 1,
+            'stop-color': 'rgba(64, 196, 255, 1)'
+        });
+    });
+
+
+    var chart = [chart];
+});
+</script>
 @endsection

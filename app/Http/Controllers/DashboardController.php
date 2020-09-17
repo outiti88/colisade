@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class DashboardController extends Controller
 {
@@ -19,8 +21,51 @@ class DashboardController extends Controller
 
     
     public function dash(){
-        
-            return view('dashboard');
+
+        //dd($date->created_at);
+
+        //Statuts des commandes
+        $c = DB::table('commandes')->where('statut','En cours')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
+        $l = DB::table('commandes')->where('statut','livré')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
+        $r = DB::table('commandes')->where('statut','retour')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
+        $e = DB::table('commandes')->where('statut','expidie')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
+
+        $tab = 
+            array(
+                'en_cours' => array(
+                    'nbr'=> DB::table('commandes')->where('statut','En cours')->where('deleted_at',NULL)->count(),
+                    'date' => ($c === NULL) ? "" : $c->created_at
+                ),
+                'expidie' => array(
+                    'nbr'=> DB::table('commandes')->where('statut','expidie')->where('deleted_at',NULL)->count(),
+                    'date' => ($e=== NULL) ? "" : $e->created_at
+                ),
+                'livré' => array(
+                    'nbr'=> DB::table('commandes')->where('statut','livré')->where('deleted_at',NULL)->count(),
+                    'date' => ($l === NULL) ? "" : $l->created_at
+                ),
+                'retour' => array(
+                    'nbr'=> DB::table('commandes')->where('statut','retour')->where('deleted_at',NULL)->count(),
+                    'date' => ($r === NULL) ? "" : $r->created_at
+                )
+                );
+
+
+        //Chart commandes livré vs commandes retour
+        $chart = 
+                array(
+                    'livre' => array(),
+                    'retour' => array()
+                );
+            for ($i=1; $i <= 12 ; $i++) { 
+                $chart['livre'][] = DB::table('commandes')->where('statut','livré')->whereMonth('created_at',($i))->sum('prix');
+                $chart['retour'][] = DB::table('commandes')->where('statut','retour')->whereMonth('created_at',($i))->sum('prix');
+            }
+       
+           $livre=json_encode($chart['livre'],JSON_NUMERIC_CHECK);
+           $retour=json_encode($chart['retour'],JSON_NUMERIC_CHECK);
+
+        return view('dashboard' , ['tab'=>$tab , 'livre'=>$livre , 'retour'=>$retour]);
         
     }
 }

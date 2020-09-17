@@ -60,6 +60,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Commande');
     }
 
+    /**
+     * Get the comments for the blog post.
+     */
+    public function bonLivraisons()
+    {
+        return $this->hasMany('App\BonLivraison');
+    }
+
     public static function boot(){
         parent::boot();
 

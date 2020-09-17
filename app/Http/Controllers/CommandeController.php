@@ -82,7 +82,7 @@ class CommandeController extends Controller
     {
         //dd(!(gmdate("H")+1 <= 18));
         //dd(Auth::user()->id );
-        if(gmdate("H")+1 <= 24 && gmdate("H")+1 > 8 ){
+        if(gmdate("H")+1 <= 18 && gmdate("H")+1 > 8 ){
             $commande = new Commande() ;
             $statut = new Statut();
             
@@ -395,7 +395,8 @@ class CommandeController extends Controller
      */
     public function destroy(Request $request,Commande $commande)
     {
-        if(Gate::denies('client-admin')){
+        if(Gate::denies('delete-commande')){
+            //dd('salut');
             $request->session()->flash('nodelete', $commande->numero);
             return redirect()->route('commandes.show',['commande' => $commande->id]);
                 }

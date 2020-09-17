@@ -145,6 +145,7 @@ N: {{$commande->numero}}
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
                     @endif
                     @endcan
+                    @can('delete-commande')
                     @if ($commande->statut === "expidié")
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
                      
@@ -156,7 +157,7 @@ N: {{$commande->numero}}
                                 </form>
                     @endif
                     
-
+                    @endcan
 
 
 

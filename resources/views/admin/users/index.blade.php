@@ -50,52 +50,52 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">{{ __('Utilisateurs Quickoo') }}</div>
-
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Nom & Prénom</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Rôles</th>
-                            @can('edit-users')
-                            <th scope="col">Action</th>
-                            @endcan
-                            
-                          </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($users as $user)
-                          <tr>
-                            <th scope="row"><img src="{{$user->image}}" alt="user" class="rounded-circle" width="31"></a></th>
-                            <td>{{$user->name}}</td>
-                            <td>{{$user->email}}</td>
-                            <td>{{ implode(', ' , $user->roles()->get()->pluck('name')->toArray() )}}</td>
-                            @can('edit-users')
-                            <td>
-                                <a href="{{route('admin.users.edit',$user->id)}}">
-                                   <button class="btn btn-primary float-lef"><i class="mdi mdi-account-edit"></i></button>
-                               </a>
-                               <a href="{{route('admin.users.destroy',$user->id)}}">
-                                   <form action="{{route('admin.users.destroy',$user->id)}}" method="POST" class="float-left">
-                                       @csrf
-                                       @method("DELETE")
-                                       <button class="btn btn-warning"><i class="mdi mdi-delete"></i></button>
-                                   </form>
-                                   
-                               </a>
-                           </td>
-                            @endcan
-                            
-                            </tr>
-                          @endforeach
-
-                        </tbody>
-                      </table>
-                  
-                     
-                  
+                
+                <div class="card-body" >
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nom & Prénom</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Rôles</th>
+                                @can('edit-users')
+                                <th scope="col">Action</th>
+                                @endcan
+                                
+                              </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($users as $user)
+                              <tr>
+                                <th scope="row"><img src="{{$user->image}}" alt="user" class="rounded-circle" width="31"></a></th>
+                                <td>{{$user->name}}</td>
+                                <td>{{$user->email}}</td>
+                                <td>{{ implode(', ' , $user->roles()->get()->pluck('name')->toArray() )}}</td>
+                                @can('edit-users')
+                                <td>
+                                    <a href="{{route('admin.users.edit',$user->id)}}">
+                                       <button class="btn btn-primary float-lef"><i class="mdi mdi-account-edit"></i></button>
+                                   </a>
+                                   <a href="{{route('admin.users.destroy',$user->id)}}">
+                                       <form action="{{route('admin.users.destroy',$user->id)}}" method="POST" class="float-left">
+                                           @csrf
+                                           @method("DELETE")
+                                           <button class="btn btn-warning"><i class="mdi mdi-delete"></i></button>
+                                       </form>
+                                       
+                                   </a>
+                               </td>
+                                @endcan
+                                
+                                </tr>
+                              @endforeach
+    
+                            </tbody>
+                          </table>
+                    </div>
+                   
                 </div>
             </div>
         </div>
