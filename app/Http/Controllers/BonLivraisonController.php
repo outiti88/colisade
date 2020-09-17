@@ -28,7 +28,8 @@ class BonLivraisonController extends Controller
      */
     public function index()
     {
-        $clients = [];
+        $clients = []; //tableau des clients existe dans la base de données
+        $users = []; //les users qui seront affichés avec leur bon de livraison
         if(!Gate::denies('ramassage-commande')) {
             $bonLivraisons = DB::table('bon_livraisons')->orderBy('created_at', 'DESC')->get();
             $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
@@ -36,7 +37,6 @@ class BonLivraisonController extends Controller
         }
         else{
             $bonLivraisons = DB::table('bon_livraisons')->where('user_id',Auth::user()->id)->orderBy('created_at', 'DESC')->get();
-
         }
 
         foreach($bonLivraisons as $bonLivraison){
@@ -70,6 +70,7 @@ class BonLivraisonController extends Controller
     public function store(Request $request)
     {
         if(!Gate::denies('ramassage-commande')) {
+            //dd($request->missing('price'));
             //admin
             $user = $request->client; //id de l'user choisi par l'admin
         }

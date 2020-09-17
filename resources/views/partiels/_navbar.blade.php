@@ -5,7 +5,7 @@
             <!-- ============================================================== -->
             <!-- Logo -->
             <!-- ============================================================== -->
-            <a class="navbar-brand" href="index.html">
+        <a class="navbar-brand" href="{{route('dashboard')}}">
     
                 <span class="logo-text" style="position: relative; left:20px">
  
@@ -33,10 +33,11 @@
                 <!-- ============================================================== -->
                 <li class="nav-item search-box"> <a class="nav-link waves-effect waves-dark" href="javascript:void(0)"><i style="
                     color: black;" class="ti-search"></i></a>
-                    <form class="app-search position-absolute">
-                        <input type="text" class="form-control" placeholder="Search &amp; enter"> <a class="srh-btn"><i style="
+                    <form class="app-search position-absolute" method="GET" action="{{route('commande.search')}}">
+                        @csrf
+                        <input name="search" type="text" class="form-control" placeholder="Tapez le numero de la commande à rechercher"> <a class="srh-btn"><i style="
                             color: black;" class="ti-close"></i></a>
-                    </form>
+                        <input type="button" style="display: none">
                 </li>
             </ul>
             <!-- ============================================================== -->

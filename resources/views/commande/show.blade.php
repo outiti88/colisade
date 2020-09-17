@@ -169,6 +169,7 @@ N: {{$commande->numero}}
     <div class="container emp-profile">
        
         <div class="row">
+           
             @if (session()->has('statut'))
             <div class="alert alert-dismissible alert-success col-12">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>

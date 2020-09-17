@@ -62,6 +62,57 @@ class CommandeController extends Controller
                                     'users'=> $users]);
     }
 
+
+
+    public function search(Request $request ) {
+
+       // dd($request->filled('search'));
+        $users = [] ;
+        $type_search = 1;
+        if(!Gate::denies('ramassage-commande')) {
+            //session administrateur donc on affiche tous les commandes
+            $total = DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->count();
+            $commandes= DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->orderBy('created_at', 'DESC')->paginate(5);
+            
+        }
+        else{
+            $commandes= DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(5);
+            $total =DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
+           //dd("salut");
+        }
+
+        if($total == 0) { //recherche par statut
+            if(!Gate::denies('ramassage-commande')) {
+                //session administrateur donc on affiche tous les commandes
+                $total = DB::table('commandes')->where('statut','like','%'.$request->search.'%')->where('deleted_at',NULL)->count();
+                $commandes= DB::table('commandes')->where('statut','like','%'.$request->search.'%')->where('deleted_at',NULL)->orderBy('created_at', 'DESC')->paginate(5);
+                
+            }
+            else{
+                $commandes= DB::table('commandes')->where('statut','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(5);
+                $total =DB::table('commandes')->where('statut','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
+               //dd("salut");
+            }
+        }
+    
+        if($total > 0 ){
+            foreach($commandes as $commande){
+                if(!empty(User::find($commande->user_id)))
+                $users[] =  User::find($commande->user_id) ;
+            }
+         
+            return view('commande.colis',['commandes' => $commandes, 
+                                    'total'=>$total,
+                                    'users'=> $users]);
+        }
+        else {
+            $request->session()->flash('search', $request->search);
+            return redirect()->route('commandes.index');
+        }
+        
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -387,6 +438,10 @@ class CommandeController extends Controller
             return redirect()->route('commandes.show',['commande' => $commande->id]);
     }
 
+
+
+    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -418,4 +473,8 @@ class CommandeController extends Controller
         }
         
     }
+
+
+
+
 }

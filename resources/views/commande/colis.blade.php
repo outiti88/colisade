@@ -53,6 +53,12 @@
     <!-- Start Page Content -->
     <!-- ============================================================== -->
     <div class="row">
+        @if (session()->has('search'))
+        <div class="alert alert-dismissible alert-warning col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Oupss !</strong> Il n'existe aucun numero de commande et aucun statut avec : {{session()->get('search')}}  </a>.
+          </div>
+        @endif
         @if (session()->has('statut'))
         <div class="alert alert-dismissible alert-success col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>

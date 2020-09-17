@@ -1,7 +1,7 @@
 @extends('racine')
 
 @section('title')
-Bon Livraison
+    Bon Livraison
 @endsection
 
 

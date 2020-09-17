@@ -23,6 +23,8 @@ Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('
 
 Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen');
 
+Route::get('/commandes/search', 'CommandeController@search')->name('commande.search');
+
 Route::resource('/commandes','CommandeController');
 
 Route::get('/profil', 'ProfilController@index')->name('profil.index');
@@ -34,7 +36,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('/bonlivraison','BonLivraisonController');
-
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
     Route::resource('/users','UsersController',['except' => ['show','create','store']]);
