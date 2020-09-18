@@ -27,7 +27,7 @@ class DashboardController extends Controller
         //Statuts des commandes
         $c = DB::table('commandes')->where('statut','En cours')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
         $l = DB::table('commandes')->where('statut','livré')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
-        $r = DB::table('commandes')->where('statut','retour')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
+        $r = DB::table('commandes')->where('statut','like','retour%')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
         $e = DB::table('commandes')->where('statut','expidie')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
 
         $tab = 
@@ -59,7 +59,7 @@ class DashboardController extends Controller
                 );
             for ($i=1; $i <= 12 ; $i++) { 
                 $chart['livre'][] = DB::table('commandes')->where('statut','livré')->whereMonth('created_at',($i))->sum('prix');
-                $chart['retour'][] = DB::table('commandes')->where('statut','retour')->whereMonth('created_at',($i))->sum('prix');
+                $chart['retour'][] = DB::table('commandes')->where('statut','like','retour%')->whereMonth('created_at',($i))->sum('prix');
             }
        
            $livre=json_encode($chart['livre'],JSON_NUMERIC_CHECK);

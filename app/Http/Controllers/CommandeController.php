@@ -79,10 +79,10 @@ class CommandeController extends Controller
         }
         
         if($request->filled('dateMin')){
-            $commandes->where('created_at','>=',$request->dateMin);
+            $commandes->whereDate('created_at','>=',$request->dateMin);
         }
         if($request->filled('dateMax')){
-            $commandes->where('created_at','<=',$request->dateMax);
+            $commandes->whereDate('created_at','<=',$request->dateMax);
         }
         if($request->filled('prixMin') && $request->prixMin > 0){
             $commandes->where('montant','>=',$request->prixMin);
@@ -133,7 +133,7 @@ class CommandeController extends Controller
                 $total =DB::table('commandes')->where('statut','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
             }
         }
-        dd($commandes);
+        //dd($commandes);
         if($total > 0 ){
             foreach($commandes as $commande){
                 if(!empty(User::find($commande->user_id)))
@@ -175,7 +175,7 @@ class CommandeController extends Controller
     {
         //dd(!(gmdate("H")+1 <= 18));
         //dd(Auth::user()->id );
-        if(gmdate("H")+1 <= 18 && gmdate("H")+1 > 8 ){
+        if(gmdate("H")+1 <= 18 ){
             $commande = new Commande() ;
             $statut = new Statut();
             
@@ -190,7 +190,7 @@ class CommandeController extends Controller
         $commande->colis = $request->colis;
         $commande->poids = $request->poids;
         $commande->nom = $request->nom;
-        $commande->numero = "dkt-".date("mdis");
+        $commande->numero = substr(Auth::user()->name, - strlen(Auth::user()->name) , 3)."-".date("md-is");
         $commande->user()->associate(Auth::user())->save();
         //dd($commande->user());
         //$commande->save();
@@ -230,7 +230,7 @@ class CommandeController extends Controller
             $content .= '
             <div class="container">
                         
-                <h1>
+                <h1 style="color:#E85F03">
                     Ticket de Commande
                 </h1>
                 <div class="tableau">
@@ -296,7 +296,23 @@ class CommandeController extends Controller
                     </table>
                 </div>
                 <h2>colis: '.$i.'/'.$commande->colis.' </h2>
-            </div>' ; }
+                <div style="display:flex ; justify-content: space-around; padding-bottom:20px">
+                    <div class="logo-text" style="padding-top:20px" >
+        
+                    <img src="https://quickoo.ma/assets/img/logo.png" style="
+                        WIDTH: 130PX;
+                    "class="light-logo" alt="homepage" />
+                    </div>
+                    <div class="logo-text" style="position:absolute; left:80% ; top:480px">
+        
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?color=E85F03&bgcolor=FFFFFF&data=https%3A%2F%2Fquickoo.ma%2F&qzone=1&margin=0&size=200x200&ecc=L" style="
+                        WIDTH: 70%;
+                    "class="light-logo" alt="homepage" />
+                    </div>
+                </div>
+            </div>
+            
+            ' ; }
             
             
         return $content;
@@ -312,26 +328,28 @@ class CommandeController extends Controller
                     *{
                         
                         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-                        font-size : 25px;
+                        font-size : 10px;
                         padding:2px;
                         margin:0;
-
                     }
-
+                    h2{
+                        text-align : center;
+                        font-size: 1.5em;
+                        border: 1px solid #e85f03;
+                    }
 
                 .container{
                     box-sizing: border-box;
                     width:100%
                     height:auto;
-                    border-color: black;
-                    border-style:solid;
-                    padding-top: 60px !important;
-                    padding-bottom:100px;
+                    padding-top: 10px !important;
                 }
 
                     .tableau{
-                    padding-top:60px;
-                    
+                    padding-top:20px;
+                    padding-bottom:5px;
+                   
+                    width:100%;
                 }
                 
 
@@ -347,12 +365,12 @@ class CommandeController extends Controller
                     }
 
                     #customers td, #customers th {
-                    border: 1px solid #ddd;
+                    border: 1px solid #e85f03;
                     }
 
-                    #customers tr:nth-child(even){background-color: #f2f2f2;}
-
-                    #customers tr:hover {background-color: #ddd;}
+                    #customers tr:nth-child(even){
+                        background-color: #f2f2f2;
+                    }
 
                     #customers th {
                     padding-top: 12px;
@@ -368,7 +386,7 @@ class CommandeController extends Controller
         for ($i=1; $i <=$commande->colis ; $i++) { 
             # code...
         }
-        $pdf -> loadHTML($style.$content);
+        $pdf -> loadHTML($style.$content)->setPaper('A6');
 
 
         return $pdf->stream();

@@ -353,12 +353,12 @@
 
    // console.log("heeeeeeeeeeeeeey",livre );
     var chart = new Chartist.Line('.campaign', {
-        labels: [1, 2, 3, 4, 5, 6, 7, 8,11,12],
+        labels: [1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12],
         series: [ livre, retour]
 
     }, {
         low: 0,
-        high: 28,
+        high: 98,
 
         showArea: true,
         fullWidth: true,
@@ -367,7 +367,7 @@
         ],
         axisY: {
             onlyInteger: true,
-            scaleMinSpace: 40,
+            scaleMinSpace: 30,
             offset: 20,
             labelInterpolationFnc: function(value) {
                 return (value / 1) + '';
