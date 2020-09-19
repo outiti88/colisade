@@ -105,12 +105,26 @@ class BonLivraisonController extends Controller
         return redirect(route('bonlivraison.index'));
     }
 
-    public function commandes(BonLivraison $bonLivraison){
+    public function commandes(BonLivraison $bonLivraison, $n , $i){
         $user = $bonLivraison->user_id;
         $date = $bonLivraison->created_at;
-        $commandes = DB::table('commandes')->whereDate('created_at',$date)->where('user_id',$user)->get();
-        $content = '';
-        foreach ($commandes as $commande) {
+        $commandes = DB::table('commandes')->whereDate('created_at',$date)->where('user_id',$user)->where('statut','<>','expidié')->get();
+        $content = 
+        '
+        <div class="invoice">
+             <table id="customers">
+                 <tr>
+                 <th>Numéro</th>
+                 <th>Destinataire</th>
+                 <th>Ville</th>
+                 <th>Téléphone</th>
+                 <th>Montant</th>
+                 <th>Prix de livraison</th>
+                 </tr>
+        ';
+        foreach ($commandes as $index => $commande) {
+            if(($index >= $i * 12) && ($index < 12*($i+1))) { //les infromations de la table depe,d de la page actuelle
+                
             if ($commande->statut === 'expidié'){
                 $commande->prix = 0;
             }
@@ -123,14 +137,21 @@ class BonLivraisonController extends Controller
             <td>'.$commande->prix.'</td>
             '.'</tr>' ;
         }
-        return $content;
+    }
+        return $content .'</table>
+        </div>'
+       ;
     }
 
-    public function content(BonLivraison $bonLivraison){
+
+
+     //fonction qui renvoie le contenue du bon de livraison
+
+    public function content(BonLivraison $bonLivraison, $n , $i){
         $user = $bonLivraison->user_id;
         $user = DB::table('users')->find($user);
-        //dd($user);
-
+        
+        //les information du fournisseur (en-tete)
         $info_client = '
             <div class="info_client">
                 <h1>'.$user->name.'</h1>
@@ -139,18 +160,18 @@ class BonLivraisonController extends Controller
                 <h3>VILLE : '.$user->ville.'</h3>
             </div>
             <div class="date_num">
-                <h3>BL-'.date("md-i").$bonLivraison->id.'</h3>
+                <h3>BL_'.bin2hex(substr($user->name, - strlen($user->name) , 3)).$bonLivraison->id.'</h3>
                 <h3>'.$bonLivraison->created_at.'</h3>
 
             </div>
         ';
-
+        // pied du bon d'achat (calcul du total)
         $total = '
             <div class="total">
                 <table id="customers">
                 <tr>
                 <td>Total brut : </td>
-                <td>'.$bonLivraison->montant .'  MAD</td>
+                <td>'.$bonLivraison->montant.'  MAD</td>
                 </tr>
                 <tr>
                 <td>Frais de livraison : </td>
@@ -164,32 +185,21 @@ class BonLivraisonController extends Controller
             </div>
             ';
 
-        $content = '';
-       $n = (int)(($bonLivraison->nonRammase  + $bonLivraison->commande )/ 10) +1 ;
-       for ($i=0; $i < $n ; $i++) { 
-           $content .= '
-           <div class="invoice">
-                <table id="customers">
-                    <tr>
-                    <th>Numéro</th>
-                    <th>Destinataire</th>
-                    <th>Ville</th>
-                    <th>Téléphone</th>
-                    <th>Montant</th>
-                    <th>Prix de livraison</th>
-                    </tr>'.
-                    $this->commandes($bonLivraison)
-                .'</table>
-            </div>
-           ';
-       }
-
-       return $info_client.$content.$total ;
+           
+       $content = $this->commandes($bonLivraison, $n , $i);
+        $content = $info_client.$content;
+        if($n == ($i+1)){ //le total seulement dans la derniere page (n est le nbr de page / i et la page actuelle)
+            $content .= $total ;
+        }
+       return $content ;
     }
 
 
     public function gen($id){
+        
         $bonLivraison = BonLivraison::findOrFail($id);
+        $user = $bonLivraison->user_id;
+        $user = DB::table('users')->find($user);
         //dd($bonLivraison->id);
         $pdf = \App::make('dompdf.wrapper');
         $style =' 
@@ -197,7 +207,7 @@ class BonLivraisonController extends Controller
         <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <title>Invoice - #123</title>
+            <title>Bon_de_livraison_BL_'.bin2hex(substr($user->name, - strlen($user->name) , 3)).$bonLivraison->id.'</title>
 
             <style type="text/css">
             @page {
@@ -208,27 +218,29 @@ class BonLivraisonController extends Controller
                     margin: 0px;
                     background-image: url("https://i.ibb.co/rxQVYqw/3446949.png");
                     width: 790px;
-                    height: 1070px;
+                    height: auto;
                     background-position: center;
-                    background-repeat: no-repeat;
+                    background-repeat: repeat;
+                    padding-bottom : 200px;
+                    background-size: 100% 1070px;
                     background-size: cover;
                     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
                     font-size: 0.75em;
                 }
                 .info_client{
-                    position:absolute;
+                    position:relative;
                     left:45px;
                     top:190px;
                 }
                 .date_num{
-                    position:absolute;
+                    position:relative;
                     left:640px;
-                    top:305px;
+                    top:155px;
                 }
                 .total{
-                    position:absolute;
-                    left:400px;
-                    top:400px;
+                    position:relative;
+                    left:200px;
+                    top:15px;
                 }
                 .invoice {
                    margin : 8px;
@@ -239,8 +251,8 @@ class BonLivraisonController extends Controller
                 #customers {
                     border-collapse: collapse;
                     width: 100%;
-                    position: absolute;
-                    top: 430px;
+                    position: relative;
+                    top: 170px;
                     }
 
                     #customers td, #customers th {
@@ -262,19 +274,22 @@ class BonLivraisonController extends Controller
             </head>
             <body>
         ';
-        $content = $this->content($bonLivraison) . $style ;
+        $m = (($bonLivraison->nonRammase  + $bonLivraison->commande )/ 12) ;
+        $n = (int)$m; // nombre de page
+        if($n != $m){$n++;}
+        //dd($n);
+        $content = '';
+        for ($i=0; $i<$n ; $i++) { 
+            $content .= $this->content($bonLivraison , $n , $i);
+        }
+        
+        $content = $style.$content.' </body></html>' ;
 
         //dd($this->content($bonLivraison));
-        $pdf -> loadHTML($content . 
-        '
-        </body>
-        </html>
-        '
-        
-        )->setPaper('A4');
+        $pdf -> loadHTML($content)->setPaper('A4');
 
 
-        return $pdf->stream('Bon_de_livraison_'.$bonLivraison->id.'.pdf');
+        return $pdf->stream('Bon_de_livraison_BL_'.bin2hex(substr($user->name, - strlen($user->name) , 3)).$bonLivraison->id.'.pdf');
     }
 
     /**

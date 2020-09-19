@@ -25,7 +25,12 @@
 @section('content')
 <div class="page-breadcrumb">
     <div class="row align-items-center">
-        
+        @if (session()->has('search'))
+        <div class="alert alert-dismissible alert-warning col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Oupss !</strong> Il n'existe aucun numero de bon de commande avec : {{session()->get('search')}}  </a>.
+          </div>
+        @endif
         @if (session()->has('cmdExist'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -111,7 +116,7 @@
                                 @can('ramassage-commande')
                                 <th scope="row"><img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31"></th>
                                 @endcan
-                                <th>{{$bonLivraison->id}}</th>
+                                <th>BL_{{bin2hex(substr($users[$index]->name, - strlen($users[$index]->name) , 3)).$bonLivraison->id}}</th>
                                 <td>{{$bonLivraison->commande}}</td>
                                 <td>{{$bonLivraison->colis}}</td>
                                 <td>{{ $bonLivraison->created_at}}</td>

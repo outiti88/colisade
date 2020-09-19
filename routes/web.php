@@ -23,7 +23,7 @@ Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('
 
 Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen');
 
-Route::get('/commandes/search', 'CommandeController@search')->name('commande.search');
+Route::get('/search', 'CommandeController@search')->name('commande.search');
 
 Route::get('/commandes/filter', 'CommandeController@filter')->name('commande.filter');
 

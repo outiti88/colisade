@@ -108,7 +108,38 @@ class CommandeController extends Controller
 
     public function search(Request $request ) {
 
-       // dd($request->filled('search'));
+       if(strcmp(substr($request->search,-strlen($request->search),3) , "BL_") == 0){  
+            $clients = [];  
+            $id_bon = (int)substr($request->search,9);
+
+            if(!Gate::denies('ramassage-commande')) {
+                $bonLivraisons = DB::table('bon_livraisons')->where('id',$id_bon)->get();
+                //dd($bonLivraisons->count());
+                $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
+            }
+            else{
+                $bonLivraisons = DB::table('bon_livraisons')->where('user_id',Auth::user()->id)->where('id',$id_bon)->get();
+
+            }
+            $total = $bonLivraisons->count();
+
+            foreach($bonLivraisons as $bonLivraison){
+                if(!empty(User::find($bonLivraison->user_id)))
+                $users[] =  User::find($bonLivraison->user_id) ;
+            }
+            if($total > 0){
+                return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
+                                        'total' => $total,
+                                         'users'=> $users,
+                                         'clients' => $clients]);
+            }
+            else{
+                $request->session()->flash('search', $request->search);
+                return redirect()->route('bonlivraison.index');
+            }
+       }
+
+
         $users = [] ;
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
