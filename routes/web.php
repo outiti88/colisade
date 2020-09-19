@@ -39,6 +39,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('/bonlivraison','BonLivraisonController');
 
+Route::get('/bonlivraison/{id}/pdf','BonLivraisonController@gen')->name('bon.gen');;
+
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
     Route::resource('/users','UsersController',['except' => ['show','create','store']]);
 

@@ -128,8 +128,13 @@
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>Erreur !</strong>vous ne pouvez pas changer le statut La commande numero {{session()->get('noedit')}}
           </div>
+        @endif 
+        @if (session()->has('bonLivraison'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Erreur !</strong>Vous pouvez pas ajouter une commande, Le bon de livraison de ce jour à été déjà générer
+          </div>
         @endif
-       
         
         <div class="col-12">
             <div class="card">

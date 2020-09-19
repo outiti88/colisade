@@ -175,7 +175,18 @@ class CommandeController extends Controller
     {
         //dd(!(gmdate("H")+1 <= 18));
         //dd(Auth::user()->id );
-        if(gmdate("H")+1 <= 18 ){
+
+        $bon_livraison = DB::table('bon_livraisons')->whereDate('created_at',now())->count();
+        //dd(now(),$bon_livraison);
+        if(gmdate("H")+1 <= 18 && gmdate("H")+1 >= 8 ){
+
+            if($bon_livraison > 0){
+                $request->session()->flash('bonLivraison');
+                return redirect('/commandes');
+            }
+
+
+
             $commande = new Commande() ;
             $statut = new Statut();
             

@@ -120,12 +120,10 @@
                                 <td>{{ $bonLivraison->nonRammase}}</td>
                                
                                 <td>
-                                    <a class="btn btn-info text-white m-r-5" ><i class="fas fa-print"></i></a>
+                                <a class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" ><i class="fas fa-print"></i></a>
     
                                </td>
-                            
-                                
-                                </tr>
+                            </tr>
                               @endforeach
     
                             </tbody>
@@ -137,7 +135,6 @@
     </div>
 
 </div>
-
 
 
 
@@ -175,7 +172,7 @@
 
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
-                                        <button class="btn btn-warning">Modifier statut</button>
+                                        <button class="btn btn-warning">Générer</button>
                                         
                                     </div>
                                 </div>
