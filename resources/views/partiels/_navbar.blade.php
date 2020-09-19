@@ -35,7 +35,7 @@
                     color: black;" class="ti-search"></i></a>
                     <form class="app-search position-absolute" method="GET" action="{{route('commande.search')}}">
                         @csrf
-                        <input name="search" type="text" class="form-control" placeholder="Tapez le numero de la commande à rechercher"> <a class="srh-btn"><i style="
+                        <input name="search" type="text" class="form-control" placeholder="Tapez le numero de commande / bon de livraison / facture ou cherchez par statut de commande"> <a class="srh-btn"><i style="
                             color: black;" class="ti-close"></i></a>
                         <input type="button" style="display: none">
                 </li>

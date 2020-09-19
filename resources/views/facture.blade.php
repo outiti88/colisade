@@ -120,7 +120,7 @@
                                 
                                
                                 <td>
-                                <a class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$facture->id)}}" ><i class="fas fa-print"></i></a>
+                                <a class="btn btn-info text-white m-r-5" href="{{route('facture.gen',$facture->id)}}" ><i class="fas fa-print"></i></a>
     
                                </td>
                             </tr>
