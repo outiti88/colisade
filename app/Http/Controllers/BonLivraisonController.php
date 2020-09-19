@@ -51,15 +51,7 @@ class BonLivraisonController extends Controller
                                          'clients' => $clients]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -136,14 +128,11 @@ class BonLivraisonController extends Controller
             <td>'.$commande->montant.'</td>
             <td>'.$commande->prix.'</td>
             '.'</tr>' ;
-        }
+                }
+            }
+        return $content .'</table>  </div>';
+       
     }
-        return $content .'</table>
-        </div>'
-       ;
-    }
-
-
 
      //fonction qui renvoie le contenue du bon de livraison
 
@@ -292,48 +281,6 @@ class BonLivraisonController extends Controller
         return $pdf->stream('Bon_de_livraison_BL_'.bin2hex(substr($user->name, - strlen($user->name) , 3)).$bonLivraison->id.'.pdf');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\BonLivraison  $bonLivraison
-     * @return \Illuminate\Http\Response
-     */
-    public function show(BonLivraison $bonLivraison)
-    {
-     
-    }
+ 
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\BonLivraison  $bonLivraison
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(BonLivraison $bonLivraison)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\BonLivraison  $bonLivraison
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, BonLivraison $bonLivraison)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\BonLivraison  $bonLivraison
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(BonLivraison $bonLivraison)
-    {
-        //
-    }
 }

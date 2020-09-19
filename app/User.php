@@ -68,6 +68,11 @@ class User extends Authenticatable
         return $this->hasMany('App\BonLivraison');
     }
 
+    public function factures()
+    {
+        return $this->hasMany('App\Facture');
+    }
+
     public static function boot(){
         parent::boot();
 

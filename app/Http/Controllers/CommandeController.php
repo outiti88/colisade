@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 
 class CommandeController extends Controller
 {
-
      /**
      * Create a new controller instance.
      *
@@ -108,6 +107,37 @@ class CommandeController extends Controller
 
     public function search(Request $request ) {
 
+        if(strcmp(substr($request->search,-strlen($request->search),4) , "FAC_") == 0){  
+            $clients = [];  
+            $users = []; 
+            if(!Gate::denies('ramassage-commande')) {
+                $factures = DB::table('factures')->where('numero','like','%'.$request->search.'%')->get();
+                $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
+            }
+            else{
+                $factures = DB::table('factures')->where('user_id',Auth::user()->id)->where('numero','like','%'.$request->search.'%')->get();
+
+            }
+            $total = $factures->count();
+
+            foreach($factures as $facture){
+                if(!empty(User::find($facture->user_id)))
+                $users[] =  User::find($facture->user_id) ;
+            }
+            if($total > 0){
+                //dd($factures);
+                return view('facture',['factures'=>$factures ,
+                                        'total' => $total,
+                                         'users'=> $users,
+                                         'clients' => $clients]);
+            }
+            else{
+                $request->session()->flash('search', $request->search);
+                return redirect()->route('facture.index');
+            }
+       }
+
+
        if(strcmp(substr($request->search,-strlen($request->search),3) , "BL_") == 0){  
             $clients = [];  
             $id_bon = (int)substr($request->search,9);
@@ -185,16 +215,6 @@ class CommandeController extends Controller
         
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -435,16 +455,6 @@ class CommandeController extends Controller
         //dd($commande) ;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Commande  $commande
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Commande $commande)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -575,8 +585,4 @@ class CommandeController extends Controller
         }
         
     }
-
-
-
-
 }

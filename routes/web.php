@@ -4,16 +4,7 @@ use App\Http\Controllers\ProfilController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+
 
 Route::get('/', 'DashboardController@dash')->name('dashboard');
 
@@ -27,7 +18,9 @@ Route::get('/search', 'CommandeController@search')->name('commande.search');
 
 Route::get('/commandes/filter', 'CommandeController@filter')->name('commande.filter');
 
-Route::resource('/commandes','CommandeController');
+Route::resource('/commandes','CommandeController')->except([
+    'create', 'edit'
+]);
 
 Route::get('/profil', 'ProfilController@index')->name('profil.index');
 
@@ -37,9 +30,17 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('/bonlivraison','BonLivraisonController');
+Route::resource('/bonlivraison','BonLivraisonController')->only([
+    'index', 'store'
+]);
 
 Route::get('/bonlivraison/{id}/pdf','BonLivraisonController@gen')->name('bon.gen');;
+
+Route::resource('/facture','FactureController')->only([
+    'index', 'store'
+]);
+
+Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen');;
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
     Route::resource('/users','UsersController',['except' => ['show','create','store']]);

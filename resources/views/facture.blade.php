@@ -1,7 +1,7 @@
 @extends('racine')
 
 @section('title')
-    Bon Livraison
+    Gestion des factures
 @endsection
 
 
@@ -28,37 +28,37 @@
         @if (session()->has('search'))
         <div class="alert alert-dismissible alert-warning col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Oupss !</strong> Il n'existe aucun numero de bon de commande avec : {{session()->get('search')}}  </a>.
+        <strong>Oupss !</strong> Il n'existe aucun numero de facture avec : {{session()->get('search')}}  </a>.
           </div>
         @endif
-        @if (session()->has('cmdExist'))
+        @if (session()->has('nbrCmdLivre'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur ! </strong>vous ne pouvez pas charger le bon de livraison avec 0 commande ramassée !
+        <strong>Erreur ! </strong>vous ne pouvez pas charger la facture avec 0 commande livrée !
           </div>
         @endif
 
-        @if (session()->has('blNoExist'))
+        @if (session()->has('facNoExist'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur ! </strong>Le bon de livraison d'aujourd'hui à été déjà génerer !
+        <strong>Erreur ! </strong>Cette facture à été déjà générée !
           </div>
         @endif
 
         @if (session()->has('ajoute'))
         <div class="alert alert-dismissible alert-success col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Et voilà ! </strong>Le bon de livraison d'aujourd'hui à été bien génerer !
+        <strong>Et voilà ! </strong>La facture à été bien généner !
           </div>
         @endif
 
         <div class="col-5">
-            <h4 class="page-title">Bon de livraison</h4>
+            <h4 class="page-title">Gestion des factures</h4>
             <div class="d-flex align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Quickoo</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Bon de livraison</li>
+                        <li class="breadcrumb-item active" aria-current="page">Facture</li>
                     </ol>
                 </nav>
             </div>
@@ -66,17 +66,11 @@
         <div class="col-7">
             <div class="text-right upgrade-btn">
                 @can('ramassage-commande')
-                <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalBonLivraison"><i class="fa fa-plus-square">
-                    </i> Générer le bon de livraison
+                <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalfacture"><i class="fa fa-plus-square">
+                    </i> Générer la facture
                 </a>
 
                 </select>
-                @endcan
-                @cannot('ramassage-commande')
-                <form method="POST" action="{{ route('bonlivraison.store') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-danger text-white m-r-5"><i class="fa fa-plus-square"></i> Génerer le bon de livraison</button>
-                </form>
                 @endcan
             </div>
         </div>
@@ -99,33 +93,34 @@
                                 <th scope="col">#</th>
                                 @endcan
                                 <th scope="col">Code</th>
-                                <th scope="col">Nombre de Commandes</th>
-                                <th scope="col">Nombre de Colis</th>
-                                <th scope="col">Date d'ajout</th>
+                                <th scope="col">Commandes livrées</th>
                                 <th scope="col">Montant Total</th>
                                 <th scope="col">Frais de Livraison</th>
-                                <th scope="col">Commandes non ramassés</th>
-                              
-                                <th scope="col">imprimer</th>
+                                <th scope="col">Commandes non livrées</th>
+                                <th scope="col">Colis non livrés</th>
+                                <th scope="col">Date d'ajout</th>
+                                <th scope="col">Imprimer la facture</th>
                               
                               </tr>
                             </thead>
                             <tbody>
-                                @foreach ($bonLivraisons as $index => $bonLivraison)
+                                @foreach ($factures as $index => $facture)
                               <tr>
                                 @can('ramassage-commande')
                                 <th scope="row"><img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31"></th>
                                 @endcan
-                                <th>BL_{{bin2hex(substr($users[$index]->name, - strlen($users[$index]->name) , 3)).$bonLivraison->id}}</th>
-                                <td>{{$bonLivraison->commande}}</td>
-                                <td>{{$bonLivraison->colis}}</td>
-                                <td>{{ $bonLivraison->created_at}}</td>
-                                <td>{{ $bonLivraison->montant}} Mad</td>
-                                <td>{{ $bonLivraison->prix}} Mad</td>
-                                <td>{{ $bonLivraison->nonRammase}}</td>
+                                <th>{{$facture->numero}}</th>
+                                <td>{{ $facture->livre}}</td>
+                                <td>{{ $facture->montant}} Mad</td>
+                                <td>{{ $facture->prix}} Mad</td>
+                                <td>{{$facture->commande}}</td>
+                                <td>{{$facture->colis}}</td>
+                                <td>{{ $facture->created_at}}</td>
+                                
+                                
                                
                                 <td>
-                                <a class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" ><i class="fas fa-print"></i></a>
+                                <a class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$facture->id)}}" ><i class="fas fa-print"></i></a>
     
                                </td>
                             </tr>
@@ -144,7 +139,7 @@
 
 
 <div class="container my-4">    
-    <div class="modal fade" id="modalBonLivraison" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal fade" id="modalfacture" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
@@ -155,14 +150,14 @@
                           </button>
                         </div>
                         <div class="modal-body mx-3">
-                            <form class="form-horizontal form-material" method="POST" action="{{route('bonlivraison.store')}}">
+                            <form class="form-horizontal form-material" method="POST" action="{{route('facture.store')}}">
                                 @csrf
                                 
                                 
                                 <div class="form-group">
                                     <label for="client" class="col-sm-12">Fournisseur :</label>
                                     <div class="col-sm-12">
-                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
+                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}" required>
                                             <option value="" disabled selected>Choisissez le fournisseur</option>
                                             @foreach ($clients as $client)
                                         <option value="{{$client->id}}" class="rounded-circle">
@@ -174,6 +169,12 @@
                                         
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="example-date-input" class="col-12 col-form-label">Date</label>
+                                    <div class="col-12">
+                                      <input class="form-control" name="date"  type="date" value="{{now()}}" id="example-date-input" required>
+                                    </div>
+                                  </div>
 
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
