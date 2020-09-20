@@ -51,7 +51,12 @@
         <strong>Et voilà ! </strong>La facture à été bien généner !
           </div>
         @endif
-
+        @if (session()->has('envoyer'))
+        <div class="alert alert-dismissible alert-success col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Wééé !</strong> La facture à été bien envoyer à  : {{session()->get('envoyer')}}  </a>.
+          </div>
+        @endif
         <div class="col-5">
             <h4 class="page-title">Gestion des factures</h4>
             <div class="d-flex align-items-center">
@@ -80,9 +85,9 @@
 <div class="container-fluid">
     
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
-            <div class="card-header">{{ __('Total des Bons de livraison : ') }} {{ $total }}</div>
+            <div class="card-header">{{ __('Total des Factures générées : ') }} {{ $total }}</div>
 
                 <div class="card-body ">
                     <div class="table-responsive">
@@ -100,6 +105,9 @@
                                 <th scope="col">Colis non livrés</th>
                                 <th scope="col">Date d'ajout</th>
                                 <th scope="col">Imprimer la facture</th>
+                                @can('ramassage-commande')
+                                <th scope="col">Envoyer par mail</th>
+                                @endcan
                               
                               </tr>
                             </thead>
@@ -116,13 +124,14 @@
                                 <td>{{$facture->commande}}</td>
                                 <td>{{$facture->colis}}</td>
                                 <td>{{ $facture->created_at}}</td>
-                                
-                                
-                               
                                 <td>
-                                <a class="btn btn-info text-white m-r-5" href="{{route('facture.gen',$facture->id)}}" ><i class="fas fa-print"></i></a>
-    
-                               </td>
+                                    <a class="btn btn-warning text-white m-r-5" href="{{route('facture.gen',$facture->id)}}" target="_blank"><i class="mdi mdi-printer"></i></a>
+                                </td>
+                                @can('ramassage-commande')
+                                <td>
+                                    <a class="btn btn-info text-white m-r-5" href="{{route('email.facture',$facture->id)}}" ><i class="mdi mdi-send"></i></a>
+                                </td>
+                                @endcan
                             </tr>
                               @endforeach
     
