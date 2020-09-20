@@ -22,7 +22,14 @@ class DashboardController extends Controller
     
     public function dash(){
 
-        //dd($date->created_at);
+    /*    if(!Gate::denies('ramassage-commande')) {
+            $factures = DB::table('factures')->where('numero','like','%'.$request->search.'%')->get();
+            $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
+        }
+        else{
+            $factures = DB::table('factures')->where('user_id',Auth::user()->id)->where('numero','like','%'.$request->search.'%')->get();
+
+        }*/
 
         //Statuts des commandes
         $c = DB::table('commandes')->where('statut','En cours')->where('deleted_at',NULL)->orderBy('created_at','DESC')->limit(1)->get()->first();
