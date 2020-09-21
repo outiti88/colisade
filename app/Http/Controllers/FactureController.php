@@ -189,12 +189,13 @@ class FactureController extends Controller
         $user = DB::table('users')->find($user);
         //dd($facture->id);
         $pdf = \App::make('dompdf.wrapper');
+
         $style =' 
         <!doctype html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <title>Bon_de_livraison_'.$facture->numero.'</title>
+            <title>Facture_'.$facture->numero.'</title>
 
             <style type="text/css">
             @page {

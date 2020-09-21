@@ -45,7 +45,12 @@
 </div>
 
 <div class="container-fluid">
-    
+    @if (session()->has('register'))
+        <div class="alert alert-dismissible alert-success col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Oupss !</strong> l'utilisateur : {{session()->get('register')}} à été bien enregister et mail envoyé </a>.
+          </div>
+        @endif
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">

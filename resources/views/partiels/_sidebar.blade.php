@@ -141,7 +141,7 @@
                                             <option>Marrakech</option>
                                             <option>Kénitra</option>
                                             <option>Casablanca</option>
-                                            <option>Rabata</option>
+                                            <option>Rabat</option>
                                         </select>
                                     </div>
                                 </div>

@@ -12,15 +12,19 @@ class PdfGenerate extends Mailable
     use Queueable, SerializesModels;
 
     public $details;
+    private $motif ;
+    
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($details)
+    public function __construct($details , $motif)
     {
-        $this->details = $details;
+            $this->motif = $motif;
+            $this->details = $details;
+        
     }
 
     /**
@@ -30,6 +34,11 @@ class PdfGenerate extends Mailable
      */
     public function build()
     {
-        return $this->subject('Email de la part de Quickoo')->view('emails.PdfGenerate');
+        if($this->motif === "pdf"){
+            return $this->subject('Facture générée')->view('emails.PdfGenerate');
+        }
+        if($this->motif === "register"){
+            return $this->subject('Bienvenue chez Quickoo Delivery')->view('emails.register');
+        }
     }
 }

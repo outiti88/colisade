@@ -22,7 +22,10 @@
 
 
 <div class="container-fluid">
-    
+        <div class="alert alert-dismissible alert-warning col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Si l'utilisateur est un client c'est recommndé de laisser le mode passe par defaut : quickoo2020 </a>.
+          </div>
     <div class="row justify-content-center">
 
         <div class="col-md-10">
@@ -97,7 +100,7 @@
                             <label for="password" class="col-md-2 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-4">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                <input id="password" value="quickoo2020" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -108,7 +111,7 @@
                             <label for="password-confirm" class="col-md-2 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
 
                             <div class="col-md-4">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                                <input id="password-confirm"  value="quickoo2020"  type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
 
