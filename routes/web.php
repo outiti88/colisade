@@ -22,6 +22,8 @@ Route::resource('/commandes','CommandeController')->except([
     'create', 'edit'
 ]);
 
+Route::get('showFromNotify/{commande}/{notification}' , 'CommandeController@showFromNotify')->name('commandes.showFromNotify')->middleware('can:ramassage-commande');
+
 Route::get('/profil', 'ProfilController@index')->name('profil.index');
 
 Route::match(['put', 'patch'],'/profil/{user}', 'ProfilController@update')->name('profil.update');
@@ -47,4 +49,4 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:mana
 
 });
 
-Route::get('/facture/{id}/send','EmailController@sendFacture')->name('email.facture');
+Route::get('/facture/{id}/send','EmailController@sendFacture')->name('email.facture')->middleware('can:ramassage-commande');

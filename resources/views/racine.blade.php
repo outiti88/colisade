@@ -9,7 +9,10 @@
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="{{url('/assets/images/favicon.png')}}">
     <title>@yield('title')</title>
+
     <link href="{{ url('/sass/style.min.css') }}" rel="stylesheet">
+    <link href="{{ url('/css/app.css') }}" rel="stylesheet">
+
     <link href="{{ url('/assets/libs/chartist/dist/chartist.min.css') }}" rel="stylesheet">
 
     @yield('style')

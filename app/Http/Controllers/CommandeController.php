@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Commande;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCommande;
+use App\Notifications\newCommande;
 use App\Statut;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use App\User; 
+use App\User;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 
 class CommandeController extends Controller
@@ -229,7 +231,7 @@ class CommandeController extends Controller
 
         $bon_livraison = DB::table('bon_livraisons')->whereDate('created_at',now())->count();
         //dd(now(),$bon_livraison);
-        if(gmdate("H")+1 <= 18 && gmdate("H")+1 >= 8 ){
+        if(gmdate("H")+1 <= 20 && gmdate("H")+1 >= 8 ){
 
             if($bon_livraison > 0){
                 $request->session()->flash('bonLivraison');
@@ -260,6 +262,12 @@ class CommandeController extends Controller
         $statut->name = $commande->statut;
         $statut->save();
         $request->session()->flash('statut', $commande->id);
+
+
+        //notification
+            $user_notify = \App\User::find(2);
+            $user_notify->notify(new newCommande( Auth::user() , $commande));
+
         }
 
         else{
@@ -269,6 +277,14 @@ class CommandeController extends Controller
         return redirect('/commandes');
     }
     
+
+    public function showFromNotify(Commande $commande , DatabaseNotification $notification){
+
+        $notification->markAsRead();
+
+        return redirect()->route('commandes.show', $commande->id);
+    }
+
 
     /**
      * Display the specified resource.
