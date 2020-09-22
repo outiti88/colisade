@@ -160,10 +160,15 @@ class CommandeController extends Controller
                 $users[] =  User::find($bonLivraison->user_id) ;
             }
             if($total > 0){
+                $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','<>','expidié')->whereDate('created_at',now())->count();
+                $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->whereDate('created_at',now())->count();
+        
                 return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
                                         'total' => $total,
                                          'users'=> $users,
-                                         'clients' => $clients]);
+                                         'clients' => $clients,
+                                         'ramasse' => $ramasse,
+                                        'nonRamasse' => $nonRammase]);
             }
             else{
                 $request->session()->flash('search', $request->search);
