@@ -1,7 +1,7 @@
 @extends('racine')
 
 @section('title')
-    Bon Livraison
+    Bon de Livraison
 @endsection
 
 
@@ -13,7 +13,6 @@
             color: #e85f03 !important;
         }
         .page-item.active .page-link {
-            
             background-color: #e85f03 !important;
             border-color: #e85f03 !important;
             color: #fff !important;
@@ -37,14 +36,12 @@
         <strong>Erreur ! </strong>vous ne pouvez pas charger le bon de livraison avec 0 commande ramassée !
           </div>
         @endif
-
         @if (session()->has('blNoExist'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>Erreur ! </strong>Le bon de livraison d'aujourd'hui à été déjà génerer !
           </div>
         @endif
-
         @if (session()->has('ajoute'))
         <div class="alert alert-dismissible alert-success col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -73,10 +70,8 @@
                 </select>
                 @endcan
                 @cannot('ramassage-commande')
-                <form method="POST" action="{{ route('bonlivraison.store') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-danger text-white m-r-5"><i class="fa fa-plus-square"></i> Génerer le bon de livraison</button>
-                </form>
+                
+                    <button data-toggle="modal" data-target="#genererBon"type="submit" class="btn btn-danger text-white m-r-5"><i class="fa fa-plus-square"></i> Génerer le bon de livraison</button>
                 @endcan
             </div>
         </div>
@@ -99,12 +94,12 @@
                                 <th scope="col">#</th>
                                 @endcan
                                 <th scope="col">Code</th>
-                                <th scope="col">Nombre de Commandes</th>
+                                <th scope="col">Commandes ramassées</th>
                                 <th scope="col">Nombre de Colis</th>
                                 <th scope="col">Date d'ajout</th>
                                 <th scope="col">Montant Total</th>
                                 <th scope="col">Frais de Livraison</th>
-                                <th scope="col">Commandes non ramassés</th>
+                                <th scope="col">Commandes non ramassées</th>
                               
                                 <th scope="col">imprimer</th>
                               
@@ -174,7 +169,6 @@
                                         
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
                                         <button class="btn btn-warning">Générer</button>
@@ -200,6 +194,40 @@
                     </div>
     </div>
 </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="genererBon" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Êtes-vous sûr de générer le bon de livraison pour ce jour?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Voud avez {{$ramasse}} de commandes Rammassées sur {{$nonRamasse + $ramasse}} commandes expidiées
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                NB: Aprés la génération du bon de livraison vous ne pourrez pas <strong>ajouter une nouvelle commande</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+          <form method="POST" action="{{ route('bonlivraison.store') }}">
+            @csrf
+            <button data-toggle="modal" data-target="#genererBon"type="submit" class="btn btn-danger text-white m-r-5">Génerer</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 @endsection

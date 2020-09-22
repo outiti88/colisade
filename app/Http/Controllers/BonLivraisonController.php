@@ -28,6 +28,9 @@ class BonLivraisonController extends Controller
      */
     public function index()
     {
+        $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','<>','expidié')->whereDate('created_at',now())->count();
+        $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->whereDate('created_at',now())->count();
+
         $clients = []; //tableau des clients existe dans la base de données
         $users = []; //les users qui seront affichés avec leur bon de livraison
         if(!Gate::denies('ramassage-commande')) {
@@ -48,7 +51,9 @@ class BonLivraisonController extends Controller
         return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
                                         'total' => $total,
                                          'users'=> $users,
-                                         'clients' => $clients]);
+                                         'clients' => $clients,
+                                        'ramasse' => $ramasse,
+                                        'nonRamasse' => $nonRammase]);
     }
 
 
