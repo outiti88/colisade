@@ -50,3 +50,7 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:mana
 });
 
 Route::get('/facture/{id}/send','EmailController@sendFacture')->name('email.facture')->middleware('can:ramassage-commande');
+
+Route::get('/inbox','NotificationController@index')->name('inbox.index');
+Route::get('/{notifications}/show','NotificationController@show')->name('inbox.show');
+Route::get('/{notifications}/delete','NotificationController@destroy')->name('inbox.destroy');

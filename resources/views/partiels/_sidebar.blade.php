@@ -21,7 +21,7 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="Userdd">
                                 <a class="dropdown-item" href="/profil" ><i class="ti-user m-r-5 m-l-5"></i> Mon Profil</a>
                                 <a class="dropdown-item" href="{{route('facture.index')}}"><i class="ti-wallet m-r-5 m-l-5"></i> Facture</a>
-                                <a class="dropdown-item" href="javascript:void(0)"><i class="ti-email m-r-5 m-l-5"></i> Inbox
+                                <a class="dropdown-item" href="{{route('inbox.index')}}"><i class="ti-email m-r-5 m-l-5"></i> Inbox
                                     @can('ramassage-commande')<span class="nbrNotify" style="
                                     left: 90px;
                                     top: 105px;
