@@ -139,7 +139,7 @@
 													<div>
 														<table width="100%" border="0" cellspacing="0" cellpadding="0">
 															<tr>
-                                                            <td class="fluid-img" style="font-size:0pt; line-height:0pt; text-align:left;"><img src="{{$details['image']}}" width="500" alt="" style="border-radius: 50% ; position: relative; left:75px" /></td>
+                                                            <td class="fluid-img" style="font-size:0pt; line-height:0pt; text-align:center;"><img src="{{$details['image']}}" width="500" alt="" style="border-radius: 50% ; position: relative; left:75px" /></td>
 															</tr>
 														</table>
 													</div>
@@ -192,7 +192,7 @@
 																<table border="0" cellspacing="0" cellpadding="0">
 																	<tr>
                                                                         <td class="text-button" style="background:#e85f03; color:#f4f4f4;  font-size:14px; line-height:28px; text-align:center; padding:8px 20px; text-transform:uppercase; font-weight:bold;">
-                                                                            <a href="/" target="_blank" class="link-white" style="color:#ffffff; text-decoration:none;">
+																		<a href="{{route('dashboard')}}" target="_blank" class="link-white" style="color:#ffffff; text-decoration:none;">
                                                                                 <span class="link-white" style="color:#ffffff; text-decoration:none;">Se Connecter</span>
                                                                             </a>
                                                                         </td>

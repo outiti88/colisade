@@ -353,7 +353,7 @@
 
     }, {
         low: 0,
-        high: 98,
+        high: 500,
 
         showArea: true,
         fullWidth: true,
