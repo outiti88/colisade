@@ -270,7 +270,7 @@ class CommandeController extends Controller
 
 
         //notification
-            $user_notify = \App\User::find(2);
+            $user_notify = \App\User::find(1);
             $user_notify->notify(new newCommande( Auth::user() , $commande));
 
         }

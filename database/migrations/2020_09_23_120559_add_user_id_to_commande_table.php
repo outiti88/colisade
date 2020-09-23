@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSoftDeleteToStatutsTable extends Migration
+class AddUserIdToCommandeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddSoftDeleteToStatutsTable extends Migration
      */
     public function up()
     {
-        Schema::table('statuts', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('commandes', function (Blueprint $table) {
+            $table->foreignId('user_id')->constrained();
         });
     }
 
@@ -25,8 +25,8 @@ class AddSoftDeleteToStatutsTable extends Migration
      */
     public function down()
     {
-        Schema::table('statuts', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        Schema::table('commandes', function (Blueprint $table) {
+            $table->dropForeignId('commandes_user_id_foreign')->constrained();
         });
     }
 }
