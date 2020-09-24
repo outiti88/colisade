@@ -22,7 +22,7 @@ Route::resource('/commandes','CommandeController')->except([
     'create', 'edit'
 ]);
 
-Route::get('showFromNotify/{commande}/{notification}' , 'CommandeController@showFromNotify')->name('commandes.showFromNotify')->middleware('can:ramassage-commande');
+Route::get('showFromNotify/{commande}/{notification}' , 'CommandeController@showFromNotify')->name('commandes.showFromNotify');
 
 Route::get('/profil', 'ProfilController@index')->name('profil.index');
 
@@ -54,3 +54,4 @@ Route::get('/facture/{id}/send','EmailController@sendFacture')->name('email.fact
 Route::get('/inbox','NotificationController@index')->name('inbox.index');
 Route::get('/{notifications}/show','NotificationController@show')->name('inbox.show');
 Route::get('/{notifications}/delete','NotificationController@destroy')->name('inbox.destroy');
+

@@ -58,7 +58,7 @@
                                 </li>
                             @endif
                         @else
-                        @can('ramassage-commande')<span class="nbrNotify"><b>{{auth()->user()->unreadNotifications->count()}}</b></span>@endcan
+                        <span class="nbrNotify"><b>{{auth()->user()->unreadNotifications->count()}}</b></span>
                         <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic " style="
                 color: #e85f03 !important;
@@ -107,7 +107,7 @@
                                 <div class="notify-drop-footer text-center" style="
                                 padding-top: 15px;
                                     ">
-                                    <a class="notify" href=""><i class="fa fa-eye"></i> Voir Tous</a>
+                                    <a class="notify" href="{{route('inbox.index')}}"><i class="fa fa-eye"></i> Voir Tous</a>
                                 </div>
                         </ul>
                     @endunless

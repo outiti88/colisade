@@ -6,6 +6,7 @@ use App\Commande;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCommande;
 use App\Notifications\newCommande;
+use App\Notifications\statutChange;
 use App\Statut;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -272,7 +273,6 @@ class CommandeController extends Controller
         //notification
             $user_notify = \App\User::find(1);
             $user_notify->notify(new newCommande( Auth::user() , $commande));
-
         }
 
         else{
@@ -533,6 +533,11 @@ class CommandeController extends Controller
             $statut->commande_id = $commande->id;
             $statut->name = $commande->statut;
             $statut->save();
+            
+            //notification
+            $user_notify = \App\User::find($commande->user_id);
+           $user_notify->notify(new statutChange($commande));
+            //dd($test);
             $request->session()->flash('edit', $commande->numero);
         }
         else $request->session()->flash('noedit', $commande->numero);

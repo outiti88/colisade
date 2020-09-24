@@ -40,8 +40,6 @@
             <div class="card">
              
                 <div class="comment-widgets scrollable">
-                    @can('ramassage-commande')
-                    @unless (Auth::user()->unreadNotifications->isEmpty())
                     @foreach ($notifications as $notification)
                     <!-- Comment Row -->
                     <div class="d-flex flex-row comment-row"   
@@ -52,17 +50,57 @@
                     @endif
                     
                     >
-                <div class="p-2"><img src="{{$notification->data['user']['image']}}" alt="user" width="50" class="rounded-circle"></div>
+                <div class="p-2"><img src="
+                    @can('ramassage-commande')
+                    {{$notification->data['user']['image']}}
+                    @endcan
+                    @can('client')
+                    https://scontent.frba3-1.fna.fbcdn.net/v/t1.0-9/107093937_2858330454295626_6840339815783805174_o.png?_nc_cat=101&_nc_sid=174925&_nc_ohc=f7hP3-o3n4oAX9AW9GV&_nc_ht=scontent.frba3-1.fna&oh=a91e690eb2d5ab61a7bfc34535465f58&oe=5F8F82CD
+                    @endcan
+                    "
+                    alt="user" width="50" class="rounded-circle"></div>
                         <div class="comment-text w-100">
-                            <h5 class="font-medium" style="color: #e85f03"><b>{{$notification->data['user']['name']}}</b></h5>
-                            <span class="m-b-15 d-block">A ajouté une nouvelle commande avec le numero :<a style="color:black" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
+                            <h5 class="font-medium" style="color: #e85f03">
+                                <b>
+                                    @can('ramassage-commande')
+                                    {{$notification->data['user']['name']}}
+                                    @endcan
+                                    @can('client')
+                                    Quickoo Delivery
+                                    @endcan
+                                </b>
+                            </h5>
+
+
+                            <span class="m-b-15 d-block">
+                                    @can('ramassage-commande')
+                                    A ajouté une nouvelle commande avec le numero :
+                                    @endcan
+                                    @can('client')
+                                    A modifié le staut de la commande :
+                                    @endcan
+                                
+                                <a style="color:black" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
                                 'notification' => $notification->id])}}">
                                  <b>{{$notification->data['commande']['numero']}}</b> 
-                            </a>
-                               </span>
+                                 </a>
+                            </span>
                             <div class="comment-footer">
-                                <span class="text-muted float-right">{{date_format($notification->created_at,"Y/m/d")}}
-                                    <p class="proile-rating"><span> {{date_format($notification->created_at,"H:i:s")}}</span></p>
+                                <span class="text-muted float-right">
+                                    @can('ramassage-commande')
+                                    {{date_format($notification->created_at,"Y/m/d")}}
+                                    @endcan
+                                    @can('client')
+                                    {{date_format($notification->updated_at,"Y/m/d")}}
+                                    @endcan
+                                    <p class="proile-rating"><span> 
+                                        @can('ramassage-commande')
+                                        {{date_format($notification->created_at,"H:i:s")}}
+                                        @endcan
+                                        @can('client')
+                                        {{date_format($notification->updated_at,"Y/m/d")}}
+                                        @endcan
+                                    </span></p>
                                 </span>
                                 <span class="label label-rounded create-btn" style="background-color: #e85f03"><a style="color:white" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
                                     'notification' => $notification->id])}}">
@@ -80,8 +118,8 @@
                     </div>
                     @endforeach
 
-                    @endunless
-                    @endcan      
+                      
+
                 </div>
             </div>
         </div>
