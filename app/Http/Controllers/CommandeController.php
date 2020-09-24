@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Gate;
 use App\User;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
+use Nexmo\Laravel\Facade\Nexmo;
 
 class CommandeController extends Controller
 {
@@ -550,6 +551,8 @@ class CommandeController extends Controller
         
         $commande = Commande::findOrFail($id);
 
+        $user = User::find($commande->user_id);
+
         if(Gate::denies('ramassage-commande') || $commande->statut === 'expidié'){
             
             $request->session()->flash('noedit', $commande->numero);
@@ -570,6 +573,13 @@ class CommandeController extends Controller
             $statut->name = $commande->statut;
             $statut->save();
             $request->session()->flash('edit', $commande->numero);
+
+            //dd(substr($user->telephone,1));
+            Nexmo::message()->send([
+                'to'   => '212'.substr($user->telephone,1),
+                'from' => 'Quickoo Delivery',
+                'text' => 'Bonjour '.$commande->nom.' Votre Commande '.$user->name.' à été bien livré.'
+            ]);
         }
         
 
