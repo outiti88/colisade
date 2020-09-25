@@ -159,7 +159,7 @@
                           </tr>
                           <tr>
                             <td align="center" style="font-size:0px;padding:0 25px;word-break:break-word;">
-                              <div style="font-family:Arial;font-size:18px;line-height:1;text-align:center;color:#000000;">Vous pouvez dès maintenat télécharger  <br>votre facture !</div>
+                              <div style="font-family:Arial;font-size:18px;line-height:1;text-align:center;color:#000000;">Merci de trouver ci-dessous les détails   <br>de la facture demandée :</div>
                             </td>
                           </tr>
                           <tr>
@@ -173,15 +173,15 @@
                                 <tr>
                                 <td align="center" bgcolor="#8bb420" role="presentation" style="border:none;border-radius:3px;cursor:auto;mso-padding-alt:10px 25px;background:#e85f03;" valign="middle"> <a href="{{route('facture.gen',$details['facture']->id)}}"style="display: inline-block; background: #e85f03; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 120%; margin: 0; text-transform: none; padding: 10px 25px; mso-padding-alt: 0px; border-radius: 3px; text-decoration: none; color: white;"
                                       target="_blank">
-              Cliquez Ici pour l'ouvrir
-            </a> </td>
+                                  Cliquez Ici pour l'ouvrir
+                                </a> </td>
                                 </tr>
                               </table>
                             </td>
                           </tr>
                           <tr>
                             <td align="center" style="font-size:0px;padding:0 25px;padding-top:40px;word-break:break-word;">
-                              <div style="font-family:Arial, sans-serif;font-size:14px;line-height:1;text-align:center;color:#000000;">Merci à vous, <br> L'équipe Quickoo Delivery ©
+                              <div style="font-family:Arial, sans-serif;font-size:14px;line-height:1;text-align:center;color:#000000;">Très cordialement, <br> L’équipe Quickoo.ma ©
                                 <p></p>
                               </div>
                             </td>

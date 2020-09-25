@@ -30,7 +30,7 @@ class EmailController extends Controller
         'facture' => $facture ,
         'user' => $user
       ];
-      \Mail::to('outiti.ayoub@gmail.com')->send(new \App\Mail\PdfGenerate($details , "pdf"));
+      \Mail::to($user->email)->send(new \App\Mail\PdfGenerate($details , "pdf"));
       $request->session()->flash('envoyer', $user->name);
       return redirect(route('facture.index'));
     }

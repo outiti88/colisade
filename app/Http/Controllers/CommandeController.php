@@ -574,9 +574,9 @@ class CommandeController extends Controller
             $statut->save();
             $request->session()->flash('edit', $commande->numero);
 
-            //dd(substr($user->telephone,1));
+            //dd('212'.substr($commande->telephone,1));
             Nexmo::message()->send([
-                'to'   => '212'.substr($user->telephone,1),
+                'to'   => '212'.substr($commande->telephone,1),
                 'from' => 'Quickoo Delivery',
                 'text' => 'Bonjour '.$commande->nom.' Votre Commande '.$user->name.' à été bien livré.'
             ]);

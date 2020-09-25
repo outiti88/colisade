@@ -171,36 +171,47 @@
 										<!-- Title + Copy + Button -->
 										<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#f4f4f4">
 											<tr>
-												<td class="p30-15" style="padding: 70px 110px;">
+												<td class="p30-15" style="padding: 0px 10px;">
 													<table width="100%" border="0" cellspacing="0" cellpadding="0">
 														<tr>
-															<td class="h1 pb20" style="color:#000000; font-size:35px; line-height:42px; text-align:center; text-transform:uppercase; padding-bottom:20px;">Bienvenue sur notre plateforme <span class="m-hide"><br /></span>Quickoo Tracking</td>
+															<td class="h1 pb20" style="color:#000000; font-size:35px; line-height:42px; text-align:center; text-transform:uppercase; padding-bottom:20px;">
+																Bienvenue sur notre plateforme <span class="m-hide" style="color: #e85f03"><br /></span>Quickoo Tracking
+																<span style="font-size: 0.75em"> <br>
+																	Vous y êtes presque !
+																</span> <br>
+																<span style="font-size:0.5em">Modifier votre <b style="color: #e85f03">Mot de passe </b> pour finaliser votre inscription</span>
+															</td>
 														</tr>
-														<tr>
-															<td class="img-center pb35" style="font-size:0pt; line-height:0pt; text-align:center; padding-bottom:35px;"><img src="images/t2_small_separator.jpg" width="50" height="2" border="0" alt="" /></td>
-														</tr>
+													
 														<tr>
                                                             <td class="text center pb30" style="color:#666666; font-family:Arial, sans-serif; font-size:16px; line-height:30px; text-align:center; padding-bottom:30px;">
                                                                 Votre Email : <strong>{{$details['email']}}</strong><br>
                                                                 Votre Mot de passe : <strong>{{$details['password']}}</strong>    
-                                                            
+																<span style="display: block ; padding-top:7px">
+																	<br>Merci d’avoir rejoint Quickoo! <br>
+																Cliquez sur le bouton ci-dessous pour modifier votre mot de passe, <br>
+																et nous vous aiderons à bien démarrer.
+																</span>
                                                             </td>
 														</tr>
+														
 														<!-- Button -->
 														<tr>
 															<td align="center">
 																<table border="0" cellspacing="0" cellpadding="0">
 																	<tr>
-                                                                        <td class="text-button" style="background:#e85f03; color:#f4f4f4;  font-size:14px; line-height:28px; text-align:center; padding:8px 20px; text-transform:uppercase; font-weight:bold;">
+                                                                        <td class="text-button" style="color:#f4f4f4; background:#e85f03;  font-size:14px; line-height:28px; text-align:center; padding:8px 20px; text-transform:uppercase; font-weight:bold;">
 																		<a href="{{route('dashboard')}}" target="_blank" class="link-white" style="color:#ffffff; text-decoration:none;">
                                                                                 <span class="link-white" style="color:#ffffff; text-decoration:none;">Se Connecter</span>
-                                                                            </a>
+																			</a>
+																			
                                                                         </td>
 																	</tr>
 																</table>
 															</td>
 														</tr>
 														<!-- END Button -->
+												
 													</table>
 												</td>
 											</tr>
@@ -238,25 +249,25 @@
 											<tr>
 												<td style="padding: 0px 30px 60px 30px; border-bottom: 10px solid #e85f03;">
 													<table width="100%" border="0" cellspacing="0" cellpadding="0">
+														
 														<tr>
-															<td class="pb30" align="center" style="padding-bottom:30px;">
-																<table border="0" cellspacing="0" cellpadding="0">
-																	<tr>
-																		<td class="img" width="55" style="font-size:0pt; line-height:0pt; text-align:left;"><a href="https://www.facebook.com/DeliveryQuickoo" target="_blank"><i class="fa fa-facebook"></i></a></td>
-																		<td class="img" width="55" style="font-size:0pt; line-height:0pt; text-align:left;"><a href="https://www.instagram.com/DeliveryQuickoo" target="_blank"><i class="fa fa-instagram"></i></a></td>
-																		<td class="img" width="34" style="font-size:0pt; line-height:0pt; text-align:left;"><a href="https://www.linkedin.com/company/quickoo/" target="_blank"><i class="fa fa-linkedin"></i></a></td>
-																	</tr>
-																</table>
-															</td>
+															<td class="text-footer pb10" style=" font-family:Arial,sans-serif; font-size:14px; line-height:28px; text-align:center; padding-bottom:10px;"><span>
+																Très cordialement
+														</td>
 														</tr>
 														<tr>
-															<td class="text-footer pb10" style="color:#e85f03; font-family:Arial,sans-serif; font-size:14px; line-height:28px; text-align:center; padding-bottom:10px;">Quickoo Delivery - Expidiez Autrement</td>
+															<td class="text-footer2 pb30" style="color:#e85f03; font-family:Arial,sans-serif; font-size:12px; line-height:18px; text-align:center; padding-bottom:30px;">L'équipe Quickoo.ma</td>
 														</tr>
 														<tr>
-															<td class="text-footer2 pb30" style="color:#e85f03; font-family:Arial,sans-serif; font-size:12px; line-height:18px; text-align:center; padding-bottom:30px;">Hay bakhti rue 102, n10 - Tanger , MAroc</td>
-														</tr>
-														<tr>
-															<td class="text-footer3" style="color:#666666; font-family:Arial,sans-serif; font-size:12px; line-height:18px; text-align:center;"><a href="mailto:contact@quickoo.ma" target="_blank" class="link4-u" style="color:#666666; text-decoration:underline;"><span class="link4-u" style="color:#666666; text-decoration:underline;">Contact@quickoo.ma</span></a></td>
+															<td class="text-footer3" style="color:#666666; font-family:Arial,sans-serif; font-size:12px; line-height:18px; text-align:center;">
+																
+																	<span class="link4-u" style="color:#666666; text-decoration:underline;">Si vous avez besoin d'aide, veuillez nous envoyer un e-mail à 
+																		<a href="mailto:contact@quickoo.ma" target="_blank" class="link4-u" style="color:#666666; text-decoration:underline;">
+																			contact@quickoo.ma
+																		</a>
+																	
+																	</span>
+																</td>
 														</tr>
 													</table>
 												</td>
