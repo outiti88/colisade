@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BonLivraison;
 use App\Commande;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCommande;
@@ -518,15 +519,17 @@ class CommandeController extends Controller
     public function changeStatut(Request $request, $id)
     { //changement de statut du expidé à en cours
         //dd(!Gate::denies('ramassage-commande'));
+       
         $commande = Commande::findOrFail($id);
-        
         if(Gate::denies('ramassage-commande')){
             //dd(true);
             $request->session()->flash('noedit', $commande->numero);
             return redirect(route('commandes.index'));
         }
-
-        if($commande->statut === "expidié")
+         $commande = Commande::findOrFail($id);
+         $date_bl = DB::table('bon_livraisons')->whereDate('created_at',$commande->created_at)->count();
+         //dd($date_bl);
+        if($commande->statut === "expidié" && $date_bl === 0)
         {
             $commande->statut= "En cours";
             $commande->save();
@@ -550,13 +553,15 @@ class CommandeController extends Controller
     {
         
         $commande = Commande::findOrFail($id);
+        $date_bl = DB::table('bon_livraisons')->whereDate('created_at',$commande->created_at)->count();
 
         $user = User::find($commande->user_id);
-
-        if(Gate::denies('ramassage-commande') || $commande->statut === 'expidié'){
+       // dd($date_bl);
+        if(Gate::denies('ramassage-commande') || $commande->statut === 'expidié' || $date_bl > 0){
             
             $request->session()->flash('noedit', $commande->numero);
-            return redirect()->route('commandes.show',['commande' => $commande->id]);        }
+            return redirect()->route('commandes.show',['commande' => $commande->id]); 
+        }
 
 
         if($commande->statut === "éxpidié") {
@@ -576,8 +581,8 @@ class CommandeController extends Controller
 
             //dd('212'.substr($commande->telephone,1));
             Nexmo::message()->send([
-                'to'   => '212'.substr($commande->telephone,1),
-                'from' => 'Quickoo Delivery',
+                'to'   => '212'.substr('0649440905',1),
+                'from' => 'Quickoo',
                 'text' => 'Bonjour '.$commande->nom.' Votre Commande '.$user->name.' à été bien livré.'
             ]);
         }
