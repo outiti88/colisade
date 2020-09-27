@@ -66,14 +66,18 @@ class FactureController extends Controller
         if(!Gate::denies('ramassage-commande')) {
         $facNoExist = DB::table('factures')->where('user_id',$user)->whereDate('created_at',$date)->count();
         $nbrCmdLivre =  DB::table('commandes')->where('statut','Livré')->where('user_id',$user)->whereDate('created_at',$date)->count();
+        $nbrCmdRamasse =  DB::table('commandes')->where('statut','En cours')->where('user_id',$user)->whereDate('created_at',$date)->count();
         $nbrCmd =  DB::table('commandes')->where('user_id',$user)->whereDate('created_at',$date)->count();
         
-        if( ($facNoExist != 0) || ($nbrCmdLivre == 0) ){ //le bon de libraison existe déja ou ga3 les commandes ba9in expidié
+        if( ($facNoExist != 0) || ($nbrCmdRamasse > 0) || ($nbrCmdLivre == 0) ){ // matkounch la facture kayna et ta chi commande mazala en cours
             if($facNoExist != 0){
                 $request->session()->flash('facNoExist');
             }
+            if($nbrCmdLivre == 0){
+                $request->session()->flash('nbrCmdLivre');
+            }
                 else{
-                    $request->session()->flash('nbrCmdLivre');
+                    $request->session()->flash('nbrCmdRamasse' , $nbrCmdRamasse);
             }
         }
         else{

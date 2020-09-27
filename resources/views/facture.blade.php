@@ -37,6 +37,13 @@
         <strong>Erreur ! </strong>vous ne pouvez pas charger la facture avec 0 commande livrée !
           </div>
         @endif
+        @if (session()->has('nbrCmdRamasse'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Erreur ! </strong>vous ne pouvez pas charger la facture avec sans traité tous les commandes ! <br>
+        Il vous reste {{session()->get('nbrCmdRamasse')}} à traiter !
+          </div>
+        @endif
 
         @if (session()->has('facNoExist'))
         <div class="alert alert-dismissible alert-danger col-12">

@@ -27,8 +27,8 @@ class ProfilController extends Controller
         $user = Auth::user();
         
         $total =DB::table('commandes')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
-        //dd( Auth::user()->id);
-        return view('profil')->with(['user'=> $user , 'total' => $total]);
+        $facture = DB::table('factures')->where('user_id',Auth::user()->id )->count();
+        return view('profil')->with(['user'=> $user , 'total' => $total , 'facture' => $facture]);
     }
 
     /**
@@ -41,10 +41,14 @@ class ProfilController extends Controller
     public function update(Request $request, User $user)
     {
        // dd($user);
-       // dd($request->roles);
+      // dd($request);
        $user->name=$request->name;
        $user->email=$request->email;
        $user->image=$request->image;
+       $user->telephone=$request->telephone;
+       $user->description=$request->description;
+       $user->ville=$request->ville;
+
        $user->save();
        
        return redirect()->route('profil.index');

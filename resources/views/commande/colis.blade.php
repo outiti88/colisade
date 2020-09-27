@@ -135,7 +135,20 @@
         <strong>Erreur !</strong>Vous pouvez pas ajouter une commande, Le bon de livraison de ce jour à été déjà générer
           </div>
         @endif
-        
+        @if (session()->has('nonExpidie'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Erreur !</strong>Commande déjà traitée  {{session()->get('nonExpidie')}} <br>
+                vous pouvez modifier que les statuts des commandes qui ont le statut <b>Expidié</b>
+        </div>
+        @endif
+        @if (session()->has('blgenere'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Erreur !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('blgenere')}} <br>
+                => le bon de livraison pour cette commande à été déjà généré
+        </div>
+        @endif
         <div class="col-12">
             <div class="card">
                 <div class="card-body">

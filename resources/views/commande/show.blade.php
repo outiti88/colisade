@@ -185,7 +185,7 @@ N: {{$commande->numero}}
         @if (session()->has('noedit'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur !</strong>vous ne pouvez pas changer le statut La commande numero {{session()->get('noedit')}}
+        <strong>Erreur !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('noedit')}}
           </div>
         @endif
         @if (session()->has('nodelete'))
@@ -198,9 +198,17 @@ N: {{$commande->numero}}
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Erreur !</strong>vous ne pouvez pas modifier La commande numero {{session()->get('noupdate')}} <br>
-                vous pouvez modifier que les commandes qui ont le statut EXPIDIE
+                vous pouvez modifier que les commandes qui ont le statut <b>EXPIDIE</b>
         </div>
         @endif
+        @if (session()->has('nonEncours'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Erreur !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('nonEncours')}} <br>
+                vous pouvez modifier que les statuts des commandes qui ont le statut <b>En Cours</b>
+        </div>
+        @endif
+
             <div class="col-md-10">
                 <div class="profile-head">
                             <h5>

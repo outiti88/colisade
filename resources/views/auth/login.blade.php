@@ -185,14 +185,14 @@
             }
 
             .wrap-login100 {
-                width: 90%;
+                width: 75%;
                 background: white;
                 border-radius: 10px;
                 overflow: hidden;
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: space-between;
-                padding: 97px 130px 80px 95px;
+                padding: 5% 10%;
                 margin: 20px;
                 border-color: #e6e6e6;
                 border-style: solid;
@@ -203,11 +203,12 @@
             [  ]*/
 
             .login100-pic {
-                width: 316px;
+                width: 40%;
             }
 
             .login100-pic img {
                 max-width: 100%;
+                padding-top: 15%;
             }
 
 
@@ -215,7 +216,7 @@
             [  ]*/
 
             .login100-form {
-                width: 290px;
+                width: 40%;
             }
 
             .login100-form-title {
@@ -245,7 +246,7 @@
                 line-height: 1.5;
                 color: #666666;
                 display: block;
-                width: auto;
+                width: 100%;
                 background: #f3e3e3;
                 height: 50px;
                 border-radius: 25px;
@@ -296,7 +297,8 @@
                 display: -ms-flexbox;
                 display: flex;
                 align-items: center;
-                position: absolute;
+                position: relative;
+                top: -2.1em;
                 border-radius: 25px;
                 bottom: 0;
                 left: 0;
@@ -365,19 +367,17 @@
             /*------------------------------------------------------------------
             [ Responsive ]*/
 
-            @media (max-width: 992px) {
+            @media (max-width: 1020px) {
                 .wrap-login100 {
                     padding: 177px 90px 33px 85px;
                 }
-                .login100-pic {
-                    width: 35%;
-                }
+              
                 .login100-form {
                     width: 50%;
                 }
             }
 
-            @media (max-width: 768px) {
+            @media (max-width: 920px) {
                 .wrap-login100 {
                     padding: 100px 80px 33px 80px;
                 }

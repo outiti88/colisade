@@ -1,5 +1,9 @@
 @extends('racine')
 
+@section('title')
+{{$user->name}} | Quickoo
+@endsection
+
 @section('content')
 <div class="page-breadcrumb">
     <div class="row align-items-center">
@@ -37,8 +41,8 @@
                         <h4 class="card-title m-t-10">{{$user->name}}</h4>
                         <h6 class="card-subtitle">{{$user->description}}</h6>
                         <div class="row text-center justify-content-md-center">
-                            <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-people"></i> <font class="font-medium">{{$total}} Colis</font></a></div>
-                            <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-picture"></i> <font class="font-medium">2 Factures</font></a></div>
+                            <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-people"></i> <font class="font-medium">{{$total}} Commandes</font></a></div>
+                            <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-picture"></i> <font class="font-medium">{{$facture}} Factures</font></a></div>
                         </div>
                     </center>
                 </div>

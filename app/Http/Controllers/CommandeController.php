@@ -239,7 +239,7 @@ class CommandeController extends Controller
 
         $bon_livraison = DB::table('bon_livraisons')->whereDate('created_at',now())->count();
         //dd(now(),$bon_livraison);
-        if(gmdate("H")+1 <= 20 && gmdate("H")+1 >= 8 ){
+        if(gmdate("H")+1 <= 23 && gmdate("H")+1 >= 8 ){
 
             if($bon_livraison > 0){
                 $request->session()->flash('bonLivraison');
@@ -519,17 +519,18 @@ class CommandeController extends Controller
     public function changeStatut(Request $request, $id)
     { //changement de statut du expidé à en cours
         //dd(!Gate::denies('ramassage-commande'));
-       
         $commande = Commande::findOrFail($id);
-        if(Gate::denies('ramassage-commande')){
-            //dd(true);
+        //dd($commande);
+        //$factureExist = DB::table('factures')->where('user_id',$commande->user_id )->whereDate('created_at',$commande->created_at)->count();
+
+        if(Gate::denies('ramassage-commande') ){
             $request->session()->flash('noedit', $commande->numero);
             return redirect(route('commandes.index'));
         }
          $commande = Commande::findOrFail($id);
-         $date_bl = DB::table('bon_livraisons')->whereDate('created_at',$commande->created_at)->count();
-         //dd($date_bl);
-        if($commande->statut === "expidié" && $date_bl === 0)
+         $blExist = DB::table('bon_livraisons')->whereDate('created_at',$commande->created_at)->count();
+        // dd($blExist);
+        if($commande->statut === "expidié" && $blExist === 0)
         {
             $commande->statut= "En cours";
             $commande->save();
@@ -544,7 +545,15 @@ class CommandeController extends Controller
             //dd($test);
             $request->session()->flash('edit', $commande->numero);
         }
-        else $request->session()->flash('noedit', $commande->numero);
+        else {
+           
+            if($commande->statut !== "expidié"){
+                $request->session()->flash('nonExpidie', $commande->numero);
+            }
+            else{
+                $request->session()->flash('blgenere', $commande->numero);
+            }
+        } 
 
         return redirect('/commandes');
     }
@@ -553,38 +562,37 @@ class CommandeController extends Controller
     {
         
         $commande = Commande::findOrFail($id);
-        $date_bl = DB::table('bon_livraisons')->whereDate('created_at',$commande->created_at)->count();
 
         $user = User::find($commande->user_id);
        // dd($date_bl);
-        if(Gate::denies('ramassage-commande') || $commande->statut === 'expidié' || $date_bl > 0){
-            
+        if(Gate::denies('ramassage-commande') || $commande->statut === 'expidié'){
             $request->session()->flash('noedit', $commande->numero);
-            return redirect()->route('commandes.show',['commande' => $commande->id]); 
         }
 
 
-        if($commande->statut === "éxpidié") {
-            $request->session()->flash('noedit', $commande->numero);
-           
-        }
         else{
+            if($commande->statut === 'En cours'){
+                $commande->statut= $request->statut;
+                $commande->commentaire= $request->commentaire;
+                $commande->save();
+                $statut = new Statut();
+                $statut->commande_id = $commande->id;
+                $statut->name = $commande->statut;
+                $statut->save();
+                $request->session()->flash('edit', $commande->numero);
+            }
+            else{
+                $request->session()->flash('nonEncours', $commande->numero);
+            }
             
-            $commande->statut= $request->statut;
-            $commande->commentaire= $request->commentaire;
-            $commande->save();
-            $statut = new Statut();
-            $statut->commande_id = $commande->id;
-            $statut->name = $commande->statut;
-            $statut->save();
-            $request->session()->flash('edit', $commande->numero);
+            
 
             //dd('212'.substr($commande->telephone,1));
-            Nexmo::message()->send([
+           /* Nexmo::message()->send([
                 'to'   => '212'.substr('0649440905',1),
                 'from' => 'Quickoo',
                 'text' => 'Bonjour '.$commande->nom.' Votre Commande '.$user->name.' à été bien livré.'
-            ]);
+            ]);*/
         }
         
 
