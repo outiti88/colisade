@@ -60,58 +60,66 @@
                         @else
                         <span class="nbrNotify"><b>{{auth()->user()->unreadNotifications->count()}}</b></span>
                         <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic " style="
-                color: #e85f03 !important;
-                font-size: 1.5em;
-            " href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-bell"></i> 
-                </a>
-                @can('ramassage-commande')
-                    @unless (Auth::user()->unreadNotifications->isEmpty())
-                    
-                        <ul class="dropdown-menu notify-drop" style="width: 300px;
-                            position: absolute;
-                            left: -250px;
-                            hmax-height: 500px;
-                            overflow: scroll;">
-                                <div class="notify-drop-title" style="
-                                            margin: 20px;">
-                                    <div class="row">
-                                    <div class="col-md-6 col-sm-6 col-xs-6">Notifications (<b>{{auth()->user()->unreadNotifications->count()}}</b>)</div>
-                                        <div class="col-md-6 col-sm-6 col-xs-6 text-right"><a href="" class="rIcon allRead" data-tooltip="tooltip" data-placement="bottom" title="tümü okundu."><i class="fa fa-dot-circle-o"></i></a></div>
-                                    </div>
-                                </div>
-                                <div class="drop-content" style="
-                                margin: 20px;">
-                                    @foreach (Auth::user()->unreadNotifications as $notification)
-                                    
-                                    
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic " 
+                                style="
+                                    color: #e85f03 !important;
+                                    font-size: 1.5em;"
+                                 href=
+                                 @can('client')
+                                 "{{route('inbox.index')}}" 
+                                 @endcan     
+                                 @can('ramassage-commande')                           
+                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                 @endcan
+                                 >
+                                <i class="fas fa-bell"></i> 
+                            </a>
+                            @can('ramassage-commande')
+                                @unless (Auth::user()->unreadNotifications->isEmpty())
                                 
-                                    <li class="row">
-                                        <a class="hoverNotif" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
-                                            'notification' => $notification->id])}}">
-                                            <div class="col-md-3 col-sm-3 col-xs-3"><div class="notify-img"><img width="35" class="rounded-circle" src="{{$notification->data['user']['image']}}" alt=""></div></div>
-                                            <div class="col-md-9 col-sm-9 col-xs-9 pd-l0"><a href="{{route('admin.users.edit',$notification->data['user']['id'])}}">{{$notification->data['user']['name']}}</a> a ajouté une nouvelle commande. 
-                                                <p>N°: <a href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
-                                                    'notification' => $notification->id])}}">{{$notification->data['commande']['numero']}}</a></p>
-                                                <p class="proile-rating">{{date_format($notification->created_at,"Y/m/d")}}<span> {{date_format($notification->created_at,"H:i:s")}}</span></p>
+                                    <ul class="dropdown-menu notify-drop" style="width: 300px;
+                                        position: absolute;
+                                        left: -250px;
+                                        hmax-height: 500px;
+                                        overflow: scroll;">
+                                            <div class="notify-drop-title" style="
+                                                        margin: 20px;">
+                                                <div class="row">
+                                                <div class="col-md-6 col-sm-6 col-xs-6">Notifications (<b>{{auth()->user()->unreadNotifications->count()}}</b>)</div>
+                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-right"><a href="" class="rIcon allRead" data-tooltip="tooltip" data-placement="bottom" title="tümü okundu."><i class="fa fa-dot-circle-o"></i></a></div>
                                                 </div>
-                                            </a>
-                                    </li>
-                                
-                                    
-                                    @endforeach
-                                   
-                                    
-                                </div>
-                                <div class="notify-drop-footer text-center" style="
-                                padding-top: 15px;
-                                    ">
-                                    <a class="notify" href="{{route('inbox.index')}}"><i class="fa fa-eye"></i> Voir Tous</a>
-                                </div>
-                        </ul>
-                    @endunless
-                 @endcan       
+                                            </div>
+                                            <div class="drop-content" style="
+                                            margin: 20px;">
+                                                @foreach (Auth::user()->unreadNotifications as $notification)
+                                                
+                                                
+                                            
+                                                <li class="row">
+                                                    <a class="hoverNotif" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
+                                                        'notification' => $notification->id])}}">
+                                                        <div class="col-md-3 col-sm-3 col-xs-3"><div class="notify-img"><img width="35" class="rounded-circle" src="{{$notification->data['user']['image']}}" alt=""></div></div>
+                                                        <div class="col-md-9 col-sm-9 col-xs-9 pd-l0"><a href="{{route('admin.users.edit',$notification->data['user']['id'])}}">{{$notification->data['user']['name']}}</a> a ajouté une nouvelle commande. 
+                                                            <p>N°: <a href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
+                                                                'notification' => $notification->id])}}">{{$notification->data['commande']['numero']}}</a></p>
+                                                            <p class="proile-rating">{{date_format($notification->created_at,"Y/m/d")}}<span> {{date_format($notification->created_at,"H:i:s")}}</span></p>
+                                                            </div>
+                                                        </a>
+                                                </li>
+                                            
+                                                
+                                                @endforeach
+                                            
+                                                
+                                            </div>
+                                            <div class="notify-drop-footer text-center" style="
+                                            padding-top: 15px;
+                                                ">
+                                                <a class="notify" href="{{route('inbox.index')}}"><i class="fa fa-eye"></i> Voir Tous</a>
+                                            </div>
+                                    </ul>
+                                @endunless
+                            @endcan       
                     
                 </li>
                 <li class="nav-item dropdown">

@@ -185,7 +185,7 @@
             }
 
             .wrap-login100 {
-                width: 70%;
+                width: 90%;
                 background: white;
                 border-radius: 10px;
                 overflow: hidden;

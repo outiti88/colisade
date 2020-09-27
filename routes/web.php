@@ -42,7 +42,7 @@ Route::resource('/facture','FactureController')->only([
     'index', 'store'
 ]);
 
-Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen');;
+Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen');
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
     Route::resource('/users','UsersController',['except' => ['show','create','store']]);
