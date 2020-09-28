@@ -139,7 +139,9 @@ N: {{$commande->numero}}
         </div>
         <div class="col-4">
             <div class="row float-right">
+                    @can('client-admin')
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
+                    @endcan
                     @can('ramassage-commande')
                     @if ($commande->statut !== "expidié")
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>

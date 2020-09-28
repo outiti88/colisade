@@ -65,13 +65,13 @@
                                  @can('client')
                                  {{route('inbox.index')}}
                                  @endcan"    
-                                 @can('ramassage-commande')                           
+                                 @can('delete-users')                           
                                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                  @endcan
                                  >
                                 <i class="fas fa-bell"></i> 
                             </a>
-                            @can('ramassage-commande')
+                            @can('delete-users')
                                 @unless (Auth::user()->unreadNotifications->isEmpty())
                                 
                                     <ul class="dropdown-menu notify-drop" style="width: 300px;
@@ -90,8 +90,6 @@
                                             margin: 20px;">
                                                 @foreach (Auth::user()->unreadNotifications as $notification)
                                                 
-                                                
-                                            
                                                 <li class="row">
                                                     <a class="hoverNotif" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
                                                         'notification' => $notification->id])}}">
@@ -104,7 +102,6 @@
                                                         </a>
                                                 </li>
                                             
-                                                
                                                 @endforeach
                                             
                                                 
@@ -126,7 +123,7 @@
                         <a class="dropdown-item" href="/profil""><i class="ti-user m-r-5 m-l-5"></i>  {{ Auth::user()->name }} </a>
                         <a class="dropdown-item" href="{{route('inbox.index')}}"><i class="ti-email m-r-5 m-l-5"></i> 
                             Inbox 
-                            @can('ramassage-commande') 
+                            @can('delete-users') 
                             <span class="badge badge-pill badge-danger">
                                 {{auth()->user()->unreadNotifications->count()}}
                             </span>
