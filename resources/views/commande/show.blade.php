@@ -231,7 +231,7 @@ N: {{$commande->numero}}
                 </div>
             </div>
             <div class="col-md-2">
-                <a class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}""><i class="fas fa-print"></i> imprimer</a>
+                <a target="_blank" class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}""><i class="fas fa-print"></i> imprimer</a>
             </div>
         </div>
         <div class="row">

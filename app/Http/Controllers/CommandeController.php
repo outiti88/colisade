@@ -327,6 +327,7 @@ class CommandeController extends Controller
 
     public function content(Commande $commande){
         $content = '';
+        $user = DB::table('users')->find($commande->user_id);
         for ($i=1; $i <= $commande->colis ; $i++) { 
             $content .= '
             <div class="container">
@@ -343,7 +344,7 @@ class CommandeController extends Controller
                     </tr>
                     <tr>
                         <th>Entreprise:  </th>
-                        <td>DECATHLON TANGER MEDINA(Tanger - 150620) - ECOM</td>
+                        <td>'.$user->name.'</td>
                     </tr>
                     </table>
                 </div>

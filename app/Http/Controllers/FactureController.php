@@ -191,7 +191,7 @@ class FactureController extends Controller
         $facture = Facture::findOrFail($id);
         $user = $facture->user_id;
 
-        if($user !== Auth::user()->id){
+        if($user !== Auth::user()->id && Gate::denies('ramassage-commande')){
             return redirect()->route('facture.index');
         }
         $user = DB::table('users')->find($user);

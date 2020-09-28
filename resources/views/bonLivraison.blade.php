@@ -120,7 +120,7 @@
                                 <td>{{ $bonLivraison->nonRammase}}</td>
                                
                                 <td>
-                                <a class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" ><i class="fas fa-print"></i></a>
+                                <a target="_blank" class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" ><i class="fas fa-print"></i></a>
     
                                </td>
                             </tr>

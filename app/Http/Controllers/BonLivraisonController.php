@@ -194,6 +194,9 @@ class BonLivraisonController extends Controller
         $bonLivraison = BonLivraison::findOrFail($id);
         $user = $bonLivraison->user_id;
         $user = DB::table('users')->find($user);
+        if($bonLivraison->user_id !== Auth::user()->id && Gate::denies('ramassage-commande')){
+            return redirect()->route('bonlivraison.index');
+        }
         //dd($bonLivraison->id);
         $pdf = \App::make('dompdf.wrapper');
         $style =' 

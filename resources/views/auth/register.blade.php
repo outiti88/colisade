@@ -1,5 +1,10 @@
 @extends('racine')
 
+
+@section('title')
+    Nouveau Utilisateur
+@endsection
+
 @section('content')
 <div class="page-breadcrumb">
     <div class="row align-items-center">

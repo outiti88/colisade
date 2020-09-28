@@ -132,7 +132,7 @@
                                 <div class="form-group">
                                     <label class="col-md-12">Téléphone :</label>
                                     <div class="col-md-12">
-                                        <input value="{{ old('telephone') }}"  name="telephone" type="text" placeholder="+212 5393-07566" class="form-control form-control-line">
+                                        <input value="{{ old('telephone') }}"  name="telephone" type="text" placeholder="0xxx xxxxxx" class="form-control form-control-line">
                                     </div>
                                 </div>
                                 <div class="form-group">
