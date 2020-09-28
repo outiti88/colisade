@@ -238,6 +238,24 @@
                         <div class="modal-body mx-3">
                             <form class="form-horizontal form-material" method="GET" action="{{route('commande.filter')}}">
                                 @csrf
+                                @can('ramassage-commande')
+                                <div class="form-group row">
+                                    <label for="client" class="col-sm-4">Fournisseur :</label>
+                                    <div class="col-sm-8">
+                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
+                                            <option value="" disabled selected>Choisissez le fournisseur</option>
+                                            @foreach ($clients as $client)
+                                        <option value="{{$client->id}}" class="rounded-circle">
+                                            {{$client->name}}
+                                        </option>
+                                            @endforeach
+                                           
+                                        </select>
+                                        
+                                    </div>
+                                </div>
+                                @endcan
+                                
                                 <div class="form-group row">
                                     <label class="col-md-4">Nom et Prénom:</label>
                                     <div class="col-md-8">

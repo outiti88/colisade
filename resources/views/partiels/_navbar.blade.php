@@ -14,10 +14,7 @@
                  "class="light-logo" alt="homepage" />
                 </span>
             </a>
-            <!-- ============================================================== -->
-            <!-- End Logo -->
-            <!-- ============================================================== -->
-            <!-- This is for the sidebar toggle which is visible on mobile only -->
+      
             <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
         </div>
         <!-- ============================================================== -->
@@ -64,10 +61,10 @@
                                 style="
                                     color: #e85f03 !important;
                                     font-size: 1.5em;"
-                                 href=
+                                 href="
                                  @can('client')
-                                 "{{route('inbox.index')}}" 
-                                 @endcan     
+                                 {{route('inbox.index')}}
+                                 @endcan"    
                                  @can('ramassage-commande')                           
                                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                  @endcan

@@ -35,7 +35,34 @@
   
   
     <div class="row">
-        <!-- column -->
+        
+        @if (session()->has('nonExpidie'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Erreur !</strong>Commande déjà traitée  {{session()->get('nonExpidie')}} <br>
+                vous pouvez modifier que les statuts des commandes qui ont le statut <b>Expidié</b>
+        </div>
+        @endif
+        @if (session()->has('blgenere'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Erreur !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('blgenere')}} <br>
+                => le bon de livraison pour cette commande à été déjà généré
+        </div>
+        @endif
+        @if (session()->has('edit'))
+        <div class="alert alert-dismissible alert-info col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Succés !</strong> Le statut de la commande numero {{session()->get('edit')}} à été bien edité !!
+          </div>
+        @endif
+        @if (session()->has('noedit'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Erreur !</strong>vous ne pouvez pas changer le statut La commande numero {{session()->get('noedit')}}
+          </div>
+        @endif 
+
         <div class="col-lg-12">
             <div class="card">
              
@@ -60,6 +87,17 @@
                     "
                     alt="user" width="50" class="rounded-circle"></div>
                         <div class="comment-text w-100">
+                            @can('ramassage-commande')
+                                <h4 class=" float-right">
+                                    <a href="{{ route('commandeStatut',['id'=> $notification->data['commande']['id'] ]) }}">
+                                        <span class="badge badge-info">
+                                            <i class="m-10 mdi mdi-verified"></i>
+                                        </span>
+                                    </a>
+                                </h4>
+                            @endcan
+                            
+
                             <h5 class="font-medium" style="color: #e85f03">
                                 <b>
                                     @can('ramassage-commande')
@@ -98,7 +136,7 @@
                                         {{date_format($notification->created_at,"H:i:s")}}
                                         @endcan
                                         @can('client')
-                                        {{date_format($notification->updated_at,"Y/m/d")}}
+                                        {{date_format($notification->updated_at,"H:i:s")}}
                                         @endcan
                                     </span></p>
                                 </span>

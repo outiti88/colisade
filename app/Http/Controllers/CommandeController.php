@@ -36,12 +36,14 @@ class CommandeController extends Controller
     public function index()
     {
         //dd(Auth::user()->id );
+        $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
         $users = [] ;
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('deleted_at',NULL)->count();
             $commandes= DB::table('commandes')->where('deleted_at',NULL)->orderBy('created_at', 'DESC')->paginate(10);
-            
+
+            //dd($clients[0]->id);
         }
         else{
             $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
@@ -57,22 +59,32 @@ class CommandeController extends Controller
         //$commandes = Commande::all()->paginate(3) ;
         return view('commande.colis',['commandes' => $commandes, 
                                     'total'=>$total,
-                                    'users'=> $users]);
+                                    'users'=> $users,
+                                    'clients' => $clients]);
     }
 
 
     public function filter(Request $request){
+       
         $commandes = DB::table('commandes')->where('deleted_at',NULL);
+        $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
+
         $users = [];
+        
 
         if(Gate::denies('ramassage-commande')) { //session client donc on cherche saulement dans ses propres commandes
             $commandes->where('user_id',Auth::user()->id );
+            $clients = null;
         }
 
         if($request->filled('statut')){
             //dd("salut");
             $commandes->where('statut','like','%'.$request->statut.'%');
            //dd($commandes->count());
+        }
+
+        if($request->filled('client')){
+            $commandes->where('user_id',$request->client);
         }
         
         if($request->filled('nom')){
@@ -105,7 +117,10 @@ class CommandeController extends Controller
 
         return view('commande.colis',['commandes' => $commandes, 
             'total'=>$total,
-            'users'=> $users]);
+            'users'=> $users,
+            'clients' => $clients
+
+            ]);
     }
 
 
@@ -211,10 +226,11 @@ class CommandeController extends Controller
                 $users[] =  User::find($commande->user_id) ;
              
             }
-               
+            $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();  
             return view('commande.colis',['commandes' => $commandes, 
             'total'=>$total,
-            'users'=> $users]);
+            'users'=> $users,
+            'clients' => $clients]);
          
            
         }
@@ -501,7 +517,7 @@ class CommandeController extends Controller
                 $commande->ville = $request->ville;
                 $commande->adresse = $request->adresse;
                 $commande->montant = $request->montant;
-                $prixVille = ($request->ville==="tanger") ? 17 : 25 ;
+                $prixVille = ($request->ville ==="Tanger") ? 17 : 25 ;
                 $prixPoids = (($request->poids==="normal") ? 0 : 9);
                 $commande->prix = $prixVille + $prixPoids;
                 $commande->colis = $request->colis;
@@ -547,7 +563,7 @@ class CommandeController extends Controller
         }
         else {
            
-            if($commande->statut !== "expidié"){
+            if($commande->statut != "expidié"){
                 $request->session()->flash('nonExpidie', $commande->numero);
             }
             else{
@@ -555,7 +571,7 @@ class CommandeController extends Controller
             }
         } 
 
-        return redirect('/commandes');
+        return back();
     }
 
     public function statutAdmin(Request $request, $id)
