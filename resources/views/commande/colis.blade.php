@@ -83,7 +83,7 @@
             </div>
             @can('client-admin')
             <div class="m-r-5">
-                <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i> Ajouter une commande</a>
+                <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i> Ajouter</a>
             </div>
             @endcan
         </div>

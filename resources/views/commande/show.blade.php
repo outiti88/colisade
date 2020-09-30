@@ -124,7 +124,7 @@ N: {{$commande->numero}}
 @section('content')
 <div class="page-breadcrumb">
     <div class="row align-items-center">
-        <div class="col-8">
+        <div class="col-6">
             <h4 class="page-title">Gestion des Colis</h4>
             <div class="d-flex align-items-center">
                 <nav aria-label="breadcrumb">
@@ -137,7 +137,7 @@ N: {{$commande->numero}}
                 </nav>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-6">
             <div class="row float-right">
                     @can('client-admin')
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>

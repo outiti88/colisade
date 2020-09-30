@@ -65,13 +65,13 @@
                     <div class="feed-widget">
                         <ul class="list-style-none feed-body m-0 p-b-20">
                             <li class="feed-item">
-                                <div class="feed-icon bg-info"><i class="far fa-bell"></i></div> {{$tab['expidie']['nbr']}} Commandes <br> Expidiées. <span class="ml-auto font-12 text-muted">{{$tab['expidie']['date']}}</span></li>
+                                <div class="feed-icon bg-warning"><i class="ti-shopping-cart"></i></div> {{$tab['expidie']['nbr']}} Commandes <br> Expidiées. <span class="ml-auto font-12 text-muted">{{$tab['expidie']['date']}}</span></li>
                             <li class="feed-item">
-                                <div class="feed-icon bg-success"><i class="ti-server"></i></div> {{$tab['en_cours']['nbr']}} Commandes <br> Ramassées.<span class="ml-auto font-12 text-muted">{{$tab['en_cours']['date']}}</span></li>
+                                <div class="feed-icon bg-info"><i class="mdi mdi-truck"></i></div> {{$tab['en_cours']['nbr']}} Commandes <br> Ramassées.<span class="ml-auto font-12 text-muted">{{$tab['en_cours']['date']}}</span></li>
                             <li class="feed-item">
-                                <div class="feed-icon bg-warning"><i class="ti-shopping-cart"></i></div> {{$tab['livré']['nbr']}} Commandes <br> Livrées.<span class="ml-auto font-12 text-muted">{{$tab['livré']['date']}}</span></li>
+                                <div class="feed-icon bg-success"><i class="mdi mdi-checkbox-marked-outline"></i></div> {{$tab['livré']['nbr']}} Commandes <br> Livrées.<span class="ml-auto font-12 text-muted">{{$tab['livré']['date']}}</span></li>
                             <li class="feed-item">
-                                <div class="feed-icon bg-danger"><i class="ti-user"></i></div> {{$tab['retour']['nbr']}} Retour <br> Commandes.<span class="ml-auto font-12 text-muted">{{$tab['retour']['date']}}</span></li>
+                                <div class="feed-icon bg-danger"><i class="mdi mdi-tumblr-reblog"></i></div> {{$tab['retour']['nbr']}} Retour <br> Commandes.<span class="ml-auto font-12 text-muted">{{$tab['retour']['date']}}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
     <!-- ============================================================== -->
     <!-- Table -->
     <!-- ============================================================== -->
-    {{-- <div class="row">
+     <div class="row">
         <!-- column -->
         <div class="col-12">
             <div class="card">
@@ -92,19 +92,10 @@
                     <!-- title -->
                     <div class="d-md-flex align-items-center">
                         <div>
-                            <h4 class="card-title">Top Selling Products</h4>
-                            <h5 class="card-subtitle">Overview of Top Selling Items</h5>
+                            <h4 class="card-title">Top client</h4>
+                            <h5 class="card-subtitle">Les commandes qui ont le plus grand montant</h5>
                         </div>
-                        <div class="ml-auto">
-                            <div class="dl">
-                                <select class="custom-select">
-                                    <option value="0" selected>Monthly</option>
-                                    <option value="1">Daily</option>
-                                    <option value="2">Weekly</option>
-                                    <option value="3">Yearly</option>
-                                </select>
-                            </div>
-                        </div>
+                       
                     </div>
                     <!-- title -->
                 </div>
@@ -112,96 +103,49 @@
                     <table class="table v-middle">
                         <thead>
                             <tr class="bg-light">
-                                <th class="border-top-0">Products</th>
-                                <th class="border-top-0">License</th>
-                                <th class="border-top-0">Support Agent</th>
-                                <th class="border-top-0">Technology</th>
-                                <th class="border-top-0">Tickets</th>
-                                <th class="border-top-0">Sales</th>
-                                <th class="border-top-0">Earnings</th>
+                                @can('ramassage-commande')
+                                <th class="border-top-0">Nom du fournisseur</th>
+                                @endcan
+                                <th class="border-top-0">Nom du client</th>
+                                <th class="border-top-0">Nombre de commandes</th>
+                                <th class="border-top-0">Nombre de colis</th>
+                                <th class="border-top-0">Montant</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($topCmds as $index => $topCmd)
                             <tr>
+                                @can('ramassage-commande')
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="m-r-10"><a class="btn btn-circle btn-info text-white">EA</a></div>
-                                        <div class="">
-                                            <h4 class="m-b-0 font-16">Elite Admin</h4>
-                                        </div>
+                                    <div class="m-r-10">
+                                        <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
+                                            
+                                                @can('edit-users')
+                                                    href="{{route('admin.users.edit',$users[$index]->id)}}"
+                                                @endcan
+
+                                        >
+                                        <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
+                                    </a>
                                     </div>
+                                    <div>    
+                                        <h4 class="m-b-0 font-16">{{$users[$index]->name}}</h4>
+                                    </div>
+                                </div>
                                 </td>
-                                <td>Single Use</td>
-                                <td>John Doe</td>
+                                @endcan
                                 <td>
-                                    <label class="label label-danger">Angular</label>
+                                            <h5 class="m-b-0 font-16">{{$topCmd->nom}}</h5>
                                 </td>
-                                <td>46</td>
-                                <td>356</td>
+                         
+                                <td>{{$topCmd->cmd}}</td>
+                                <td>{{$topCmd->colis}}</td>
                                 <td>
-                                    <h5 class="m-b-0">$2850.06</h5>
+                                    <h5 class="m-b-0">{{$topCmd->m}} MAD</h5>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="m-r-10"><a class="btn btn-circle btn-orange text-white">MA</a></div>
-                                        <div class="">
-                                            <h4 class="m-b-0 font-16">Monster Admin</h4>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Single Use</td>
-                                <td>Venessa Fern</td>
-                                <td>
-                                    <label class="label label-info">Vue Js</label>
-                                </td>
-                                <td>46</td>
-                                <td>356</td>
-                                <td>
-                                    <h5 class="m-b-0">$2850.06</h5>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="m-r-10"><a class="btn btn-circle btn-success text-white">MP</a></div>
-                                        <div class="">
-                                            <h4 class="m-b-0 font-16">Material Pro Admin</h4>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Single Use</td>
-                                <td>John Doe</td>
-                                <td>
-                                    <label class="label label-success">Bootstrap</label>
-                                </td>
-                                <td>46</td>
-                                <td>356</td>
-                                <td>
-                                    <h5 class="m-b-0">$2850.06</h5>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="m-r-10"><a class="btn btn-circle btn-purple text-white">AA</a></div>
-                                        <div class="">
-                                            <h4 class="m-b-0 font-16">Ample Admin</h4>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Single Use</td>
-                                <td>John Doe</td>
-                                <td>
-                                    <label class="label label-purple">React</label>
-                                </td>
-                                <td>46</td>
-                                <td>356</td>
-                                <td>
-                                    <h5 class="m-b-0">$2850.06</h5>
-                                </td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -209,7 +153,7 @@
         </div>
     </div>
   
-    <div class="row">
+  {{--   <div class="row">
         <!-- column -->
         <div class="col-lg-6">
             <div class="card">
@@ -325,8 +269,8 @@
                 </div>
             </div>
         </div>
-    </div> --}}
-  
+    </div> 
+   --}}
     <!-- Recent comment and chats -->
     <!-- ============================================================== -->
 </div>

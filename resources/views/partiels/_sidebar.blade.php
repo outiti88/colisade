@@ -155,7 +155,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
-                                        <button class="btn btn-success">Ajouter</button>
+                                        <button class="btn btn-danger">Ajouter</button>
                                         
                                     </div>
                                 </div>

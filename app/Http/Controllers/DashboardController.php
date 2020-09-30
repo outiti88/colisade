@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -32,6 +33,7 @@ class DashboardController extends Controller
             $factures = DB::table('factures')->where('user_id',Auth::user()->id)->where('numero','like','%'.$request->search.'%')->get();
 
         }*/
+        $users = [];
         $c_total = DB::table('commandes')->where('statut','En cours')->where('deleted_at',NULL);
         $l_total = DB::table('commandes')->where('statut','livré')->where('deleted_at',NULL);
         $r_total = DB::table('commandes')->where('statut','like','retour%')->where('deleted_at',NULL);
@@ -42,7 +44,33 @@ class DashboardController extends Controller
             $l_total = $l_total->where('user_id',Auth::user()->id);
             $r_total = $r_total->where('user_id',Auth::user()->id);
             $e_total = $e_total->where('user_id',Auth::user()->id);
+
+            $topCmd = DB::table('commandes')
+                            ->select(DB::raw('nom , count(*) as cmd , sum(colis) as colis , sum(montant) as m'))
+                            ->where('deleted_at',NULL)
+                            ->where('user_id',Auth::user()->id)
+                            ->where('statut','livré')
+                            ->groupBy('nom')
+                            ->orderBy('m', 'DESC')
+                            ->take(4)->get();
         }
+
+        else{
+            $topCmd = DB::table('commandes')
+            ->select(DB::raw('nom , user_id, count(*) as cmd , sum(colis) as colis , sum(montant) as m'))
+            ->where('deleted_at',NULL)
+            ->where('statut','livré')
+            ->groupBy('nom')
+            ->orderBy('m', 'DESC')
+            ->take(4)->get();
+
+            foreach($topCmd as $commande){
+                if(!empty(User::find($commande->user_id)))
+                $users[] =  User::find($commande->user_id) ;
+            }
+        }
+        
+        //dd($users);
 
         //Statuts des commandes
         $c= $c_total->orderBy('created_at','DESC')->limit(1)->get()->first();
@@ -97,7 +125,7 @@ class DashboardController extends Controller
            $livre=json_encode($chart['livre'],JSON_NUMERIC_CHECK);
            $retour=json_encode($chart['retour'],JSON_NUMERIC_CHECK);
 
-        return view('dashboard' , ['tab'=>$tab , 'livre'=>$livre , 'retour'=>$retour]);
+        return view('dashboard' , ['tab'=>$tab , 'livre'=>$livre , 'retour'=>$retour , 'topCmds' => $topCmd , 'users' => $users]);
         
     }
 }
