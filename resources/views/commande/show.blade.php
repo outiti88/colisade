@@ -143,7 +143,7 @@ N: {{$commande->numero}}
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
                     @endcan
                     @can('ramassage-commande')
-                    @if ($commande->statut !== "expidié")
+                    @if ($commande->statut === "en cours")
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
                     @endif
                     @endcan

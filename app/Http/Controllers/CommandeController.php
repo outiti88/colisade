@@ -254,7 +254,7 @@ class CommandeController extends Controller
         //dd(Auth::user()->id );
 
         $bon_livraison = DB::table('bon_livraisons')->whereDate('created_at',now())->where('user_id',Auth::user()->id)->count();
-        dd(now(),$bon_livraison);
+        //dd(now(),$bon_livraison);
         if(gmdate("H")+1 <= 23 && gmdate("H")+1 >= 8 ){
 
             if($bon_livraison > 0){
@@ -328,6 +328,7 @@ class CommandeController extends Controller
     public function content(Commande $commande){
         $content = '';
         $user = DB::table('users')->find($commande->user_id);
+
         for ($i=1; $i <= $commande->colis ; $i++) { 
             $content .= '
             <div class="container">
@@ -545,7 +546,8 @@ class CommandeController extends Controller
             return redirect(route('commandes.index'));
         }
          $commande = Commande::findOrFail($id);
-         $blExist = DB::table('bon_livraisons')->whereDate('created_at',$commande->created_at)->where('user_id',Auth::user()->id)->count();
+         $blExist = DB::table('bon_livraisons')->whereDate('created_at',$commande->created_at)->where('user_id',$commande->user_id)->count();
+         
         // dd($blExist);
         if($commande->statut === "expidié" && $blExist === 0)
         {

@@ -76,8 +76,8 @@ class FactureController extends Controller
             if($nbrCmdLivre == 0){
                 $request->session()->flash('nbrCmdLivre');
             }
-                else{
-                    $request->session()->flash('nbrCmdRamasse' , $nbrCmdRamasse);
+            if ($nbrCmdLivre == 0){
+                $request->session()->flash('nbrCmdRamasse' , $nbrCmdRamasse);
             }
         }
         else{
