@@ -15,6 +15,7 @@ class NotificationController extends Controller
     public function index(){
 
         if(!Gate::denies('ramassage-commande')){
+           
             $notifications = DatabaseNotification::all()->sortByDesc('created_at')->sortBy('read_at')->where('notifiable_id',1);
         }
         else{

@@ -72,7 +72,7 @@
                                 <i class="fas fa-bell"></i> 
                             </a>
                             @can('delete-users')
-                                @unless (Auth::user()->unreadNotifications->isEmpty())
+                                @unless (auth()->user()->unreadNotifications->isEmpty())
                                 
                                     <ul class="dropdown-menu notify-drop" style="width: 300px;
                                         position: absolute;
@@ -88,8 +88,10 @@
                                             </div>
                                             <div class="drop-content" style="
                                             margin: 20px;">
-                                                @foreach (Auth::user()->unreadNotifications as $notification)
+                                                @foreach (auth()->user()->unreadNotifications as $notification)
                                                 
+                                                
+                                            
                                                 <li class="row">
                                                     <a class="hoverNotif" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
                                                         'notification' => $notification->id])}}">
@@ -102,6 +104,7 @@
                                                         </a>
                                                 </li>
                                             
+                                                
                                                 @endforeach
                                             
                                                 
