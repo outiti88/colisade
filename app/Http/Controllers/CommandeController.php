@@ -261,12 +261,24 @@ class CommandeController extends Controller
                 $request->session()->flash('bonLivraison');
                 return redirect('/commandes');
             }
-
-
+            if(!Gate::denies('manage-users')){
+                if(isset($request->client)){
+                    $fournisseur = User::find($request->client);
+                }
+                else{
+                    return redirect('/commandes');
+                }
+                
+            }
+            else{
+                $fournisseur = Auth::user() ;
+            }
 
             $commande = new Commande() ;
             $statut = new Statut();
             
+            
+            //dd('salut');
         $commande->telephone = $request->telephone;
         $commande->ville = $request->ville;
         $commande->adresse = $request->adresse;
@@ -278,8 +290,10 @@ class CommandeController extends Controller
         $commande->colis = $request->colis;
         $commande->poids = $request->poids;
         $commande->nom = $request->nom;
-        $commande->numero = substr(Auth::user()->name, - strlen(Auth::user()->name) , 3)."-".date("md-is");
-        $commande->user()->associate(Auth::user())->save();
+        $commande->numero = substr($fournisseur->name, - strlen($fournisseur->name) , 3)."-".date("md-is");
+        $commande->user()->associate($fournisseur)->save();
+
+        
         //dd($commande->user());
         //$commande->save();
         $statut->commande_id = $commande->id;
@@ -290,7 +304,7 @@ class CommandeController extends Controller
 
         //notification
             $user_notify = \App\User::find(1);
-            $user_notify->notify(new newCommande( Auth::user() , $commande));
+            $user_notify->notify(new newCommande( $fournisseur , $commande));
         }
 
         else{

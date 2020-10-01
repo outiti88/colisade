@@ -44,10 +44,15 @@
                     <!-- End User Profile-->
                 </li>
                 
-                @can('client-admin')
+                @can('client')
                 <li class="p-15 m-t-10"><a href="javascript:void(0)" class="btn btn-block create-btn text-white no-block d-flex align-items-center" data-toggle="modal" data-target="#modalSubscriptionForm">
                     <i class="fa fa-plus-square"></i> 
                     <span class="hide-menu m-l-5">Nouvelle Commande</span> </a></li>
+                @endcan
+                @can('manage-users')
+                <li class="p-15 m-t-10"><a href="{{route('register')}}" class="btn btn-block create-btn text-white no-block d-flex align-items-center">
+                    <i class="fa fa-plus-square"></i> 
+                    <span class="hide-menu m-l-5">Nouveau Utilisateur</span> </a></li>
                 @endcan
                 <!-- User Profile-->
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span></a></li>
@@ -68,7 +73,7 @@
 </aside>
 
 <div class="container my-4">    
-    @can('client-admin')
+    @can('client')
     <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog" role="document">

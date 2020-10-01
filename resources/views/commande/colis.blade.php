@@ -328,6 +328,140 @@
     </div>
 </div>
 
+
+
+
+<div class="container my-4">    
+    @can('manage-users')
+    <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header text-center">
+                          <h4 class="modal-title w-100 font-weight-bold">Nouvelle Commande</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <form class="form-horizontal form-material" method="POST" action="{{route('commandes.store')}}">
+                                @csrf
+                                <div class="form-group row">
+                                    <label for="client" class="col-sm-12">Fournisseur :</label>
+                                    <div class="col-sm-12">
+                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}" required>
+                                            <option value="" disabled selected>Choisissez le fournisseur</option>
+                                            @foreach ($clients as $client)
+                                        <option value="{{$client->id}}" class="rounded-circle">
+                                            {{$client->name}}
+                                        </option>
+                                            @endforeach
+                                           
+                                        </select>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-12">Nom et Prénom du destinataire :</label>
+                                    <div class="col-md-12">
+                                        <input  value="{{ old('nom') }}" name="nom" type="text" placeholder="Nom & Prénom" class="form-control form-control-line">
+                                    </div>
+                                </div>
+                               
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="example-email" class="col-md-12">Nombre de Colis :</label>
+                                        <div class="col-md-12">
+                                            <input  value="{{ old('colis') }}" type="number" class="form-control form-control-line" name="colis" id="example-email">
+                                        </div>
+                                    </div>
+    
+    
+                                    <fieldset class="form-group col-md-4">
+                                        <div class="row">
+                                          <legend class="col-form-label  pt-0">Poids :</legend>
+                                          <div class="col-sm-12">
+                                            <div class="form-check">
+                                              <input   class="form-check-input" type="radio" name="poids" id="normal" value="normal" checked>
+                                              <label class="form-check-label" for="normal">
+                                                P. Normal
+                                              </label>
+                                            </div>
+                                            <div class="form-check">
+                                              <input   class="form-check-input" type="radio" name="poids" id="voluminaux" value="voluminaux">
+                                              <label class="form-check-label" for="voluminaux">
+                                                P. Volumineux
+                                              </label>
+                                            </div>
+                                        
+                                          </div>
+                                        </div>
+                                      </fieldset>
+    
+    
+                                      <div class="form-group col-md-4">
+                                        <label for="example-email" class="col-md-12">Montant (MAD) :</label>
+                                        <div class="col-md-12">
+                                            <input  value="{{ old('montant') }}" type="number" class="form-control form-control-line" name="montant" id="example-email">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                
+                                <div class="form-group">
+                                    <label class="col-md-12">Téléphone :</label>
+                                    <div class="col-md-12">
+                                        <input value="{{ old('telephone') }}"  name="telephone" type="text" placeholder="0xxx xxxxxx" class="form-control form-control-line">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-12">Adresse :</label>
+                                    <div class="col-md-12">
+                                        <textarea  name="adresse" rows="5" class="form-control form-control-line">{{ old('adresse') }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-12">Ville :</label>
+                                    <div class="col-sm-12">
+                                        <select name="ville" class="form-control form-control-line">
+                                            <option>Tanger</option>
+                                            <option>Marrakech</option>
+                                            <option>Kénitra</option>
+                                            <option>Casablanca</option>
+                                            <option>Rabat</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button class="btn btn-danger">Ajouter</button>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+                            @if ($errors->any())
+                            <div class="alert alert-dismissible alert-danger">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>
+                                        <strong>{{$error}}</strong>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                              </div>
+                              @endif
+                        </div>
+            
+                      </div>
+                    </div>
+    </div>
+    @endcan
+</div>
+
+
+
+
 @endsection
 
 @section('javascript')
