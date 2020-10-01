@@ -139,7 +139,11 @@
                                 </div>
                                 <div class="form-check">
                                     <input type="checkbox" name="roles[]" value="2" id="Client" checked>
-                                    <label for="Client">Client</label>
+                                    <label for="Client">Magasinier</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="roles[]" value="5" id="Client" checked>
+                                    <label for="Client">E-commerçant</label>
                                 </div>
                                 <div class="form-check">
                                     <input type="checkbox" name="roles[]" value="3" id="Livreur" >

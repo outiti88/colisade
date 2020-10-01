@@ -60,6 +60,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Commande');
     }
 
+    public function produits(){
+        return $this->hasMany('App\Produit');
+    }
+
     /**
      * Get the comments for the blog post.
      */
