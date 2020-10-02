@@ -254,6 +254,24 @@ N: {{$commande->numero}}
                             <h6>
                                 {{$commande->numero}}
                             </h6>
+                            <a href="" title="Statut" 
+                                    class="badge badge-pill 
+                                    @switch($commande->statut)
+                                    @case("expidié")
+                                    badge-warning
+                                        @break
+                                    @case("En cours")
+                                    badge-info
+                                        @break
+                                    @case("Livré")
+                                    badge-success
+                                        @break
+                                    @default
+                                    badge-danger
+                                @endswitch
+                                    "> 
+                                     <span style="font-size: 1.25em">{{$commande->statut}}</span> 
+                                </a>
                             <p class="proile-rating">Date : {{date_format($commande->created_at,"Y/m/d")}}<span> {{date_format($commande->created_at,"H:i:s")}}</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -360,21 +378,50 @@ N: {{$commande->numero}}
                     </div>
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label>STATUT</label>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <p>DATE</p>
                                     </div>
-                                </div>
-                                @foreach ($statuts as $statut)
-                                <div class="row">
-                                    <div class="col-md-6">
-                                    <label>{{$statut->name}}</label>
+                                    @can('ramassage-commande')
+                                    <div class="col-md-4">
+                                        <p>PAR</p>
                                     </div>
-                                    <div class="col-md-6">
+                                    @endcan
+                                </div>
+                                @foreach ($statuts as $index => $statut)
+                                <div class="row">
+                                    <div class="col-md-4">
+                                    <label>
+                                        <a style="color: white" href="" title="Statut" 
+                                    class="badge badge-pill 
+                                    @switch($statut->name)
+                                    @case("expidié")
+                                    badge-warning
+                                        @break
+                                    @case("En cours")
+                                    badge-info
+                                        @break
+                                    @case("Livré")
+                                    badge-success
+                                        @break
+                                    @default
+                                    badge-danger
+                                @endswitch
+                                    "> 
+                                     <span style="font-size: 1.25em">{{$statut->name}}</span> 
+                                </a>
+                                    </label>
+                                    </div>
+                                    <div class="col-md-4">
                                         <p>{{$statut->created_at}}</p>
                                     </div>
+                                    @can('ramassage-commande')
+                                    <div class="col-md-4">
+                                        <p>{{$par[$index]->name}}</p>
+                                    </div>
+                                    @endcan
                                 </div>
                                 @endforeach
                                 

@@ -333,8 +333,13 @@ class CommandeController extends Controller
     {
         //return $commande;
         $statuts = DB::table('statuts')->where('commande_id',$commande->id)->get();
-        //dd($commande);
-        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts]);
+
+        foreach($statuts as $statut){
+            $users[] =  User::find($statut->user_id) ;
+         
+        }
+        //dd($users);
+        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 'par' => $users]);
     }
 
 

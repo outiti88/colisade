@@ -161,7 +161,9 @@
                     <table class="table table-hover table-bordered" style="font-size: 0.85em;">
                         <thead>
                             <tr>
+                                @can('ramassage-commande')
                                 <th scope="col">Client</th>
+                                @endcan
                                 <th scope="col">Numero Commande</th>
                                 <th scope="col">Nom Complet</th>
                                 <th scope="col">Téléphone</th>
@@ -178,6 +180,7 @@
                         <tbody>
                            @forelse ($commandes as $index => $commande)
                            <tr>
+                            @can('ramassage-commande')
                             <th scope="row">
                                 <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
                                         @if(Auth::user()->id === $users[$index]->id )
@@ -192,6 +195,7 @@
                                     <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
                                 </a>
                             </th>
+                            @endcan
                             <th scope="row">{{$commande->numero}}</th>
                             <td>{{$commande->nom}}</td>
                             <td>{{$commande->telephone}}</td>
@@ -200,8 +204,33 @@
                             <td>{{$commande->montant}} MAD</td>
                             <td>{{$commande->prix}} MAD</td>
                             <td>{{$commande->created_at}}</td>
-                            <td><a href="{{ route('commandeStatut',['id'=> $commande->id]) }}">{{$commande->statut}}  ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}}) </a></td>
-                           <td style="font-size: 1.5em"><a style="color: #e85f03" href="/commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
+                            <td>
+                                
+                                <a style="color: white" title="Rammaser la commande" 
+                                    class="badge badge-pill 
+                                    @switch($commande->statut)
+                                    @case("expidié")
+                                    badge-warning
+                                        @break
+                                    @case("En cours")
+                                    badge-info
+                                        @break
+                                    @case("Livré")
+                                    badge-success
+                                        @break
+                                    @default
+                                    badge-danger
+                                @endswitch
+                                    "
+                                    @can('ramassage-commande')
+                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                    @endcan
+                                     > 
+                                     <span style="font-size: 1.25em">{{$commande->statut}}</span> 
+                                </a>
+                                <br> ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}}) 
+                            </td>
+                           <td style="font-size: 1.5em"><a title="Voir le detail" style="color: #e85f03" href="/commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
                         </tr>
                         @empty
                         <tr>
