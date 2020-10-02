@@ -215,7 +215,7 @@
                     </table>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
-                            {{$commandes -> links()}}
+                           {{$commandes -> links()}}
                         </div>
                     </div>
                 </div>
@@ -270,7 +270,7 @@
                                         <select name="statut" class="form-control form-control-line">
                                             <option selected disabled>Choisissez le statut</option>
                                             <option>Expidié</option>
-                                            <option>Ramassé</option>
+                                            <option>en cours</option>
                                             <option>Livré</option>
                                             <option>Retour Complet</option>
                                             <option>Retour Partiel</option>

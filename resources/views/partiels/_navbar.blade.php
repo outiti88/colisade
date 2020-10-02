@@ -77,8 +77,9 @@
                                     <ul class="dropdown-menu notify-drop" style="width: 300px;
                                         position: absolute;
                                         left: -250px;
-                                        hmax-height: 500px;
-                                        overflow: scroll;">
+                                        max-height: 500px;
+                                        overflow-y:scroll;
+                                         overflow-x:hidden;">
                                             <div class="notify-drop-title" style="
                                                         margin: 20px;">
                                                 <div class="row">

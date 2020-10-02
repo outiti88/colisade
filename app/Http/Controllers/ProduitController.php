@@ -2,6 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Commande;
+use App\Http\Requests\StoreCommande;
+use App\Notifications\newCommande;
+use App\Notifications\statutChange;
+use App\Statut;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use App\User;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Auth;
 use App\Produit;
 use Illuminate\Http\Request;
 
@@ -14,7 +24,30 @@ class ProduitController extends Controller
      */
     public function index()
     {
-        //
+        $clients = User::whereHas('roles', function($q){$q->where('name','ecom');})->get();
+        $users = [] ;
+
+        if(!Gate::denies('ramassage-commande')) {
+            //session administrateur donc on affiche tous les commandes
+            $total = DB::table('produits')->count();
+            $produits= DB::table('produits')->orderBy('created_at', 'DESC')->paginate(10);
+            foreach($produits as $produit){
+                if(!empty(User::find($produit->user_id)))
+                $users[] =  User::find($produit->user_id) ;
+            }
+            //dd($clients[0]->id);
+        }
+        else{
+            $produits= DB::table('produits')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
+            $total =DB::table('produits')->where('user_id',Auth::user()->id )->count();
+           //dd("salut");
+        }
+
+
+        return view('produit.index' , ['produits' => $produits, 
+                                'total'=>$total,
+                                'users'=> $users,
+                                'clients' => $clients]);
     }
 
     /**

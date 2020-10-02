@@ -36,7 +36,7 @@ class CommandeController extends Controller
     public function index()
     {
         //dd(Auth::user()->id );
-        $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
+        $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
         $users = [] ;
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
@@ -298,7 +298,7 @@ class CommandeController extends Controller
         //$commande->save();
         $statut->commande_id = $commande->id;
         $statut->name = $commande->statut;
-        $statut->save();
+        $statut->user()->associate(Auth::user())->save();
         $request->session()->flash('statut', $commande->id);
 
 
@@ -570,7 +570,7 @@ class CommandeController extends Controller
             $statut = new Statut();
             $statut->commande_id = $commande->id;
             $statut->name = $commande->statut;
-            $statut->save();
+            $statut->user()->associate(Auth::user())->save();
             
             //notification
             $user_notify = \App\User::find($commande->user_id);
@@ -611,7 +611,7 @@ class CommandeController extends Controller
                 $statut = new Statut();
                 $statut->commande_id = $commande->id;
                 $statut->name = $commande->statut;
-                $statut->save();
+                $statut->user()->associate(Auth::user())->save();
                 $request->session()->flash('edit', $commande->numero);
             }
             else{

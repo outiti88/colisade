@@ -22,6 +22,10 @@ Route::resource('/commandes','CommandeController')->except([
     'create', 'edit'
 ]);
 
+Route::resource('/produit','ProduitController')->except([
+    'create', 'edit'
+])->middleware('can:gestion-stock');
+
 Route::get('showFromNotify/{commande}/{notification}' , 'CommandeController@showFromNotify')->name('commandes.showFromNotify');
 
 Route::get('/profil', 'ProfilController@index')->name('profil.index');
@@ -46,7 +50,6 @@ Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen');
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
     Route::resource('/users','UsersController',['except' => ['show','create','store']]);
-
 });
 
 Route::get('/facture/{id}/send','EmailController@sendFacture')->name('email.facture')->middleware('can:ramassage-commande');
@@ -54,4 +57,3 @@ Route::get('/facture/{id}/send','EmailController@sendFacture')->name('email.fact
 Route::get('/inbox','NotificationController@index')->name('inbox.index');
 Route::get('/{notifications}/show','NotificationController@show')->name('inbox.show');
 Route::get('/{notifications}/delete','NotificationController@destroy')->name('inbox.destroy');
-

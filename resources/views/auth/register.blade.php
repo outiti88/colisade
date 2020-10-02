@@ -131,28 +131,36 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="roles" class="col-md-2 col-form-label text-md-right">Rôles: </label>
+                            <label for="roles" class="col-md-2 col-form-label text-md-right">Rôles Quickoo: </label>
                             <div class="col-md-10 d-flex p-t-10 justify-content-around">
                                 <div class="form-check">
-                                    <input type="checkbox" name="roles[]" value="1" id="admin" >
+                                    <input type="radio" name="roles[]" value="1" id="admin" >
                                     <label for="admin">Admin</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" name="roles[]" value="2" id="Client" checked>
-                                    <label for="Client">Magasinier</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" name="roles[]" value="5" id="Client" checked>
-                                    <label for="Client">E-commerçant</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" name="roles[]" value="3" id="Livreur" >
+                                    <input type="radio" name="roles[]" value="3" id="Livreur" >
                                     <label for="Livreur">Livreur</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" name="roles[]" value="4" id="Personnel" >
+                                    <input type="radio" name="roles[]" value="4" id="Personnel" >
                                     <label for="Personnel">Personnel</label>
                                 </div>
+                            </div>
+                            <label for="roles" class="col-md-2 col-form-label text-md-right">Client : </label>
+                            <div class="col-md-10 d-flex p-t-10 justify-content-around">
+                            <div class="form-check">
+                                <input type="radio" name="roles[]" value="2" id="cl" checked>
+                                <label for="cl">Collecte, Livraison</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" name="roles[]" value="5" id="cls">
+                                <label for="cls">Collecte, livraison, stockage</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" name="roles[]" value="0" id="s">
+                                <label for="s">Stockage</label>
+                            </div>
+                        
                             </div>
                         </div>
 
