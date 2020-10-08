@@ -290,6 +290,7 @@ class CommandeController extends Controller
         $commande->colis = $request->colis;
         $commande->poids = $request->poids;
         $commande->nom = $request->nom;
+        $commande->traiter = 0;
         $commande->numero = substr($fournisseur->name, - strlen($fournisseur->name) , 3)."-".date("md-is");
         $commande->user()->associate($fournisseur)->save();
 
@@ -565,10 +566,10 @@ class CommandeController extends Controller
             return redirect(route('commandes.index'));
         }
          $commande = Commande::findOrFail($id);
-         $blExist = DB::table('bon_livraisons')->whereDate('created_at',$commande->created_at)->where('user_id',$commande->user_id)->count();
-         
+         //pour traiter la commande à ramassée , faut verifier deux conditons:
+            // commande est expidiée + traiter = 0         
         // dd($blExist);
-        if($commande->statut === "expidié" && $blExist === 0)
+        if($commande->statut === "expidié" && $commande->traiter == 0)
         {
             $commande->statut= "En cours";
             $commande->save();
@@ -609,7 +610,7 @@ class CommandeController extends Controller
 
 
         else{
-            if($commande->statut === 'En cours'){
+            if($commande->statut === 'En cours' && $commande->traiter > 0){ //bach traiter commande khass tkoun en cours w bl dyalha kyn
                 $commande->statut= $request->statut;
                 $commande->commentaire= $request->commentaire;
                 $commande->save();

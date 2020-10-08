@@ -158,7 +158,7 @@
                     <h6 class="card-subtitle">Nombre total des commandes : <code>{{$total}} Commandes</code> .</h6>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered" style="font-size: 0.85em;">
+                    <table class="table table-hover table-bordered" style="font-size: 0.72em;">
                         <thead>
                             <tr>
                                 @can('ramassage-commande')
@@ -206,25 +206,34 @@
                             <td>{{$commande->created_at}}</td>
                             <td>
                                 
-                                <a style="color: white" title="Rammaser la commande" 
+                                <a style="color: white" 
                                     class="badge badge-pill 
                                     @switch($commande->statut)
                                     @case("expidié")
-                                    badge-warning
-                                        @break
-                                    @case("En cours")
-                                    badge-info
-                                        @break
-                                    @case("Livré")
-                                    badge-success
-                                        @break
-                                    @default
-                                    badge-danger
-                                @endswitch
-                                    "
+                                    badge-warning"
                                     @can('ramassage-commande')
+                                    title="Rammaser la commande" 
                                      href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
                                     @endcan
+                                        @break
+                                    @case("En cours")
+                                    badge-info"
+                                        @if ($commande->traiter > 0)
+                                        title="Voir le bon de livraison" 
+                                        href="{{route('bon.gen',$commande->traiter)}}"
+                                        @else
+                                        title="Générer le bon de livraison" 
+                                        href="{{route('bonlivraison.index')}}"
+                                        @endif
+                                        
+                                        @break
+                                    @case("Livré")
+                                    badge-success"
+                                        @break
+                                    @default
+                                    badge-danger"
+                                @endswitch
+                                    
                                      > 
                                      <span style="font-size: 1.25em">{{$commande->statut}}</span> 
                                 </a>

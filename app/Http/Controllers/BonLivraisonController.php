@@ -35,7 +35,7 @@ class BonLivraisonController extends Controller
         $users = []; //les users qui seront affichés avec leur bon de livraison
         if(!Gate::denies('ramassage-commande')) {
             $bonLivraisons = DB::table('bon_livraisons')->orderBy('created_at', 'DESC')->get();
-            $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
+            $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
 
         }
         else{
@@ -75,27 +75,27 @@ class BonLivraisonController extends Controller
             $user = Auth::user()->id ; //session du client
         }
         $date = now();
-        $blNoExist = DB::table('bon_livraisons')->where('user_id',$user)->whereDate('created_at',$date)->count();
-        $cmdExist =  DB::table('commandes')->where('statut','<>','expidié')->where('user_id',$user)->whereDate('created_at',now())->count();
+        $cmdExist =  DB::table('commandes')->where('statut','en cours')->where('traiter','0')->where('user_id',$user)->count();
 
-        //dd($blNoExist , $cmdExist , $user);
+       // dd($cmdExist , $user);
 
-        if( ($blNoExist != 0) || ($cmdExist == 0) ){ //le bon de libraison existe déja ou ga3 les commandes ba9in expidié
-            if($blNoExist != 0){
-                $request->session()->flash('blNoExist');
-            }
-                else{
+        if( ($cmdExist == 0) ){ // 0 commande en cours et jamais traiter
+            
                     $request->session()->flash('cmdExist');
-            }
+            
         }
         else{
             $bonLivraison = new BonLivraison();
-            $bonLivraison->colis = DB::table('commandes')->where('user_id',$user)->where('statut','<>','expidié')->whereDate('created_at',$date)->sum('colis');
-            $bonLivraison->commande = DB::table('commandes')->where('user_id',$user)->where('statut','<>','expidié')->whereDate('created_at',$date)->count();
-            $bonLivraison->prix = DB::table('commandes')->where('user_id',$user)->where('statut','<>','expidié')->whereDate('created_at',$date)->sum('prix');
-            $bonLivraison->montant = DB::table('commandes')->where('user_id',$user)->where('statut','<>','expidié')->whereDate('created_at',$date)->sum('montant');
-            $bonLivraison->nonRammase = DB::table('commandes')->where('user_id',$user)->where('statut','expidié')->whereDate('created_at',$date)->count();
+            $bonLivraison->colis = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->sum('colis');
+            $bonLivraison->commande = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->count();
+            $bonLivraison->prix = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->sum('prix');
+            $bonLivraison->montant = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->sum('montant');
+            $bonLivraison->nonRammase = 0 ;
             $bonLivraison->user()->associate($user)->save();
+
+            $affected = DB::table('commandes')->where('statut','en cours')->where('traiter', '=', '0')->update(array('traiter' => $bonLivraison->id));
+            //dd($affected);
+
             $request->session()->flash('ajoute');
         }
 
@@ -105,7 +105,7 @@ class BonLivraisonController extends Controller
     public function commandes(BonLivraison $bonLivraison, $n , $i){
         $user = $bonLivraison->user_id;
         $date = $bonLivraison->created_at;
-        $commandes = DB::table('commandes')->whereDate('created_at',$date)->where('user_id',$user)->where('statut','<>','expidié')->get();
+        $commandes = DB::table('commandes')->where('statut','en cours')->where('traiter',$bonLivraison->id)->where('user_id',$user)->get();
         $content = 
         '
         <div class="invoice">

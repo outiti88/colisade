@@ -99,7 +99,6 @@
                                 <th scope="col">Date d'ajout</th>
                                 <th scope="col">Montant Total</th>
                                 <th scope="col">Frais de Livraison</th>
-                                <th scope="col">Commandes non ramassées</th>
                               
                                 <th scope="col">imprimer</th>
                               
@@ -117,7 +116,6 @@
                                 <td>{{ $bonLivraison->created_at}}</td>
                                 <td>{{ $bonLivraison->montant}} Mad</td>
                                 <td>{{ $bonLivraison->prix}} Mad</td>
-                                <td>{{ $bonLivraison->nonRammase}}</td>
                                
                                 <td>
                                 <a target="_blank" class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" ><i class="fas fa-print"></i></a>

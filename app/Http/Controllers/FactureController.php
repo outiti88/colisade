@@ -34,8 +34,7 @@ class FactureController extends Controller
         $users = []; //les users qui seront affichés avec leur bon de livraison
         if(!Gate::denies('ramassage-commande')) {
             $factures = DB::table('factures')->orderBy('created_at', 'DESC')->get();
-            $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
-        }
+            $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();        }
         else{
             $factures = DB::table('factures')->where('user_id',Auth::user()->id)->orderBy('created_at', 'DESC')->get();
         }
