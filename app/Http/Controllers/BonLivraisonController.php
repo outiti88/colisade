@@ -28,8 +28,8 @@ class BonLivraisonController extends Controller
      */
     public function index()
     {
-        $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','<>','expidié')->whereDate('created_at',now())->count();
-        $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->whereDate('created_at',now())->count();
+        $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','en cours')->where('traiter','0')->count();
+        $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->where('traiter','0')->count();
 
         $clients = []; //tableau des clients existe dans la base de données
         $users = []; //les users qui seront affichés avec leur bon de livraison

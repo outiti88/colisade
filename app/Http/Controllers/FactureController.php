@@ -60,34 +60,27 @@ class FactureController extends Controller
      */
     public function store(Request $request)
     {
-        $date = $request->date;
         $user = $request->client;
         if(!Gate::denies('ramassage-commande')) {
-        $facNoExist = DB::table('factures')->where('user_id',$user)->whereDate('created_at',$date)->count();
-        $nbrCmdLivre =  DB::table('commandes')->where('statut','Livré')->where('user_id',$user)->whereDate('created_at',$date)->count();
-        $nbrCmdRamasse =  DB::table('commandes')->where('statut','En cours')->where('user_id',$user)->whereDate('created_at',$date)->count();
-        $nbrCmd =  DB::table('commandes')->where('user_id',$user)->whereDate('created_at',$date)->count();
-        
-        if( ($facNoExist != 0) || ($nbrCmdRamasse > 0) || ($nbrCmdLivre == 0) ){ // matkounch la facture kayna et ta chi commande mazala en cours
-            if($facNoExist != 0){
-                $request->session()->flash('facNoExist');
-            }
-            if($nbrCmdLivre == 0){
-                $request->session()->flash('nbrCmdLivre');
-            }
-            if ($nbrCmdLivre == 0){
+        $nbrCmdLivre =  DB::table('commandes')->where('statut','Livré')->where('user_id',$user)->where('facturer','0')->count();
+        $nbrCmdRamasse =  DB::table('commandes')->where('statut','En cours')->where('user_id',$user)->where('facturer','0')->count();
+
+        if($nbrCmdLivre == 0){ 
+           
                 $request->session()->flash('nbrCmdRamasse' , $nbrCmdRamasse);
-            }
+            
         }
         else{
             $facture = new Facture();
             $facture->numero = 'FAC_'.date("mdis");
-            $facture->colis = DB::table('commandes')->where('user_id',$user)->where('statut','<>','Livré')->whereDate('created_at',$date)->sum('colis');
+            $facture->colis = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Reporté', 'Retour Complet', 'Retour Partiel'])->where('facturer','0')->sum('colis');
             $facture->livre = $nbrCmdLivre;
-            $facture->prix = DB::table('commandes')->where('user_id',$user)->where('statut','Livré')->whereDate('created_at',$date)->sum('prix');
-            $facture->montant = DB::table('commandes')->where('user_id',$user)->where('statut','Livré')->whereDate('created_at',$date)->sum('montant');
-            $facture->commande = $nbrCmd - $nbrCmdLivre; //nbr de commanddes non livrée
+            $facture->prix = DB::table('commandes')->where('user_id',$user)->where('statut','Livré')->where('facturer','0')->sum('prix');
+            $facture->montant = DB::table('commandes')->where('user_id',$user)->where('statut','Livré')->where('facturer','0')->sum('montant');
+            $facture->commande = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Reporté', 'Retour Complet', 'Retour Partiel'])->where('facturer','0')->count(); //nbr de commanddes non livrée
             $facture->user()->associate($user)->save();
+            $affected = DB::table('commandes')->whereIn('statut', ['Livré','Reporté', 'Retour Complet', 'Retour Partiel'])->where('facturer', '=', '0')->update(array('facturer' => $facture->id));
+
             $request->session()->flash('ajoute');
         }
 
@@ -99,8 +92,7 @@ class FactureController extends Controller
 
     public function commandes(Facture $facture, $n , $i){
         $user = $facture->user_id;
-        $date = $facture->created_at;
-        $commandes = DB::table('commandes')->whereDate('created_at',$date)->where('user_id',$user)->where('statut','livré')->get();
+        $commandes = DB::table('commandes')->where('user_id',$user)->where('statut','livré')->where('facturer',$facture->id)->get();
         $content = 
         '
         <div class="invoice">

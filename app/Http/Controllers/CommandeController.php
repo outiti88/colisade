@@ -12,6 +12,8 @@ use App\Statut;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\User;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -291,6 +293,7 @@ class CommandeController extends Controller
         $commande->poids = $request->poids;
         $commande->nom = $request->nom;
         $commande->traiter = 0;
+        $commande->facturer = 0;
         $commande->numero = substr($fournisseur->name, - strlen($fournisseur->name) , 3)."-".date("md-is");
         $commande->user()->associate($fournisseur)->save();
 
@@ -332,6 +335,14 @@ class CommandeController extends Controller
      */
     public function show(Commande $commande)
     {
+        if($commande->statut == 'Livré'){
+            $timestamp1 = strtotime($commande->created_at);
+            $timestamp2 = strtotime($commande->updated_at);
+            $hour = abs($timestamp2 - $timestamp1)/(3600);
+            $minute = ($hour - (int)$hour ) * 60 ;
+            $seconde = ($minute - (int)$minute ) * 60 ;
+            //dd((int)$hour , (int)$minute ,(int)$seconde);
+        }
         //return $commande;
         $statuts = DB::table('statuts')->where('commande_id',$commande->id)->get();
 

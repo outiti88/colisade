@@ -185,12 +185,7 @@
                                         
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="example-date-input" class="col-12 col-form-label">Date</label>
-                                    <div class="col-12">
-                                      <input class="form-control" name="date"  type="date" value="{{now()}}" id="example-date-input" required>
-                                    </div>
-                                  </div>
+                            
 
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
