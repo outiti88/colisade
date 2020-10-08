@@ -81,7 +81,7 @@
 <div class="container-fluid">
     
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
             <div class="card-header">{{ __('Total des Bons de livraison : ') }} {{ $total }}</div>
 
@@ -99,8 +99,7 @@
                                 <th scope="col">Date d'ajout</th>
                                 <th scope="col">Montant Total</th>
                                 <th scope="col">Frais de Livraison</th>
-                              
-                                <th scope="col">imprimer</th>
+                                <th scope="col">Imprimer</th>
                               
                               </tr>
                             </thead>
@@ -110,17 +109,22 @@
                                 @can('ramassage-commande')
                                 <th scope="row"><img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31"></th>
                                 @endcan
-                                <th>BL_{{bin2hex(substr($users[$index]->name, - strlen($users[$index]->name) , 3)).$bonLivraison->id}}</th>
+                                <th>
+                                  <a class="btn btn-light" href="{{route('bon.search',$bonLivraison->id)}}">
+                                    BL_{{bin2hex(substr($users[$index]->name, - strlen($users[$index]->name) , 3)).$bonLivraison->id}}
+                                  </a>
+                                  
+                                </th>
                                 <td>{{$bonLivraison->commande}}</td>
                                 <td>{{$bonLivraison->colis}}</td>
                                 <td>{{ $bonLivraison->created_at}}</td>
                                 <td>{{ $bonLivraison->montant}} Mad</td>
                                 <td>{{ $bonLivraison->prix}} Mad</td>
-                               
                                 <td>
-                                <a target="_blank" class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" ><i class="fas fa-print"></i></a>
-    
+                                <a target="_blank" class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" >
+                                  <i class="fas fa-print"></i></a>
                                </td>
+                             
                             </tr>
                               @endforeach
     

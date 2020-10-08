@@ -105,7 +105,7 @@ class BonLivraisonController extends Controller
     public function commandes(BonLivraison $bonLivraison, $n , $i){
         $user = $bonLivraison->user_id;
         $date = $bonLivraison->created_at;
-        $commandes = DB::table('commandes')->where('statut','en cours')->where('traiter',$bonLivraison->id)->where('user_id',$user)->get();
+        $commandes = DB::table('commandes')->where('traiter',$bonLivraison->id)->where('user_id',$user)->get();
         $content = 
         '
         <div class="invoice">
@@ -287,6 +287,35 @@ class BonLivraisonController extends Controller
 
 
         return $pdf->stream('Bon_de_livraison_BL_'.bin2hex(substr($user->name, - strlen($user->name) , 3)).$bonLivraison->id.'.pdf');
+    }
+
+    public function search($id){
+         //dd(Auth::user()->id );
+         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
+         $users = [] ;
+         if(!Gate::denies('ramassage-commande')) {
+             //session administrateur donc on affiche tous les commandes
+             $total = DB::table('commandes')->where('deleted_at',NULL)->where('traiter',$id)->count();
+             $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('traiter',$id)->orderBy('created_at', 'DESC')->paginate(10);
+ 
+             //dd($clients[0]->id);
+         }
+         else{
+             $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('traiter',$id)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
+             $total =DB::table('commandes')->where('deleted_at',NULL)->where('traiter',$id)->where('user_id',Auth::user()->id )->count();
+            //dd("salut");
+         }
+ 
+       
+             foreach($commandes as $commande){
+                 if(!empty(User::find($commande->user_id)))
+                 $users[] =  User::find($commande->user_id) ;
+             }
+         //$commandes = Commande::all()->paginate(3) ;
+         return view('commande.colis',['commandes' => $commandes, 
+                                     'total'=>$total,
+                                     'users'=> $users,
+                                     'clients' => $clients]);
     }
 
  

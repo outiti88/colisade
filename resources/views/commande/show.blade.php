@@ -132,7 +132,6 @@ N: {{$commande->numero}}
                         <li class="breadcrumb-item"><a href="/">Quickoo</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><a href="/commandes">Colis</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{$commande->numero}}</li>
-                        
                     </ol>
                 </nav>
             </div>
@@ -143,7 +142,7 @@ N: {{$commande->numero}}
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
                     @endcan
                     @can('ramassage-commande')
-                    @if ($commande->statut === "En cours")
+                    @if ($commande->statut === "En cours" && $commande->traiter != 0)
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
                     @endif
                     @endcan
@@ -249,29 +248,50 @@ N: {{$commande->numero}}
             <div class="col-md-10">
                 <div class="profile-head">
                             <h5>
-                                Commande numero:
-                            </h5>
-                            <h6>
-                                {{$commande->numero}}
-                            </h6>
-                            <a href="" title="Statut" 
+                                Commande numero: <span style="color: #e85f03">{{$commande->numero}}</span>
+                                <a  style="color: white" 
                                     class="badge badge-pill 
                                     @switch($commande->statut)
                                     @case("expidié")
-                                    badge-warning
+                                    badge-warning"
+                                    @can('ramassage-commande')
+                                    title="Rammaser la commande" 
+                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                    @endcan
                                         @break
                                     @case("En cours")
-                                    badge-info
+                                    badge-info"
+                                        @if ($commande->traiter > 0)
+                                        title="Voir le bon de livraison" 
+                                        href="{{route('bon.gen',$commande->traiter)}}"
+                                        target="_blank"
+                                        @else
+                                        title="Générer le bon de livraison" 
+                                        href="{{route('bonlivraison.index')}}"
+                                        @endif
+                                        
                                         @break
                                     @case("Livré")
-                                    badge-success
+                                    badge-success"
+                                    @if ($commande->facturer > 0)
+                                        title="Voir la facture" 
+                                        href="{{route('facture.gen',$commande->facturer)}}"
+                                        target="_blank"
+                                        @else
+                                        title="Générer la facture" 
+                                        href="{{route('facture.index')}}"
+                                        @endif
                                         @break
                                     @default
-                                    badge-danger
+                                    badge-danger"
                                 @endswitch
-                                    "> 
+                                    
+                                     > 
                                      <span style="font-size: 1.25em">{{$commande->statut}}</span> 
                                 </a>
+                            </h5>
+                           
+                           
                             <p class="proile-rating">Date : {{date_format($commande->created_at,"Y/m/d")}}<span> {{date_format($commande->created_at,"H:i:s")}}</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -394,22 +414,44 @@ N: {{$commande->numero}}
                                 <div class="row">
                                     <div class="col-md-4">
                                     <label>
-                                        <a style="color: white" href="" title="Statut" 
+                                        <a  style="color: white" 
                                     class="badge badge-pill 
                                     @switch($statut->name)
                                     @case("expidié")
-                                    badge-warning
+                                    badge-warning"
+                                    @can('ramassage-commande')
+                                    title="Rammaser la commande" 
+                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                    @endcan
                                         @break
                                     @case("En cours")
-                                    badge-info
+                                    badge-info"
+                                        @if ($commande->traiter > 0)
+                                        title="Voir le bon de livraison" 
+                                        href="{{route('bon.search',$commande->traiter)}}"
+                                        target="_blank"
+                                        @else
+                                        title="Générer le bon de livraison" 
+                                        href="{{route('bonlivraison.index')}}"
+                                        @endif
+                                        
                                         @break
                                     @case("Livré")
-                                    badge-success
+                                    badge-success"
+                                    @if ($commande->facturer > 0)
+                                        title="Voir la facture" 
+                                        href="{{route('facture.gen',$commande->facturer)}}"
+                                        target="_blank"
+                                        @else
+                                        title="Générer la facture" 
+                                        href="{{route('facture.index')}}"
+                                        @endif
                                         @break
                                     @default
-                                    badge-danger
+                                    badge-danger"
                                 @endswitch
-                                    "> 
+                                    
+                                     > 
                                      <span style="font-size: 1.25em">{{$statut->name}}</span> 
                                 </a>
                                     </label>

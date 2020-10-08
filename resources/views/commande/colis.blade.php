@@ -196,7 +196,28 @@
                                 </a>
                             </th>
                             @endcan
-                            <th scope="row">{{$commande->numero}}</th>
+                            <th scope="row">
+                                
+                                @if ($commande->facturer != 0)
+                                
+                                    <a target="_blank" style="color: white; background-color: #e85f03" 
+                                    class="badge badge-pill" > 
+                                    <span style="font-size: 1.25em">Facturée</span> 
+                                    </a>
+                                    <br>
+                                @else
+                                    @if ($commande->traiter != 0)
+                                    
+                                    <a href="{{route('bon.search',$commande->traiter)}}" style="color: white" 
+                                    class="badge badge-pill badge-dark"> 
+                                    <span style="font-size: 1.25em">Bon livraison</span> 
+                                    </a>
+                                    <br>
+                                    @endif
+                                @endif
+                                {{$commande->numero}}
+                            
+                            </th>
                             <td>{{$commande->nom}}</td>
                             <td>{{$commande->telephone}}</td>
                             <td>{{$commande->ville}}</td>
@@ -206,7 +227,7 @@
                             <td>{{$commande->created_at}}</td>
                             <td>
                                 
-                                <a style="color: white" 
+                                <a  style="color: white" 
                                     class="badge badge-pill 
                                     @switch($commande->statut)
                                     @case("expidié")
@@ -221,6 +242,7 @@
                                         @if ($commande->traiter > 0)
                                         title="Voir le bon de livraison" 
                                         href="{{route('bon.gen',$commande->traiter)}}"
+                                        target="_blank"
                                         @else
                                         title="Générer le bon de livraison" 
                                         href="{{route('bonlivraison.index')}}"
@@ -229,6 +251,14 @@
                                         @break
                                     @case("Livré")
                                     badge-success"
+                                    @if ($commande->facturer > 0)
+                                        title="Voir la facture" 
+                                        href="{{route('facture.gen',$commande->facturer)}}"
+                                        target="_blank"
+                                        @else
+                                        title="Générer la facture" 
+                                        href="{{route('facture.index')}}"
+                                        @endif
                                         @break
                                     @default
                                     badge-danger"

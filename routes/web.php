@@ -40,13 +40,18 @@ Route::resource('/bonlivraison','BonLivraisonController')->only([
     'index', 'store'
 ]);
 
-Route::get('/bonlivraison/{id}/pdf','BonLivraisonController@gen')->name('bon.gen');;
+Route::get('/bonlivraison/{id}/pdf','BonLivraisonController@gen')->name('bon.gen');
+
+Route::get('/bonlivraison/{id}/details','BonLivraisonController@search')->name('bon.search');;
 
 Route::resource('/facture','FactureController')->only([
     'index', 'store'
 ]);
 
 Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen');
+
+Route::get('/facture/{id}/details','FactureController@search')->name('facture.search');;
+
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
     Route::resource('/users','UsersController',['except' => ['show','create','store']]);

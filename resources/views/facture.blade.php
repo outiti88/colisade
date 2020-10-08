@@ -124,7 +124,11 @@
                                 @can('ramassage-commande')
                                 <th scope="row"><img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31"></th>
                                 @endcan
-                                <th>{{$facture->numero}}</th>
+                                <th>
+                                    <a class="btn btn-light" href="{{route('facture.search',$facture->id)}}">
+                                        {{$facture->numero}}
+                                    </a>
+                                </th>
                                 <td>{{ $facture->livre}}</td>
                                 <td>{{ $facture->montant}} Mad</td>
                                 <td>{{ $facture->prix}} Mad</td>

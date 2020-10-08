@@ -69,7 +69,7 @@ class CommandeController extends Controller
     public function filter(Request $request){
        
         $commandes = DB::table('commandes')->where('deleted_at',NULL);
-        $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
+        $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
 
         $users = [];
         
@@ -134,7 +134,7 @@ class CommandeController extends Controller
             $users = []; 
             if(!Gate::denies('ramassage-commande')) {
                 $factures = DB::table('factures')->where('numero','like','%'.$request->search.'%')->get();
-                $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
+                $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
             }
             else{
                 $factures = DB::table('factures')->where('user_id',Auth::user()->id)->where('numero','like','%'.$request->search.'%')->get();
@@ -167,7 +167,7 @@ class CommandeController extends Controller
             if(!Gate::denies('ramassage-commande')) {
                 $bonLivraisons = DB::table('bon_livraisons')->where('id',$id_bon)->get();
                 //dd($bonLivraisons->count());
-                $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();
+                $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
             }
             else{
                 $bonLivraisons = DB::table('bon_livraisons')->where('user_id',Auth::user()->id)->where('id',$id_bon)->get();
@@ -228,7 +228,7 @@ class CommandeController extends Controller
                 $users[] =  User::find($commande->user_id) ;
              
             }
-            $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();  
+            $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();  
             return view('commande.colis',['commandes' => $commandes, 
             'total'=>$total,
             'users'=> $users,
@@ -632,6 +632,7 @@ class CommandeController extends Controller
                 $request->session()->flash('edit', $commande->numero);
             }
             else{
+                
                 $request->session()->flash('nonEncours', $commande->numero);
             }
             
