@@ -139,7 +139,7 @@ N: {{$commande->numero}}
         </div>
         <div class="col-6">
             <div class="row float-right">
-                    @can('client-admin')
+                    @can('client')
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
                     @endcan
                     @can('ramassage-commande')
