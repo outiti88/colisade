@@ -428,8 +428,7 @@ N: {{$commande->numero}}
                                     badge-info"
                                         @if ($commande->traiter > 0)
                                         title="Voir le bon de livraison" 
-                                        href="{{route('bon.search',$commande->traiter)}}"
-                                        target="_blank"
+                                        href="{{route('bon.infos',$commande->traiter)}}"
                                         @else
                                         title="Générer le bon de livraison" 
                                         href="{{route('bonlivraison.index')}}"
@@ -440,8 +439,7 @@ N: {{$commande->numero}}
                                     badge-success"
                                     @if ($commande->facturer > 0)
                                         title="Voir la facture" 
-                                        href="{{route('facture.gen',$commande->facturer)}}"
-                                        target="_blank"
+                                        href="{{route('facture.infos',$commande->facturer)}}"
                                         @else
                                         title="Générer la facture" 
                                         href="{{route('facture.index')}}"

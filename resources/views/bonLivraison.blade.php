@@ -39,16 +39,21 @@
         @if (session()->has('blNoExist'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur ! </strong>Le bon de livraison d'aujourd'hui à été déjà génerer !
+        <strong>Erreur ! </strong>Le bon de livraison d'aujourd'hui à été déjà générer !
           </div>
         @endif
         @if (session()->has('ajoute'))
         <div class="alert alert-dismissible alert-success col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Et voilà ! </strong>Le bon de livraison d'aujourd'hui à été bien génerer !
+        <strong>Et voilà ! </strong>Le bon de livraison d'aujourd'hui à été bien générer !
           </div>
         @endif
-
+        @if (session()->has('bonLivraison'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Attention !</strong>Le bon de livraison de ce jour à été déjà générer
+          </div>
+        @endif
         <div class="col-5">
             <h4 class="page-title">Bon de livraison</h4>
             <div class="d-flex align-items-center">
@@ -71,7 +76,7 @@
                 @endcan
                 @cannot('ramassage-commande')
                 
-                    <button data-toggle="modal" data-target="#genererBon"type="submit" class="btn btn-danger text-white m-r-5"><i class="fa fa-plus-square"></i> Génerer le bon de livraison</button>
+                    <button data-toggle="modal" data-target="#genererBon"type="submit" class="btn btn-danger text-white m-r-5"><i class="fa fa-plus-square"></i> Générer le bon de livraison</button>
                 @endcan
             </div>
         </div>
@@ -105,7 +110,11 @@
                             </thead>
                             <tbody>
                                 @foreach ($bonLivraisons as $index => $bonLivraison)
-                              <tr>
+                              <tr 
+                              @if (\Carbon\Carbon::parse($bonLivraison->created_at)->format('d-m-Y') == date("d-m-Y") && session()->has('bonLivraison') )
+                              style="background-color: #e85f032e;"
+                              @endif
+                              >
                                 @can('ramassage-commande')
                                 <th scope="row"><img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31"></th>
                                 @endcan
@@ -224,7 +233,7 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
           <form method="POST" action="{{ route('bonlivraison.store') }}">
             @csrf
-            <button data-toggle="modal" data-target="#genererBon"type="submit" class="btn btn-danger text-white m-r-5">Génerer</button>
+            <button data-toggle="modal" data-target="#genererBon"type="submit" class="btn btn-danger text-white m-r-5">générer</button>
         </form>
         </div>
       </div>

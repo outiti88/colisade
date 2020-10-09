@@ -79,10 +79,14 @@ class BonLivraisonController extends Controller
 
        // dd($cmdExist , $user);
 
+       $bon_livraison = DB::table('bon_livraisons')->whereDate('created_at',now())->where('user_id',Auth::user()->id)->count();
+       if($bon_livraison > 0){
+        $request->session()->flash('bonLivraison');
+        return redirect(route('bonlivraison.index'));
+            }
+
         if( ($cmdExist == 0) ){ // 0 commande en cours et jamais traiter
-            
                     $request->session()->flash('cmdExist');
-            
         }
         else{
             $bonLivraison = new BonLivraison();
@@ -317,6 +321,42 @@ class BonLivraisonController extends Controller
                                      'users'=> $users,
                                      'clients' => $clients]);
     }
+
+
+    public function infos($id){
+        $clients = [];  
+        $id_bon = $id;
+
+        if(!Gate::denies('ramassage-commande')) {
+            $bonLivraisons = DB::table('bon_livraisons')->where('id',$id_bon)->get();
+            //dd($bonLivraisons->count());
+            $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
+        }
+        else{
+            $bonLivraisons = DB::table('bon_livraisons')->where('user_id',Auth::user()->id)->where('id',$id_bon)->get();
+
+        }
+        $total = $bonLivraisons->count();
+
+        foreach($bonLivraisons as $bonLivraison){
+            if(!empty(User::find($bonLivraison->user_id)))
+            $users[] =  User::find($bonLivraison->user_id) ;
+        }
+        if($total > 0){
+            $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','en cours')->where('traiter','0')->count();
+            $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->where('traiter','0')->count();
+    
+            return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
+                                    'total' => $total,
+                                     'users'=> $users,
+                                     'clients' => $clients,
+                                     'ramasse' => $ramasse,
+                                    'nonRamasse' => $nonRammase]);
+        }
+        else{
+            return redirect()->route('bonlivraison.index');
+        }
+   }
 
  
 

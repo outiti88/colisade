@@ -309,4 +309,33 @@ class FactureController extends Controller
                                     'clients' => $clients]);
    }
 
+   public function infos($id){
+        $clients = [];  
+        $users = []; 
+        if(!Gate::denies('ramassage-commande')) {
+            $factures = DB::table('factures')->where('id',$id)->get();
+            $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
+        }
+        else{
+            $factures = DB::table('factures')->where('user_id',Auth::user()->id)->where('id',$id)->get();
+
+        }
+        $total = $factures->count();
+
+        foreach($factures as $facture){
+            if(!empty(User::find($facture->user_id)))
+            $users[] =  User::find($facture->user_id) ;
+        }
+        if($total > 0){
+            //dd($factures);
+            return view('facture',['factures'=>$factures ,
+                                    'total' => $total,
+                                    'users'=> $users,
+                                    'clients' => $clients]);
+        }
+        else{
+            return redirect()->route('facture.index');
+        }
+   }
+
 }

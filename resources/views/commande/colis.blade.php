@@ -71,7 +71,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Quickoo</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Colis</li>
+                        <li class="breadcrumb-item active" aria-current="page"><a href="/commandes">Colis</a></li>
                     </ol>
                 </nav>
             </div>
@@ -95,7 +95,7 @@
         @if (session()->has('search'))
         <div class="alert alert-dismissible alert-warning col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Oupss !</strong> Il n'existe aucun numero de commande et aucun statut avec : {{session()->get('search')}}  </a>.
+        <strong>Attention !</strong> Il n'existe aucun numero de commande et aucun statut avec : {{session()->get('search')}}  </a>.
           </div>
         @endif
         @if (session()->has('statut'))
@@ -108,7 +108,7 @@
         @if (session()->has('avant18'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur !</strong> {{gmdate("H")+1 . gmdate(":i:s")}} Vous pouvez pas ajouter une commande après 19h:00 GMT+1 !!
+        <strong>Attention !</strong> {{gmdate("H")+1 . gmdate(":i:s")}} Vous pouvez pas ajouter une commande après 19h:00 GMT+1 !!
           </div>
         @endif
 
@@ -128,26 +128,21 @@
         @if (session()->has('noedit'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur !</strong>vous ne pouvez pas changer le statut La commande numero {{session()->get('noedit')}}
+        <strong>Attention !</strong>vous ne pouvez pas changer le statut La commande numero {{session()->get('noedit')}}
           </div>
         @endif 
-        @if (session()->has('bonLivraison'))
-        <div class="alert alert-dismissible alert-danger col-12">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur !</strong>Vous pouvez pas ajouter une commande, Le bon de livraison de ce jour à été déjà générer
-          </div>
-        @endif
+      
         @if (session()->has('nonExpidie'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Erreur !</strong>Commande déjà traitée  {{session()->get('nonExpidie')}} <br>
+            <strong>Attention !</strong>Commande déjà traitée  {{session()->get('nonExpidie')}} <br>
                 vous pouvez modifier que les statuts des commandes qui ont le statut <b>Expidié</b>
         </div>
         @endif
         @if (session()->has('blgenere'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Erreur !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('blgenere')}} <br>
+            <strong>Attention !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('blgenere')}} <br>
                 => le bon de livraison pour cette commande à été déjà généré
         </div>
         @endif
@@ -200,7 +195,7 @@
                                 
                                 @if ($commande->facturer != 0)
                                 
-                                    <a target="_blank" style="color: white; background-color: #e85f03" 
+                                    <a href="{{route('facture.infos',$commande->facturer)}}" style="color: white; background-color: #e85f03" 
                                     class="badge badge-pill" > 
                                     <span style="font-size: 1.25em">Facturée</span> 
                                     </a>
@@ -208,7 +203,7 @@
                                 @else
                                     @if ($commande->traiter != 0)
                                     
-                                    <a href="{{route('bon.search',$commande->traiter)}}" style="color: white" 
+                                    <a href="{{route('bon.infos',$commande->traiter)}}" style="color: white" 
                                     class="badge badge-pill badge-dark"> 
                                     <span style="font-size: 1.25em">Bon livraison</span> 
                                     </a>

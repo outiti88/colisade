@@ -180,8 +180,8 @@ class CommandeController extends Controller
                 $users[] =  User::find($bonLivraison->user_id) ;
             }
             if($total > 0){
-                $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','<>','expidié')->whereDate('created_at',now())->count();
-                $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->whereDate('created_at',now())->count();
+                $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','en cours')->where('traiter','0')->count();
+                $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->where('traiter','0')->count();
         
                 return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
                                         'total' => $total,
@@ -255,14 +255,10 @@ class CommandeController extends Controller
         //dd(!(gmdate("H")+1 <= 18));
         //dd(Auth::user()->id );
 
-        $bon_livraison = DB::table('bon_livraisons')->whereDate('created_at',now())->where('user_id',Auth::user()->id)->count();
         //dd(now(),$bon_livraison);
         if(gmdate("H")+1 <= 23 && gmdate("H")+1 >= 8 ){
 
-            if($bon_livraison > 0){
-                $request->session()->flash('bonLivraison');
-                return redirect('/commandes');
-            }
+           
             if(!Gate::denies('manage-users')){
                 if(isset($request->client)){
                     $fournisseur = User::find($request->client);
