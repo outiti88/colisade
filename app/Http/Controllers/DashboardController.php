@@ -60,7 +60,7 @@ class DashboardController extends Controller
             ->select(DB::raw('nom , user_id, count(*) as cmd , sum(colis) as colis , sum(montant) as m'))
             ->where('deleted_at',NULL)
             ->where('statut','livré')
-            ->groupBy('nom')
+            ->groupBy('nom', 'user_id')
             ->orderBy('m', 'DESC')
             ->take(4)->get();
 
