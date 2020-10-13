@@ -151,6 +151,7 @@
                 <div class="card-body">
                     <h4 class="card-title">Gestion des comandes / colis</h4>
                     <h6 class="card-subtitle">Nombre total des commandes : <code>{{$total}} Commandes</code> .</h6>
+                    <input class="form-control" id="myInput" type="text" placeholder="Rechercher..">
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered" style="font-size: 0.72em;">
@@ -172,7 +173,7 @@
                                 
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="myTable">
                            @forelse ($commandes as $index => $commande)
                            <tr>
                             @can('ramassage-commande')
@@ -535,4 +536,14 @@
             });
         </script>
     @endif
+    <script>
+        $(document).ready(function(){
+          $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
+        </script>
 @endsection

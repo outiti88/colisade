@@ -97,7 +97,7 @@ class BonLivraisonController extends Controller
             $bonLivraison->nonRammase = 0 ;
             $bonLivraison->user()->associate($user)->save();
 
-            $affected = DB::table('commandes')->where('statut','en cours')->where('traiter', '=', '0')->update(array('traiter' => $bonLivraison->id));
+            $affected = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter', '=', '0')->update(array('traiter' => $bonLivraison->id));
             //dd($affected);
 
             $request->session()->flash('ajoute');

@@ -79,7 +79,7 @@ class FactureController extends Controller
             $facture->montant = DB::table('commandes')->where('user_id',$user)->where('statut','Livré')->where('facturer','0')->sum('montant');
             $facture->commande = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Reporté', 'Retour Complet', 'Retour Partiel'])->where('facturer','0')->count(); //nbr de commanddes non livrée
             $facture->user()->associate($user)->save();
-            $affected = DB::table('commandes')->whereIn('statut', ['Livré','Reporté', 'Retour Complet', 'Retour Partiel'])->where('facturer', '=', '0')->update(array('facturer' => $facture->id));
+            $affected = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Livré','Reporté', 'Retour Complet', 'Retour Partiel'])->where('facturer', '=', '0')->update(array('facturer' => $facture->id));
 
             $request->session()->flash('ajoute');
         }
@@ -288,12 +288,14 @@ class FactureController extends Controller
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('deleted_at',NULL)->where('facturer',$id)->count();
             $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('facturer',$id)->orderBy('created_at', 'DESC')->paginate(10);
+            //dd($commandes);
 
             //dd($clients[0]->id);
         }
         else{
             $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('facturer',$id)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
             $total =DB::table('commandes')->where('deleted_at',NULL)->where('facturer',$id)->where('user_id',Auth::user()->id )->count();
+            
            //dd("salut");
         }
 
