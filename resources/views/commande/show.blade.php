@@ -189,8 +189,6 @@ N: {{$commande->numero}}
                                     </div>
                                   </div>
                     
-               
-                    
                     @endif
                     
                     @endcan
@@ -209,38 +207,38 @@ N: {{$commande->numero}}
             @if (session()->has('statut'))
             <div class="alert alert-dismissible alert-success col-12">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Succés !</strong> La commande à été bien Modifier </a>.
+            <strong>Succés !</strong> La commande à été bien Modifiée </a>.
               </div>
             @endif
             @if (session()->has('edit'))
         <div class="alert alert-dismissible alert-info col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Succés !</strong> Le statut de la commande numero {{session()->get('edit')}} à été bien edité !!
+        <strong>Succés !</strong> Le statut de la commande numero {{session()->get('edit')}} à été bien edité !
           </div>
         @endif
         @if (session()->has('noedit'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('noedit')}}
+        <strong>Attention !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('noedit')}}
           </div>
         @endif
         @if (session()->has('nodelete'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur !</strong>vous ne pouvez pas supprimer La commande numero {{session()->get('nodelete')}}
+        <strong>Attention !</strong>vous ne pouvez pas supprimer La commande numero {{session()->get('nodelete')}}
           </div>
         @endif
         @if (session()->has('noupdate'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Erreur !</strong>vous ne pouvez pas modifier La commande numero {{session()->get('noupdate')}} <br>
+            <strong>Attention !</strong>vous ne pouvez pas modifier La commande numero {{session()->get('noupdate')}} <br>
                 vous pouvez modifier que les commandes qui ont le statut <b>EXPIDIE</b>
         </div>
         @endif
         @if (session()->has('nonEncours'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Erreur !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('nonEncours')}} <br>
+            <strong>Attention !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('nonEncours')}} <br>
                 vous pouvez modifier que les statuts des commandes qui ont le statut <b>En Cours</b>
         </div>
         @endif
@@ -357,7 +355,12 @@ N: {{$commande->numero}}
                                         <label>Montant :</label>
                                     </div>
                                     <div class="col-md-6">
+                                        @if ($commande->montant > 0)
                                         <p>{{$commande->montant}} MAD</p>
+                                        @else
+                                        <p> <i class="far fa-credit-card"></i> CARD PAYMENT
+                                        </p>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="row">
@@ -536,9 +539,28 @@ N: {{$commande->numero}}
                                           </div>
                                         </div>
                                       </fieldset>
+                                      <fieldset class="form-group col-md-4">
+                                        <div class="row">
+                                          <legend class="col-form-label  pt-0">Mode de paiement :</legend>
+                                          <div class="col-sm-12">
+                                            <div class="form-check">
+                                              <input  onclick="myFunctionEdit2(this.value)" class="form-check-input" type="radio" name="mode" id="cd" value="cd" checked>
+                                              <label class="form-check-label" for="cd">
+                                                Cash on delivery
+                                              </label>
+                                            </div>
+                                            <div class="form-check">
+                                              <input  onclick="myFunctionEdit2(this.value)" class="form-check-input" type="radio" name="mode" id="cp" value="cp">
+                                              <label class="form-check-label" for="cp">
+                                                Card payment
+                                              </label>
+                                            </div>
+                                        
+                                          </div>
+                                        </div>
+                                      </fieldset>
     
-    
-                                      <div class="form-group col-md-4">
+                                      <div class="form-group col-md-12" id="montant2"  style="display: block">
                                         <label for="example-email" class="col-md-12">Montant (MAD) :</label>
                                         <div class="col-md-12">
                                             <input  value="{{ old('montant',$commande->montant) }}" type="number" class="form-control form-control-line" name="montant" id="example-email">
@@ -562,12 +584,133 @@ N: {{$commande->numero}}
                                 <div class="form-group">
                                     <label class="col-sm-12">Ville :</label>
                                     <div class="col-sm-12">
-                                        <select name="ville" class="form-control form-control-line" value="{{ old('ville',$commande->ville) }}">
-                                            <option>Tanger</option>
-                                            <option>Marrakech</option>
-                                            <option>Kénitra</option>
-                                            <option>Casablanca</option>
-                                            <option>Rabata</option>
+                                        <select name="ville" class="form-control form-control-line" value="{{ old('ville',$commande->ville) }}" id="ville2" onchange="myFunctionEdit1()" required>
+                                            <option checked>Choisissez la ville</option>
+                                            <option value="tanger">Tanger</option>
+                                            <option >Marrakech</option>
+                                            <option >Kénitra</option>
+                                            <option >Casablanca</option>
+                                            <option >Rabat</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="display: none"  class="form-group" id="secteur2">
+                                    <label class="col-sm-12">Secteur :</label>
+                                    <div class="col-sm-12">
+                                        <select name="secteur" class="form-control form-control-line" required>
+                                            
+                                            <option value="">Tous les secteurs</option>
+                                            <option value="1330">Al Kasaba</option>
+                                            <option value="1340">Aviation</option>
+                                            <option value="1350">Cap spartel</option>
+                                            <option value="1360">Centre ville</option>
+                                            <option value="1370">Cité californie</option>
+                                            <option value="1380">Girari</option>
+                                            <option value="1390">Ibn Taymia</option>
+                                            <option value="1400">M'nar</option>
+                                            <option value="1410">M'sallah</option>
+                                            <option value="1420">Makhoukha</option>
+                                            <option value="1430">Malabata</option>
+                                            <option value="1440">Marchane</option>
+                                            <option value="1450">Marjane</option>
+                                            <option value="1460">Moujahidine</option>
+                                            <option value="1470">Moulay Youssef</option>
+                                            <option value="1480">Santa</option>
+                                            <option value="1490">Val Fleuri</option>
+                                            <option value="1500">Vieille montagne</option>
+                                            <option value="1510">Ziatene</option>
+                                            <option value="1520">Autre secteur</option>
+                                            <option value="1149">Achennad</option>
+                                            <option value="1150">Aharrarine</option>
+                                            <option value="1151">Ahlane</option>
+                                            <option value="1152">Aida</option>
+                                            <option value="1153">Al Anbar</option>
+                                            <option value="1154">Al Warda</option>
+                                            <option value="1155">Aouama Gharbia</option>
+                                            <option value="1156">Beausejour</option>
+                                            <option value="1157">Behair</option>
+                                            <option value="1158">Ben Dibane</option>
+                                            <option value="1159">Beni Makada Lakdima</option>
+                                            <option value="1160">Beni Said</option>
+                                            <option value="1161">Beni Touzine</option>
+                                            <option value="1162">Bir Aharchoune</option>
+                                            <option value="1163">Bir Chifa</option>
+                                            <option value="1164">Bir El Ghazi</option>
+                                            <option value="1165">Bouchta-Abdelatif</option>
+                                            <option value="1166">Bouhout 1</option>
+                                            <option value="1167">Bouhout 2</option>
+                                            <option value="1168">Dher Ahjjam</option>
+                                            <option value="1169">Dher Lahmam</option>
+                                            <option value="1170">El Baraka</option>
+                                            <option value="1171">El Haj El Mokhtar</option>
+                                            <option value="1172">El Khair 1</option>
+                                            <option value="1173">El Khair 2</option>
+                                            <option value="1174">El Mers 1</option>
+                                            <option value="1175">El Mers 2</option>
+                                            <option value="1176">El Mrabet</option>
+                                            <option value="1177">Ennasr</option>
+                                            <option value="1178">Gourziana</option>
+                                            <option value="1179">Haddad</option>
+                                            <option value="1180">Hanaa 1</option>
+                                            <option value="1181">Hanaa 2</option>
+                                            <option value="1182">Hanaa 3 - Soussi</option>
+                                            <option value="1183">Jirrari</option>
+                                            <option value="1184">Les Rosiers</option>
+                                            <option value="1185">Zemmouri</option>
+                                            <option value="1186">Zouitina</option>
+                                            <option value="1187">Al Amal</option>
+                                            <option value="1188">Al Mandar Al Jamil</option>
+                                            <option value="1189">Alia</option>
+                                            <option value="1190">Benkirane</option>
+                                            <option value="1191">Charf</option>
+                                            <option value="1192">Draoua</option>
+                                            <option value="1193">Drissia</option>
+                                            <option value="1194">El Majd</option>
+                                            <option value="1195">El Oued</option>
+                                            <option value="1196">Mghogha</option>
+                                            <option value="1197">Nzaha</option>
+                                            <option value="1198">Sania</option>
+                                            <option value="1199">Tanger City Center</option>
+                                            <option value="1200">Tanja Balia</option>
+                                            <option value="1201">Zone Industrielle Mghogha</option>
+                                            <option value="1202">Azib Haj Kaddour</option>
+                                            <option value="1203">Bel Air - Val fleuri</option>
+                                            <option value="1204">Bir Chairi</option>
+                                            <option value="1205">Branes 1</option>
+                                            <option value="1206">Branes 2</option>
+                                            <option value="1207">Casabarata</option>
+                                            <option value="1208">Castilla</option>
+                                            <option value="1209">Hay Al Bassatine</option>
+                                            <option value="1210">Hay El Boughaz</option>
+                                            <option value="1211">Hay Zaoudia</option>
+                                            <option value="1212">Lalla Chafia</option>
+                                            <option value="1213">Souani</option>
+                                            <option value="1214">Achakar</option>
+                                            <option value="1215">Administratif</option>
+                                            <option value="1216">Ahammar</option>
+                                            <option value="1217">Ain El Hayani</option>
+                                            <option value="1218">Algerie</option>
+                                            <option value="1220">Branes Kdima</option>
+                                            <option value="1221">Californie</option>
+                                            <option value="1222">Centre</option>
+                                            <option value="1223">De La Plage</option>
+                                            <option value="1224">Du Golf</option>
+                                            <option value="1225">Hay Hassani</option>
+                                            <option value="1226">Iberie</option>
+                                            <option value="1227">Jbel Kbir</option>
+                                            <option value="1228">Laaouina</option>
+                                            <option value="1229">Marchan</option>
+                                            <option value="1230">Mediouna</option>
+                                            <option value="1231">Mesnana</option>
+                                            <option value="1232">Mghayer</option>
+                                            <option value="1233">Mister Khouch</option>
+                                            <option value="1234">Mozart</option>
+                                            <option value="1235">Msala</option>
+                                            <option value="1236">Médina</option>
+                                            <option value="1237">Port Tanger ville</option>
+                                            <option value="1238">Rmilat</option>
+                                            <option value="1239">Star Hill</option>
+                                            <option value="1240">manar</option>
                                         </select>
                                     </div>
                                 </div>
@@ -657,4 +800,58 @@ N: {{$commande->numero}}
     </div>
 </div>
 
+@endsection
+
+@section('javascript')
+<script>
+    
+    function myFunctionEdit1() {
+        var x = document.getElementById("secteur2");
+    var test = document.getElementById("ville2").value;
+    if(test=='tanger'){
+        x.style.display = "block";
+    }
+    else{
+        x.style.display = "none";
+    }
+    }
+</script>
+<script>
+    function myFunctionEdit2(mode) {
+        var y = document.getElementById("montant2");
+        if(mode == 'cd' && y.value != 0 ){
+            y.style.display = "block";
+        }
+        else{
+            y.style.display = "none";
+        }
+    }
+</script>
+<script>
+    function myFunction() {
+        var xx = document.getElementById("secteur");
+    var test = document.getElementById("ville").value;
+    if(test=='tanger'){
+        xx.style.display = "block";
+    }
+    else{
+        xx.style.display = "none";
+    }
+    }
+</script>
+
+<script>
+    function myFunction2(mode) {
+        var yy = document.getElementById("montant");
+
+        if(mode == 'cd'){
+            yy.style.display = "block";
+            console.log("cd");
+        }
+        else{
+            yy.style.display = "none";
+            console.log("cp");
+        }
+    }
+</script>
 @endsection

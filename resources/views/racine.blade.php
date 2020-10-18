@@ -46,6 +46,32 @@
 
     </div>
 
+    <script>
+        var xx = document.getElementById("secteur");
+        function myFunction() {
+        var test = document.getElementById("ville").value;
+        if(test=='tanger'){
+            xx.style.display = "block";
+        }
+        else{
+            xx.style.display = "none";
+        }
+        }
+    </script>
+
+    <script>
+        var yy = document.getElementById("montant");
+        function myFunction2(mode) {
+            if(mode == 'cd'){
+                yy.style.display = "block";
+                console.log("cd");
+            }
+            else{
+                yy.style.display = "none";
+                console.log("cp");
+            }
+        }
+    </script>
     
 
     <script src="{{ url('/assets/libs/jquery/dist/jquery.min.js') }}"></script>

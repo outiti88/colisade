@@ -256,7 +256,6 @@ class CommandeController extends Controller
         //dd(Auth::user()->id );
 
         //dd(now(),$bon_livraison);
-        if(gmdate("H")+1 <= 23 && gmdate("H")+1 >= 8 ){
 
            
             if(!Gate::denies('manage-users')){
@@ -272,18 +271,27 @@ class CommandeController extends Controller
                 $fournisseur = Auth::user() ;
             }
 
+            if($request->ville != "tanger" || $request->secteur == 0) {
+                return redirect('/commandes');
+            }
             $commande = new Commande() ;
             $statut = new Statut();
             
+        if($request->mode == "cd"){
+            $commande->montant = $request->montant;
+        }
+        else{
+            $commande->montant = 0;
+        }
             
-            //dd('salut');
         $commande->telephone = $request->telephone;
         $commande->ville = $request->ville;
         $commande->adresse = $request->adresse;
-        $commande->montant = $request->montant;
-        $prixVille = ($request->ville==="tanger") ? 17 : 25 ;
-        $prixPoids = (($request->poids==="normal") ? 0 : 9);
+        
+        $prixVille = ($request->secteur=== 0) ? 17 : 27 ;
+        $prixPoids = (($request->poids==="normal") ? 0 : 18);
         $commande->prix = $prixVille + $prixPoids;
+        if($request->ville != 0 ) $commande->prix += 20 ;
         $commande->statut = "expidié";
         $commande->colis = $request->colis;
         $commande->poids = $request->poids;
@@ -305,11 +313,7 @@ class CommandeController extends Controller
         //notification
             $user_notify = \App\User::find(1);
             $user_notify->notify(new newCommande( $fournisseur , $commande));
-        }
-
-        else{
-            $request->session()->flash('avant18');
-        }
+       
 
         return redirect('/commandes');
     }
@@ -437,7 +441,7 @@ class CommandeController extends Controller
         
                     <img src="https://api.qrserver.com/v1/create-qr-code/?color=E85F03&bgcolor=FFFFFF&data=https%3A%2F%2Fquickoo.ma%2F&qzone=1&margin=0&size=200x200&ecc=L" style="
                         WIDTH: 70%;
-                    "class="light-logo" alt="homepage" />
+                    "class="light-logo"/>
                     </div>
                 </div>
             </div>
@@ -542,6 +546,18 @@ class CommandeController extends Controller
 
         else
             {
+                if($request->mode == "cd"){
+                    $commande->montant = $request->montant;
+                }
+                else{
+                    $commande->montant = 0;
+                }
+
+                if($request->ville != "tanger" || $request->secteur == 0) {
+                    return redirect('/commandes');
+                }
+                
+                    
                 $commande->telephone = $request->telephone;
                 $commande->ville = $request->ville;
                 $commande->adresse = $request->adresse;
