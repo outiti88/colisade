@@ -86,16 +86,33 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-md-2 col-form-label text-md-right">ICE</label>
+                        <div class="col-md-6">
+                            <input name="description" type="text" value="{{$user->description}}"class="form-control form-control-line">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label for="roles" class="col-md-2 col-form-label text-md-right">Rôles: </label>
                         <div class="col-md-6">
                     @foreach ($roles as $role)
                         <div class="form-check">
                             @if (in_array($role->name, $user->roles()->get()->pluck('name')->toArray()) )
-                            <input type="checkbox" name="roles[]" value="{{$role->id}}" id="{{$role->name}}" checked>
+                            <input type="radio" name="roles[]" value="{{$role->id}}" id="{{$role->name}}" checked>
                             @else
-                            <input type="checkbox" name="roles[]" value="{{$role->id}}" id="{{$role->name}}">
+                            <input type="radio" name="roles[]" value="{{$role->id}}" id="{{$role->name}}">
                             @endif
-                            <label for="{{$role->name}}">{{$role->name}}</label>
+                            <label for="{{$role->name}}">
+                                @switch($role->name)
+                                    @case('client')
+                                     Collecte, Livraison
+                                        @break
+                                    @case('ecom')
+                                    Collecte, livraison, stockage
+                                        @break
+                                    @default
+                                    {{$role->name}}
+                                @endswitch
+                            </label>
                         </div>
                     @endforeach
                     </div>

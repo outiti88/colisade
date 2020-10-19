@@ -29,7 +29,7 @@
 <div class="container-fluid">
         <div class="alert alert-dismissible alert-warning col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Si l'utilisateur est un client c'est recommndé de laisser le mode passe par defaut : quickoo2020 </a>.
+        <strong>Si l'utilisateur est un client c'est recommondé de laisser le mode passe par defaut : quickoo2020 </a>.
           </div>
     <div class="row justify-content-center">
 
@@ -73,10 +73,10 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="adresse" class="col-md-2 col-form-label text-md-right">{{ __('Adresse') }}</label>
+                            <label for="description" class="col-md-2 col-form-label text-md-right">{{ __('ICE') }}</label>
 
                             <div class="col-md-4">
-                                <input id="adresse" type="text" class="form-control"  name="adresse" value="{{ old('adresse') }}" required >
+                                <input id="description" type="text" class="form-control"  name="description" value="{{ old('description') }}" >
 
                             </div>
                             <label for="ville" class="col-md-2 col-form-label text-md-right">{{ __('Ville') }}</label>
@@ -101,6 +101,17 @@
                             </div>
                         </div>
 
+                        
+
+                        <div class="form-group row">
+                            <label for="adresse" class="col-md-2 col-form-label text-md-right">{{ __('Adresse') }}</label>
+
+                            <div class="col-md-10">
+                                <textarea name="adresse" id="adresse" cols="100" rows="5"></textarea required>
+                            </div>
+                            
+                            
+                        </div>
                         <div class="form-group row">
                             <label for="password" class="col-md-2 col-form-label text-md-right">{{ __('Password') }}</label>
 
@@ -119,17 +130,6 @@
                                 <input id="password-confirm"  value="quickoo2020"  type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="description" class="col-md-2 col-form-label text-md-right">{{ __('Description') }}</label>
-
-                            <div class="col-md-10">
-                                <textarea name="description" id="description" cols="100" rows="5"></textarea>
-                            </div>
-                            
-                            
-                        </div>
-
                         <div class="form-group row">
                             <label for="roles" class="col-md-2 col-form-label text-md-right">Rôles Quickoo: </label>
                             <div class="col-md-10 d-flex p-t-10 justify-content-around">

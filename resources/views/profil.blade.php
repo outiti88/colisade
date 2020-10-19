@@ -39,7 +39,7 @@
                 <div class="card-body">
                 <center class="m-t-30"> <img src="{{$user->image}}" class="rounded-circle" width="150" />
                         <h4 class="card-title m-t-10">{{$user->name}}</h4>
-                        <h6 class="card-subtitle">{{$user->description}}</h6>
+                        <h6 class="card-subtitle">ICE: {{$user->description}}</h6>
                         <div class="row text-center justify-content-md-center">
                         <div class="col-4"><a href="{{route('commandes.index')}}" class="link"><i class="icon-people"></i> <font class="font-medium">{{$total}} <br>Commandes</font></a></div>
                             <div class="col-4"><a href="{{route('facture.index')}}" class="link"><i class="icon-picture"></i> <font class="font-medium">{{$facture}} <br>Factures</font></a></div>
@@ -56,9 +56,9 @@
                         <iframe src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Marjane,%20Tanger%20PAC,%20Avenue%20des%20Forces%20Arm%C3%A9es%20Royales,%20Tanger%2090060+(Decathlon%20Tanger)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" width="100%" height="150" frameborder="0" style="border:0" allowfullscreen></iframe>
                     </div> <small class="text-muted p-t-30 db">Reseaux Sociaux</small>
                     <br/>
-                    <button class="btn btn-circle btn-secondary"><i class="fab fa-facebook-f"></i></button>
-                    <button class="btn btn-circle btn-secondary"><i class="fab fa-twitter"></i></button>
-                    <button class="btn btn-circle btn-secondary"><i class="fab fa-youtube"></i></button>
+                    <a href="https://www.facebook.com/DeliveryQuickoo" target="_blank" class="btn btn-circle btn-secondary"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/DeliveryQuickoo" target="_blank" class="btn btn-circle btn-secondary"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/quickoo/" target="_blank" class="btn btn-circle btn-secondary"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
         </div>
@@ -109,9 +109,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-12">Description</label>
+                            <label class="col-md-12">Adresse</label>
                             <div class="col-md-12">
-                            <textarea name="description" rows="5" class="form-control form-control-line">{{$user->description}}</textarea>
+                            <textarea name="adresse" rows="5" class="form-control form-control-line">{{$user->adresse}}</textarea>
                             </div>
                         </div>
                         <div class="form-group">

@@ -76,6 +76,7 @@ class UsersController extends Controller
        $user->image=$request->image;
        $user->name=$request->name;
        $user->email=$request->email;
+       $user->description = $request->description;
        $user->save();
        
        return redirect()->route('admin.users.index');

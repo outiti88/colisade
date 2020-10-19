@@ -283,12 +283,12 @@ class CommandeController extends Controller
         else{
             $commande->montant = 0;
         }
-            
+       // dd($request);
         $commande->telephone = $request->telephone;
         $commande->ville = $request->ville;
         $commande->adresse = $request->adresse;
         
-        $prixVille = ($request->secteur=== 0) ? 17 : 27 ;
+        $prixVille = ($request->secteur == 0) ? 17 : 27 ;
         $prixPoids = (($request->poids==="normal") ? 0 : 18);
         $commande->prix = $prixVille + $prixPoids;
         if($request->ville != 0 ) $commande->prix += 20 ;
@@ -359,6 +359,9 @@ class CommandeController extends Controller
     public function content(Commande $commande){
         $content = '';
         $user = DB::table('users')->find($commande->user_id);
+        
+        if($commande->montant == 0) $montant = "Payé par Carte bancaire";
+        else $montant = ($commande->montant+$commande->prix) .' Mad';
 
         for ($i=1; $i <= $commande->colis ; $i++) { 
             $content .= '
@@ -380,6 +383,7 @@ class CommandeController extends Controller
                     </tr>
                     </table>
                 </div>
+                <h2>Montant Total :'. $montant .' </h2>
                 <div class="tableau">
                     <table id="customers">
                         <tr>
@@ -481,7 +485,6 @@ class CommandeController extends Controller
 
                     .tableau{
                     padding-top:20px;
-                    padding-bottom:5px;
                    
                     width:100%;
                 }
@@ -508,7 +511,7 @@ class CommandeController extends Controller
 
                     #customers th {
                     padding-top: 12px;
-                    padding-bottom: 12px;
+                    padding-bottom: 10px;
                     
                     color: black;
                     }
@@ -557,12 +560,11 @@ class CommandeController extends Controller
                     return redirect('/commandes');
                 }
                 
-                    
+                
                 $commande->telephone = $request->telephone;
                 $commande->ville = $request->ville;
                 $commande->adresse = $request->adresse;
-                $commande->montant = $request->montant;
-                $prixVille = ($request->ville ==="Tanger") ? 17 : 25 ;
+                $prixVille = ($request->secteur ===0) ? 17 : 25 ;
                 $prixPoids = (($request->poids==="normal") ? 0 : 9);
                 $commande->prix = $prixVille + $prixPoids;
                 $commande->colis = $request->colis;
@@ -572,7 +574,6 @@ class CommandeController extends Controller
                
                 $request->session()->flash('statut', 'modifié');
             }
-
         return redirect()->route('commandes.show',['commande' => $commande->id]);
     }
 

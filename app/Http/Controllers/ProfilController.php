@@ -46,7 +46,7 @@ class ProfilController extends Controller
        $user->email=$request->email;
        $user->image=$request->image;
        $user->telephone=$request->telephone;
-       $user->description=$request->description;
+       $user->adresse=$request->adresse;
        $user->ville=$request->ville;
 
        $user->save();

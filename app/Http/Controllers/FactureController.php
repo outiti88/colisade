@@ -111,13 +111,18 @@ class FactureController extends Controller
 
             if(($index >= $i * 12) && ($index < 12*($i+1))) { //les infromations de la table depe,d de la page actuelle
             $statut = DB::table('statuts')->where('commande_id',$commande->id)->where('name','livré')->get()->first();
-                
+            if($commande->montant == 0){
+                $montant = "Payée Par CB";
+            }
+            else{
+                $montant = $commande->montant;
+            } 
             $content .= '<tr>'.'
             <td>'.$commande->numero.'</td>
             <td>'.$commande->nom.'</td>
             <td>'.$commande->ville.'</td>
             <td>'.$commande->telephone.'</td>
-            <td>'.$commande->montant.'</td>
+            <td>'.$montant.'</td>
             <td>'.$commande->prix.'</td>
             <td>'.$statut->created_at.'</td>
             '.'</tr>' ;
@@ -140,30 +145,25 @@ class FactureController extends Controller
                 <h3>ADRESSE : '.$user->adresse.'</h3>
                 <h3>TELEPHONE : '.$user->telephone.'</h3>
                 <h3>VILLE : '.$user->ville.'</h3>
+                <h3>ICE: '.$user->description.'</h3>
             </div>
             <div class="date_num">
                 <h3>'.$facture->numero.'</h3>
                 <h3>'.$facture->created_at.'</h3>
+                
 
             </div>
         ';
         // pied du bon d'achat (calcul du total)
         $total = '
             <div class="total">
-                <table id="customers">
-                <tr>
-                <td>Total brut : </td>
-                <td>'.$facture->montant.'  MAD</td>
-                </tr>
-                <tr>
-                <td>Frais de livraison : </td>
-                <td>'.$facture->prix .'  MAD</td>
-                </tr>
-                <tr>
-                <th>TOTAL NET : </th>
-                <td>'.($facture->montant - $facture->prix) .'  MAD</td>
-                </tr>
-                </table>
+            <table id="customers">
+                
+            <tr>
+            <th>TOTAL NET : </th>
+            <td>'.$facture->montant.'  MAD</td>
+            </tr>
+            </table>
             </div>
             ';
 

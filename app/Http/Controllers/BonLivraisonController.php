@@ -129,12 +129,18 @@ class BonLivraisonController extends Controller
             if ($commande->statut === 'expidié'){
                 $commande->prix = 0;
             }
+            if($commande->montant == 0){
+                $montant = "Payée Par CB";
+            }
+            else{
+                $montant = $commande->montant;
+            }
             $content .= '<tr>'.'
             <td>'.$commande->numero.'</td>
             <td>'.$commande->nom.'</td>
             <td>'.$commande->ville.'</td>
             <td>'.$commande->telephone.'</td>
-            <td>'.$commande->montant.'</td>
+            <td>'.$montant.'</td>
             <td>'.$commande->prix.'</td>
             '.'</tr>' ;
                 }
@@ -156,6 +162,7 @@ class BonLivraisonController extends Controller
                 <h3>ADRESSE : '.$user->adresse.'</h3>
                 <h3>TELEPHONE : '.$user->telephone.'</h3>
                 <h3>VILLE : '.$user->ville.'</h3>
+                <h3>ICE: '.$user->description.'</h3>
             </div>
             <div class="date_num">
                 <h3>BL_'.bin2hex(substr($user->name, - strlen($user->name) , 3)).$bonLivraison->id.'</h3>
@@ -167,17 +174,10 @@ class BonLivraisonController extends Controller
         $total = '
             <div class="total">
                 <table id="customers">
-                <tr>
-                <td>Total brut : </td>
-                <td>'.$bonLivraison->montant.'  MAD</td>
-                </tr>
-                <tr>
-                <td>Frais de livraison : </td>
-                <td>'.$bonLivraison->prix .'  MAD</td>
-                </tr>
+                
                 <tr>
                 <th>TOTAL NET : </th>
-                <td>'.($bonLivraison->montant - $bonLivraison->prix) .'  MAD</td>
+                <td>'.$bonLivraison->montant.'  MAD</td>
                 </tr>
                 </table>
             </div>
