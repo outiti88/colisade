@@ -64,9 +64,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Produit');
     }
 
-    /**
-     * Get the comments for the blog post.
-     */
+    public function mouvements(){
+        return $this->hasMany('App\Mouvement');
+    }
+
+
     public function bonLivraisons()
     {
         return $this->hasMany('App\BonLivraison');

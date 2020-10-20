@@ -518,12 +518,12 @@
                                 <div style="display: none"  class="form-group" id="secteur">
                                     <label class="col-sm-12">Secteur :</label>
                                     <div class="col-sm-12">
-                                        <select name="secteur" class="form-control form-control-line" required>
+                                        <select name="secteur" class="form-control form-control-line " required>
                                             
                                             <option value="">Tous les secteurs</option>
-                                            <option value="0">Al Kasaba</option>
-                                            <option value="0">Aviation</option>
-                                            <option value="0">Cap spartel</option>
+                                            <option value="1">Al Kasaba</option>
+                                            <option value="1">Aviation</option>
+                                            <option value="1">Cap spartel</option>
                                             <option value="0">Centre ville</option>
                                             <option value="0">Cité californie</option>
                                             <option value="0">Girari</option>
@@ -540,7 +540,6 @@
                                             <option value="0">Val Fleuri</option>
                                             <option value="0">Vieille montagne</option>
                                             <option value="0">Ziatene</option>
-                                            <option value="0">Autre secteur</option>
                                             <option value="0">Achennad</option>
                                             <option value="0">Aharrarine</option>
                                             <option value="0">Ahlane</option>
@@ -588,8 +587,9 @@
                                             <option value="0">Drissia</option>
                                             <option value="0">El Majd</option>
                                             <option value="0">El Oued</option>
-                                            <option value="0">Mghogha</option>
+                                            <option value="1">Mghogha</option>
                                             <option value="0">Nzaha</option>
+                                            <option value="1">Gueznaia</option>
                                             <option value="0">Sania</option>
                                             <option value="0">Tanger City Center</option>
                                             <option value="0">Tanja Balia</option>
@@ -628,10 +628,11 @@
                                             <option value="0">Mozart</option>
                                             <option value="0">Msala</option>
                                             <option value="0">Médina</option>
-                                            <option value="0">Port Tanger ville</option>
+                                            <option value="1">Port Tanger ville</option>
                                             <option value="0">Rmilat</option>
                                             <option value="0">Star Hill</option>
                                             <option value="0">manar</option>
+                                            <option value="0">Autre secteur</option>
                                         </select>
                                     </div>
                                 </div>

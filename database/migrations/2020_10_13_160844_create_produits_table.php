@@ -15,6 +15,13 @@ class CreateProduitsTable extends Migration
     {
         Schema::create('produits', function (Blueprint $table) {
             $table->id();
+            $table->string('libelle');
+            $table->string('reference');
+            $table->string('categorie');
+            $table->string('photo')->nullable();
+            $table->text('description')->nullable();
+            $table->float('prix');
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

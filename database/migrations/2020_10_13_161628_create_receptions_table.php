@@ -15,6 +15,12 @@ class CreateReceptionsTable extends Migration
     {
         Schema::create('receptions', function (Blueprint $table) {
             $table->id();
+            $table->integer('qte');
+            $table->integer('colis');
+            $table->string('company');
+            $table->string('etat');
+            $table->date('prevu_at');
+            $table->foreignId('produit_id')->constrained();
             $table->timestamps();
         });
     }

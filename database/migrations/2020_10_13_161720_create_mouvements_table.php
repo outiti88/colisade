@@ -15,6 +15,11 @@ class CreateMouvementsTable extends Migration
     {
         Schema::create('mouvements', function (Blueprint $table) {
             $table->id();
+            $table->string('type');
+            $table->integer('avant');
+            $table->integer('apres');
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('produit_id')->constrained();
             $table->timestamps();
         });
     }

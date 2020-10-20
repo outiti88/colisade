@@ -297,7 +297,7 @@
 
     }, {
         low: 0,
-        high: 500,
+        high: livre,
 
         showArea: true,
         fullWidth: true,

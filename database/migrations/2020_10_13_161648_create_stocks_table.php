@@ -15,6 +15,10 @@ class CreateStocksTable extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
+            $table->integer('qte');
+            $table->integer('cmd');
+            $table->foreignId('produit_id')->constrained();
+            $table->string('etat')->nullable();
             $table->timestamps();
         });
     }

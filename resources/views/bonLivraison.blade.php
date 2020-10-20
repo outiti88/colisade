@@ -48,12 +48,7 @@
         <strong>Et voilà ! </strong>Le bon de livraison d'aujourd'hui à été bien générer !
           </div>
         @endif
-        @if (session()->has('bonLivraison'))
-        <div class="alert alert-dismissible alert-danger col-12">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Attention !</strong>Le bon de livraison de ce jour à été déjà générer
-          </div>
-        @endif
+      
         <div class="col-5">
             <h4 class="page-title">Bon de livraison</h4>
             <div class="d-flex align-items-center">

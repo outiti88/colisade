@@ -80,10 +80,7 @@ class BonLivraisonController extends Controller
        // dd($cmdExist , $user);
 
        $bon_livraison = DB::table('bon_livraisons')->whereDate('created_at',now())->where('user_id',Auth::user()->id)->count();
-       if($bon_livraison > 0){
-        $request->session()->flash('bonLivraison');
-        return redirect(route('bonlivraison.index'));
-            }
+       
 
         if( ($cmdExist == 0) ){ // 0 commande en cours et jamais traiter
                     $request->session()->flash('cmdExist');

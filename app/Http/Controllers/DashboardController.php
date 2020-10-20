@@ -108,8 +108,8 @@ class DashboardController extends Controller
                 if(Gate::denies('ramassage-commande')){
                     for ($i=1; $i <= 12 ; $i++) { 
                     
-                        $chart['livre'][] = DB::table('commandes')->where('statut','livré')->where('deleted_at',NULL)->whereMonth('created_at',($i))->where('user_id',Auth::user()->id)->sum('prix');
-                        $chart['retour'][] = DB::table('commandes')->where('statut','like','%retour%')->where('deleted_at',NULL)->whereMonth('created_at',($i))->where('user_id',Auth::user()->id)->sum('prix');
+                        $chart['livre'][] = DB::table('commandes')->where('statut','livré')->where('deleted_at',NULL)->whereMonth('created_at',($i))->where('user_id',Auth::user()->id)->sum('montant');
+                        $chart['retour'][] = DB::table('commandes')->where('statut','like','%retour%')->where('deleted_at',NULL)->whereMonth('created_at',($i))->where('user_id',Auth::user()->id)->sum('montant');
                     }
                 }
                 else{

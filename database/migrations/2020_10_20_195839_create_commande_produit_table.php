@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReceptionProduitTable extends Migration
+class CreateCommandeProduitTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateReceptionProduitTable extends Migration
      */
     public function up()
     {
-        Schema::create('reception_produit', function (Blueprint $table) {
+        Schema::create('commande_produit', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reception_id')->constrained();
+            $table->foreignId('commande_id')->constrained();
             $table->foreignId('produit_id')->constrained();
             $table->integer('qte');
             $table->timestamps();
@@ -29,6 +29,6 @@ class CreateReceptionProduitTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reception_produit');
+        Schema::dropIfExists('commande_produit');
     }
 }

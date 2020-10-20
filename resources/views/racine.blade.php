@@ -77,7 +77,7 @@
     <script src="{{ url('/assets/libs/jquery/dist/jquery.min.js') }}"></script>
     <!-- Bootstrap tether Core JavaScript -->
     <script src="{{ url('/assets/libs/popper.js/dist/umd/popper.min.js') }}"></script>
-<script src="{{ url('/assets/libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url('/assets/libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ url('/js/app-style-switcher.js') }}" ></script>
     <!--Wave Effects -->
     <script src="{{ url('/js/waves.js"') }}" ></script>

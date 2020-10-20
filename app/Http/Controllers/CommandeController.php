@@ -43,12 +43,12 @@ class CommandeController extends Controller
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('deleted_at',NULL)->count();
-            $commandes= DB::table('commandes')->where('deleted_at',NULL)->orderBy('created_at', 'DESC')->paginate(10);
+            $commandes= DB::table('commandes')->where('deleted_at',NULL)->orderBy('updated_at', 'DESC')->paginate(10);
 
             //dd($clients[0]->id);
         }
         else{
-            $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
+            $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->orderBy('updated_at', 'DESC')->paginate(10);
             $total =DB::table('commandes')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
            //dd("salut");
         }
@@ -271,7 +271,7 @@ class CommandeController extends Controller
                 $fournisseur = Auth::user() ;
             }
 
-            if($request->ville != "tanger" || $request->secteur == 0) {
+            if($request->ville != "tanger" ) {
                 return redirect('/commandes');
             }
             $commande = new Commande() ;
@@ -288,9 +288,10 @@ class CommandeController extends Controller
         $commande->ville = $request->ville;
         $commande->adresse = $request->adresse;
         
-        $prixVille = ($request->secteur == 0) ? 17 : 27 ;
+        $prixVille = ($request->secteur == 0) ? 17 : 25 ;
         $prixPoids = (($request->poids==="normal") ? 0 : 18);
         $commande->prix = $prixVille + $prixPoids;
+        $commande->prix = ($commande->prix == 43 ) ? 45 : $commande->prix ;
         if($request->ville != 0 ) $commande->prix += 20 ;
         $commande->statut = "expidié";
         $commande->colis = $request->colis;
@@ -556,7 +557,7 @@ class CommandeController extends Controller
                     $commande->montant = 0;
                 }
 
-                if($request->ville != "tanger" || $request->secteur == 0) {
+                if($request->ville != "tanger" ) {
                     return redirect('/commandes');
                 }
                 
@@ -564,9 +565,13 @@ class CommandeController extends Controller
                 $commande->telephone = $request->telephone;
                 $commande->ville = $request->ville;
                 $commande->adresse = $request->adresse;
-                $prixVille = ($request->secteur ===0) ? 17 : 25 ;
-                $prixPoids = (($request->poids==="normal") ? 0 : 9);
+                
+                
+                $prixVille = ($request->secteur == 0) ? 17 : 25 ;
+                $prixPoids = (($request->poids==="normal") ? 0 : 18);
                 $commande->prix = $prixVille + $prixPoids;
+                $commande->prix = ($commande->prix == 43 ) ? 45 : $commande->prix ;
+                
                 $commande->colis = $request->colis;
                 $commande->poids = $request->poids;
                 $commande->nom = $request->nom;
