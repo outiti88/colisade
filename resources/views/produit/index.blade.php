@@ -78,7 +78,7 @@
                             @endcan
 
                             <th scope="row"> <a title="{{$produit->reference}}" class=" text-muted waves-effect waves-dark pro-pic">
-                                    <img src="uploads/produit/{{$produit->photo}}" alt="user" class="rounded-circle" width="31">
+                                    <img src="/uploads/produit/{{$produit->photo}}" alt="user" class="rounded-circle" width="31">
                                 </a></th>
                             <td>{{$produit->reference}}</td>
                             <td>{{$produit->libelle}}</td>
@@ -89,9 +89,9 @@
                             
          
                            <td style="font-size: 1.5em">
-                            <a style="color: #e85f03" href="/produits/{{$produit->id}}">
+                            <a style="color: #e85f03" href="/produit/{{$produit->id}}">
                             <i class="mdi mdi-eye"></i></a>
-                            <a style="color: #e85f03" href="/produits/{{$produit->id}}">
+                            <a style="color: #e85f03" href="/produit/{{$produit->id}}">
                                 <i class="ti-pencil""></i></a>
                             </td>
                         </tr>

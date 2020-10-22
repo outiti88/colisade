@@ -18,6 +18,16 @@ use Illuminate\Http\Request;
 
 class ProduitController extends Controller
 {
+
+      /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -105,7 +115,6 @@ class ProduitController extends Controller
                 $stock->etat = "Nouveau";
                 $stock->produit()->associate($produit)->save();
                 return redirect()->route('produit.index');
-                
             }
             
         
@@ -120,7 +129,11 @@ class ProduitController extends Controller
      */
     public function show(Produit $produit)
     {
-        //
+        if(Gate::denies('ramassage-commande')){
+            if($produit->user_id !== Auth::user()->id)
+            return redirect()->route('produit.index');
+        }
+        return view('produit.show', ['produit'=>$produit]);
     }
 
     /**
@@ -143,7 +156,34 @@ class ProduitController extends Controller
      */
     public function update(Request $request, Produit $produit)
     {
-        //
+        if((!Gate::denies('ecom') && $produit->user_id !== Auth::user()->id ) || Gate::denies('gestion-stock')){
+            return redirect()->route('produit.index');
+        }
+        else{
+            $produit->libelle = $request->libelle;
+            $produit->prix = $request->prix;
+            $produit->categorie = $request->categorie;
+            $produit->description = $request->description;
+            /* if ($request->hasfile('photo')){
+                //dd($request->file('photo'));
+                 $file = $request->file('photo');
+                 $extension = $file->getClientOriginalExtension(); //getting image extension
+                 $filename = time() . '.' . $extension ;
+                 $file->move('uploads/produit/',$filename);
+                 $produit->photo = $filename ;
+             }
+             else{
+                 $produit->photo =  $produit->categorie . '.png';
+             } */
+             $produit->save();
+               
+             $request->session()->flash('produit', 'modifié');
+
+             return redirect()->route('produit.show',['produit' => $produit->id]);
+        }
+        
+        
+        dd("salut");
     }
 
     /**

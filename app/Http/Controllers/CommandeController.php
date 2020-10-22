@@ -384,6 +384,11 @@ class CommandeController extends Controller
      */
     public function show(Commande $commande)
     {
+
+        if(Gate::denies('ramassage-commande')){
+            if($commande->user_id !== Auth::user()->id)
+            return redirect()->route('commandes.index');
+        }
         
         if($commande->statut == 'Livré'){
             $timestamp1 = strtotime($commande->created_at);
@@ -606,13 +611,15 @@ class CommandeController extends Controller
      */
     public function update(StoreCommande $request, Commande $commande)
     {
+        if(Gate::denies('ramassage-commande')){
+            if($commande->user_id !== Auth::user()->id)
+            return redirect()->route('commandes.index');
+        }
 
         if(Gate::denies('client-admin') || $commande->statut !== "expidié"){
             //dd( $commande->staut );
             $request->session()->flash('noupdate', $commande->numero);
-            
         }
-
         else
             {
                 if(Gate::denies('ecom') ){

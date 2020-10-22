@@ -20,7 +20,7 @@ class CreateReceptionsTable extends Migration
             $table->string('company');
             $table->string('etat');
             $table->date('prevu_at');
-            $table->foreignId('produit_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

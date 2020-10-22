@@ -197,6 +197,7 @@ N: {{$commande->numero}}
 
             </div>
         </div>
+        
     </div>
 </div>
 <div class="container-fluid">
@@ -500,7 +501,7 @@ N: {{$commande->numero}}
                         @foreach ($produits as $index => $produit)
                             <div class="row">
                                 <div class="col-md-4">
-                                    <a href="/produits/{{$produit->id}}" title="{{$produit->libelle}}" class=" text-muted waves-effect waves-dark pro-pic">
+                                    <a href="/produit/{{$produit->id}}" title="{{$produit->libelle}}" class=" text-muted waves-effect waves-dark pro-pic">
                                         <img src="/uploads/produit/{{$produit->photo}}" alt="user" class="rounded-circle" width="31">
                                     </a>
                                     <label>{{$produit->libelle}}</label>

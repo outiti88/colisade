@@ -788,7 +788,7 @@
                               <div class="form-group">
                                   <label class="col-sm-12">Ville :</label>
                                   <div class="col-sm-12">
-                                      <select name="ville" class="form-control form-control-line" id="ville" onchange="myFunction()" required>
+                                      <select value="{{ old('ville') }}" name="ville" class="form-control form-control-line" id="ville" onchange="myFunction()" required>
                                           <option checked>Choisissez la ville</option>
                                           <option value="Tanger">Tanger</option>
                                           <option >Marrakech</option>
@@ -801,7 +801,7 @@
                               <div style="display: none"  class="form-group" id="secteur">
                                   <label class="col-sm-12">Secteur :</label>
                                   <div class="col-sm-12">
-                                    <select  value="{{ old('ville',$commande->secteur) }}" name="secteur" class="form-control form-control-line" required>
+                                    <select  value="{{ old('secteur') }}" name="secteur" class="form-control form-control-line" required>
 
                                         <option value="">Tous les secteurs</option>
                                             <option>Aviation</option>
