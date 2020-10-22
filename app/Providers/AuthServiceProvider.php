@@ -38,6 +38,14 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('client-admin', function($user){
+            return $user->hasAnyRoles(['admin','client','ecom']);
+        });
+
+        Gate::define('fournisseur', function($user){
+            return $user->hasAnyRoles(['ecom','client']);
+        });
+
+        Gate::define('gestion-commande', function($user){
             return $user->hasAnyRoles(['admin','client']);
         });
 
@@ -54,7 +62,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('delete-commande', function($user){
-            return $user->hasAnyRoles(['admin','client','personel']);
+            return $user->hasAnyRoles(['admin','client','personel','ecom']);
         });
 
 

@@ -26,6 +26,10 @@ Route::resource('/produit','ProduitController')->except([
     'create', 'edit'
 ])->middleware('can:gestion-stock');
 
+Route::resource('/reception','ReceptionController')->except([
+    'create', 'edit'
+])->middleware('can:gestion-stock');
+
 Route::get('showFromNotify/{commande}/{notification}' , 'CommandeController@showFromNotify')->name('commandes.showFromNotify');
 
 Route::get('/profil', 'ProfilController@index')->name('profil.index');

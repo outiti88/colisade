@@ -13,6 +13,7 @@ use App\User;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Produit;
+use App\Stock;
 use Illuminate\Http\Request;
 
 class ProduitController extends Controller
@@ -24,9 +25,8 @@ class ProduitController extends Controller
      */
     public function index()
     {
-        $clients = User::whereHas('roles', function($q){$q->where('name','ecom');})->get();
         $users = [] ;
-
+        $stock = [];
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('produits')->count();
@@ -40,14 +40,17 @@ class ProduitController extends Controller
         else{
             $produits= DB::table('produits')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
             $total =DB::table('produits')->where('user_id',Auth::user()->id )->count();
-           //dd("salut");
+            
         }
-
+        foreach($produits as $produit){
+            $dbStock = DB::table('stocks')->where('produit_id',$produit->id)->first();
+            $stock[] =  $dbStock ;
+        }
 
         return view('produit.index' , ['produits' => $produits, 
                                 'total'=>$total,
                                 'users'=> $users,
-                                'clients' => $clients]);
+                                    'stock'=>$stock]);
     }
 
     /**
@@ -68,7 +71,45 @@ class ProduitController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(Gate::denies('ecom')){
+           
+                return redirect('/commandes');
+            } 
+            else{
+                $produit = new Produit();
+                
+                $produit->libelle = $request->libelle;
+                $produit->prix = $request->prix;
+                $produit->categorie = $request->categorie;
+                $produit->description = $request->description;
+                $produit->reference = bin2hex(substr($produit->libelle, - strlen($produit->libelle) , 3)).date("mdis");
+
+                if ($request->hasfile('photo')){
+                   //dd($request->file('photo'));
+                    $file = $request->file('photo');
+                    $extension = $file->getClientOriginalExtension(); //getting image extension
+                    $filename = time() . '.' . $extension ;
+                    $file->move('uploads/produit/',$filename);
+                    $produit->photo = $filename ;
+                }
+                else{
+                    $produit->photo =  $produit->categorie . '.png';
+                }
+
+                $produit->user()->associate(Auth::user())->save();
+
+                $stock = new Stock();
+
+                $stock->qte = 0;
+                $stock->cmd = 0;
+                $stock->etat = "Nouveau";
+                $stock->produit()->associate($produit)->save();
+                return redirect()->route('produit.index');
+                
+            }
+            
+        
+        
     }
 
     /**

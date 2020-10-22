@@ -46,34 +46,53 @@
                     <table class="table table-hover table-bordered" style="font-size: 0.85em;">
                         <thead>
                             <tr>
-                                <th scope="col">Code produit</th>
-                                <th scope="col">Nom du produit</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Poids</th>
+                                @can('ramassage-commande')
+                                <th scope="col">Client</th>
+                                @endcan
+                                <th scope="col">Image</th>
+                                <th scope="col">Reference</th>
+                                <th scope="col">Libelle</th>
+                                <th scope="col">Categorie</th>
                                 <th scope="col">Prix</th>
-                                <th scope="col">en stock</th>
-                                <th scope="col">vendu</th>
-                                <th scope="col">reception</th>
-                                <th scope="col">Voir</th>
-                                
+                                <th scope="col">Quantité</th>
+                                <th scope="col">En commande</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                            @forelse ($produits as $index => $produit)
                            <tr>
-                            <th scope="row">{{$produit->numero}}</th>
-                            <td>{{$produit->code}}</td>
-                            <td>{{$produit->nom}}</td>
-                            <td>{{$produit->description}}</td>
-                            <td>{{$produit->poids}}</td>
+                            @can('ramassage-commande')
+                            <th scope="row">
+                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
+                                       
+                                            @can('edit-users')
+                                                href="{{route('admin.users.edit',$users[$index]->id)}}"
+                                            @endcan
+
+                                        
+                                    >
+                                    <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
+                                </a>
+                            </th>
+                            @endcan
+
+                            <th scope="row"> <a title="{{$produit->reference}}" class=" text-muted waves-effect waves-dark pro-pic">
+                                    <img src="uploads/produit/{{$produit->photo}}" alt="user" class="rounded-circle" width="31">
+                                </a></th>
+                            <td>{{$produit->reference}}</td>
+                            <td>{{$produit->libelle}}</td>
+                            <td>{{$produit->categorie}}</td>
                             <td>{{$produit->prix}} MAD</td>
-                            <td>{{$produit->quantite}} MAD</td>
-                            <td>{{$produit->vendu}}</td>
-                            <td>>{{$produit->updated_at}} 
-                                ({{\Carbon\Carbon::parse($produit->updated_at)->diffForHumans()}}) 
-                            </td>
-                           <td style="font-size: 1.5em"><a style="color: #e85f03" href="/produits/{{$produit->id}}">
+                            <td>{{$stock[$index]->qte}}</td>
+                            <td>{{$stock[$index]->cmd}}</td>
+                            
+         
+                           <td style="font-size: 1.5em">
+                            <a style="color: #e85f03" href="/produits/{{$produit->id}}">
                             <i class="mdi mdi-eye"></i></a>
+                            <a style="color: #e85f03" href="/produits/{{$produit->id}}">
+                                <i class="ti-pencil""></i></a>
                             </td>
                         </tr>
                         @empty
@@ -100,6 +119,95 @@
 
 
 
+
+
+<div class="container my-4">    
+    @can('ecom')
+    <div class="modal fade" id="modalStockAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header text-center">
+                          <h4 class="modal-title w-100 font-weight-bold">Nouveau Produit</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <form class="form-horizontal form-material" method="POST" action="{{route('produit.store')}}" enctype="multipart/form-data">
+                                @csrf
+                                
+                                <div class="form-group">
+                                    <label class="col-md-12">Libelle du Produit :</label>
+                                    <div class="col-md-12">
+                                        <input  value="{{ old('libelle') }}" name="libelle" type="text" placeholder="Libelle" class="form-control form-control-line" required>
+                                    </div>
+                                </div>
+                               
+                                <div class="form-group col-md-12">
+                                    <label for="example-email" class="col-md-12">Prix (MAD) :</label>
+                                    <div class="col-md-12">
+                                        <input  value="{{ old('prix') }}" type="number" class="form-control form-control-line" name="prix" >
+                                    </div>
+                                </div>
+                
+                                <div class="form-group">
+                                    <label class="col-md-12">Description :</label>
+                                    <div class="col-md-12">
+                                        <textarea  name="description" rows="5" class="form-control form-control-line">{{ old('description') }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-12">Categorie :</label>
+                                    <div class="col-sm-12">
+                                        <select name="categorie" class="form-control form-control-line" >
+                                            <option >Vêtements</option>
+                                            <option >Chaussures</option>
+                                            <option >Bijoux et accessoires</option>
+                                            <option >Produits Cosmétiques</option>
+                                            <option >Produits High Tech</option>
+                                            <option >Librairie</option>
+                                            <option >Maroquinerie</option>
+                                            <option >Végétaux</option>
+                                            <option >Autres</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                    </div>
+                                    <div class="custom-file">
+                                      <input type="file" name="photo" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                                      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                    </div>
+                                  </div>
+                                <div class="form-group">
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button class="btn btn-danger">Ajouter</button>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+                            @if ($errors->any())
+                            <div class="alert alert-dismissible alert-danger">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>
+                                        <strong>{{$error}}</strong>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                              </div>
+                              @endif
+                        </div>
+            
+                      </div>
+                    </div>
+    </div>
+    @endcan
+</div>
 
 
 @endsection

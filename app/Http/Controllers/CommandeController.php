@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\BonLivraison;
 use App\Commande;
+use App\CommandeProduit;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCommande;
 use App\Notifications\newCommande;
 use App\Notifications\statutChange;
+use App\Produit;
 use App\Statut;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -40,6 +42,13 @@ class CommandeController extends Controller
         //dd(Auth::user()->id );
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
         $users = [] ;
+        $produits = [];
+
+        if(!Gate::denies('ecom')){
+            $produits = Produit::where('user_id',Auth::user()->id)->get();
+            //dd($produits);
+        }
+
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('deleted_at',NULL)->count();
@@ -62,7 +71,8 @@ class CommandeController extends Controller
         return view('commande.colis',['commandes' => $commandes, 
                                     'total'=>$total,
                                     'users'=> $users,
-                                    'clients' => $clients]);
+                                    'clients' => $clients,
+                                    'produits'=>$produits]);
     }
 
 
@@ -72,7 +82,12 @@ class CommandeController extends Controller
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
 
         $users = [];
-        
+        $produits = [];
+
+        if(!Gate::denies('ecom')){
+            $produits = Produit::where('user_id',Auth::user()->id)->get();
+            //dd($produits);
+        }
 
         if(Gate::denies('ramassage-commande')) { //session client donc on cherche saulement dans ses propres commandes
             $commandes->where('user_id',Auth::user()->id );
@@ -120,7 +135,8 @@ class CommandeController extends Controller
         return view('commande.colis',['commandes' => $commandes, 
             'total'=>$total,
             'users'=> $users,
-            'clients' => $clients
+            'clients' => $clients,
+            'produits' => $produits
 
             ]);
     }
@@ -198,6 +214,7 @@ class CommandeController extends Controller
 
 
         $users = [] ;
+        $produits = [];
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->count();
@@ -223,6 +240,12 @@ class CommandeController extends Controller
         }
         //dd($commandes);
         if($total > 0 ){
+            
+
+            if(!Gate::denies('ecom')){
+                $produits = Produit::where('user_id',Auth::user()->id)->get();
+                //dd($produits);
+            }
             foreach($commandes as $commande){
                 if(!empty(User::find($commande->user_id)))
                 $users[] =  User::find($commande->user_id) ;
@@ -232,7 +255,9 @@ class CommandeController extends Controller
             return view('commande.colis',['commandes' => $commandes, 
             'total'=>$total,
             'users'=> $users,
-            'clients' => $clients]);
+            'clients' => $clients,
+            'produits' => $produits
+            ]);
          
            
         }
@@ -271,13 +296,15 @@ class CommandeController extends Controller
                 $fournisseur = Auth::user() ;
             }
 
-            if($request->ville != "tanger" ) {
+            
+
+            if($request->ville != "Tanger" ) {
                 return redirect('/commandes');
             }
             $commande = new Commande() ;
             $statut = new Statut();
             
-        if($request->mode == "cd"){
+        if($request->mode == "cd" && Gate::denies('ecom')){
             $commande->montant = $request->montant;
         }
         else{
@@ -286,9 +313,11 @@ class CommandeController extends Controller
        // dd($request);
         $commande->telephone = $request->telephone;
         $commande->ville = $request->ville;
+        $commande->secteur = $request->secteur;
         $commande->adresse = $request->adresse;
-        
-        $prixVille = ($request->secteur == 0) ? 17 : 25 ;
+
+        $HorsTanger = array("Cap spartel","Du Golf","manar","Aviation","Mghogha","Zone Industrielle Mghogha","Achakar");
+        $prixVille = (in_array($request->secteur,$HorsTanger)) ? 25 : 17 ;
         $prixPoids = (($request->poids==="normal") ? 0 : 18);
         $commande->prix = $prixVille + $prixPoids;
         $commande->prix = ($commande->prix == 43 ) ? 45 : $commande->prix ;
@@ -300,13 +329,32 @@ class CommandeController extends Controller
         $commande->traiter = 0;
         $commande->facturer = 0;
         $commande->numero = substr($fournisseur->name, - strlen($fournisseur->name) , 3)."-".date("md-is");
+
+        if(!Gate::denies('ecom')){
+            foreach ($request->produit as $index => $produit){
+                $prixProduit = Produit::find($produit)->prix * $request->qte[$index];
+                $commande->montant += $prixProduit;
+            }
+        }
         $commande->user()->associate($fournisseur)->save();
 
+        if(!Gate::denies('ecom')){
+            foreach ($request->produit as $index => $produit){
+
+                $produit_commande = new CommandeProduit();
+                $produit_commande->commande_id = $commande->id;
+                $produit_commande->produit_id = $produit;
+                $produit_commande->qte =  $request->qte[$index];
+                $produit_commande->save();
+            }
+        }
         
         //dd($commande->user());
         //$commande->save();
         $statut->commande_id = $commande->id;
         $statut->name = $commande->statut;
+
+        
         $statut->user()->associate(Auth::user())->save();
         $request->session()->flash('statut', $commande->id);
 
@@ -336,6 +384,7 @@ class CommandeController extends Controller
      */
     public function show(Commande $commande)
     {
+        
         if($commande->statut == 'Livré'){
             $timestamp1 = strtotime($commande->created_at);
             $timestamp2 = strtotime($commande->updated_at);
@@ -344,15 +393,31 @@ class CommandeController extends Controller
             $seconde = ($minute - (int)$minute ) * 60 ;
             //dd((int)$hour , (int)$minute ,(int)$seconde);
         }
+       
         //return $commande;
+        //dd($produits);
         $statuts = DB::table('statuts')->where('commande_id',$commande->id)->get();
-
         foreach($statuts as $statut){
             $users[] =  User::find($statut->user_id) ;
-         
+
         }
+        if(!Gate::denies('gestion-stock')){
+            $produits = [] ;
+            $liaisons = DB::table('commande_produits')->where('commande_id',$commande->id)->get();
+            foreach($liaisons as $produit){
+            $produits[] = Produit::find($produit->produit_id);
+        }
+        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 
+                                    'par' => $users,
+                                    'produits' => $produits,
+                                    'liaisons' => $liaisons
+                                    ]);
+
+        }   
         //dd($users);
-        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 'par' => $users]);
+        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 
+                                    'par' => $users
+                                    ]);
     }
 
 
@@ -550,24 +615,27 @@ class CommandeController extends Controller
 
         else
             {
-                if($request->mode == "cd"){
-                    $commande->montant = $request->montant;
-                }
-                else{
-                    $commande->montant = 0;
-                }
-
-                if($request->ville != "tanger" ) {
-                    return redirect('/commandes');
+                if(Gate::denies('ecom') ){
+                    if($request->mode == "cd"){
+                        $commande->montant = $request->montant;
+                    }
+                    else{
+                        $commande->montant = 0;
+                    }
                 }
                 
+
+                if($request->ville != "Tanger" ) {
+                    return redirect('/commandes');
+                }
                 
                 $commande->telephone = $request->telephone;
                 $commande->ville = $request->ville;
                 $commande->adresse = $request->adresse;
-                
-                
-                $prixVille = ($request->secteur == 0) ? 17 : 25 ;
+                $commande->secteur = $request->secteur;
+                //dd($request->secteur);
+                $HorsTanger = array("Cap spartel","Du Golf","manar","Aviation","Mghogha","Zone Industrielle Mghogha","Achakar");
+                $prixVille = (in_array($request->secteur,$HorsTanger)) ? 25 : 17 ;
                 $prixPoids = (($request->poids==="normal") ? 0 : 18);
                 $commande->prix = $prixVille + $prixPoids;
                 $commande->prix = ($commande->prix == 43 ) ? 45 : $commande->prix ;

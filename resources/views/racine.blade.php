@@ -50,7 +50,7 @@
         var xx = document.getElementById("secteur");
         function myFunction() {
         var test = document.getElementById("ville").value;
-        if(test=='tanger'){
+        if(test=='Tanger'){
             xx.style.display = "block";
         }
         else{
@@ -73,6 +73,7 @@
         }
     </script>
     
+ 
 
     <script src="{{ url('/assets/libs/jquery/dist/jquery.min.js') }}"></script>
     <!-- Bootstrap tether Core JavaScript -->
