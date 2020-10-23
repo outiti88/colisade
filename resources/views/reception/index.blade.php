@@ -76,16 +76,44 @@
                             </th>
                             @endcan
 
-                            <th scope="row"> <a title="{{$produit->reference}}" class=" text-muted waves-effect waves-dark pro-pic">
-                                    <img src="/uploads/produit/{{$produit->photo}}" alt="user" class="rounded-circle" width="31">
-                                </a></th>
+                    
                             <td>{{$reception->reference}}</td>
                             <td>{{$reception->colis}}</td>
                             <td>{{$reception->qte}}</td>
                             <td>{{$reception->created_at}}</td>
                             <td>{{$reception->company}}</td>
                             <td>{{$reception->prevu_at}}</td>
-                            <td>{{$reception->etat}}</td>
+                            <td>
+                                <a  style="color: white" 
+                                    class="badge badge-pill 
+                                    @switch($reception->etat)
+                                    @case("Envoyé")
+                                    badge-warning"
+                                    @can('edit-users')
+                                    title="Valider la reception" 
+                                     href="{{ route('reception.index') }}"
+                                    @endcan
+                                        @break
+                                    
+                                    @case("Validé")
+                                    badge-success"
+                                    @if ($commande->facturer > 0)
+                                        title="Voir le details" 
+                                        href="{{route('reception.index')}}"
+                                        @endif
+                                        @break
+                                    @default
+                                    badge-danger"
+                                @endswitch
+                                     > 
+                                     <span style="font-size: 1.25em">{{$reception->etat}}</span> 
+                                      
+                                </a>
+                                <br> ({{\Carbon\Carbon::parse($reception->updated_at)->diffForHumans()}})
+                            
+                            
+
+                            </td>
 
                         </tr>
                         @empty
@@ -100,7 +128,7 @@
                     </table>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
-                            {{$produits -> links()}}
+                            {{$receptions -> links()}}
                         </div>
                     </div>
                 </div>

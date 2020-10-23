@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Produit;
+use App\Reception;
+use App\ReceptionProduit;
+use App\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -29,18 +33,21 @@ class ReceptionController extends Controller
     {
         $users = [] ;
         $stock = [];
+        $produits= null ;
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('receptions')->count();
             $receptions= DB::table('receptions')->orderBy('created_at', 'DESC')->paginate(10);
-            $produits= DB::table('produits')->orderBy('created_at', 'DESC')->paginate(10);
-            
+            foreach($receptions as $reception){
+                if(!empty(User::find($reception->user_id)))
+                $users[] =  User::find($reception->user_id) ;
+            }
             //dd($clients[0]->id);
         }
         else{
             $receptions= DB::table('receptions')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
             $total =DB::table('receptions')->where('user_id',Auth::user()->id )->count();
-            $produits= DB::table('produits')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
+            $produits= DB::table('produits')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->get();
 
         }
        
@@ -63,7 +70,36 @@ class ReceptionController extends Controller
      */
     public function store(Request $request)
     {
-        //dd("salut");
+        if(Gate::denies('gestion-stock')){
+            return redirect()->route('produit.index');
+        }
+        else{
+            //dd("salut");
+            $reception = new Reception();
+            $reception->company = $request->company ;
+            $reception->etat = 'Envoyé' ;
+            $reception->prevu_at = $request->prevu_at ;
+            $reception->reference =  "rec-".bin2hex(substr($reception->company, - strlen($reception->company) , 3)).date("mdis");
+            $reception->qte = array_sum($request->qte) ;
+            $reception->colis = count($request->produit);
+            $reception->user()->associate(Auth::user())->save();
+
+            foreach($request->produit as $index => $produit){
+
+                $stock = DB::table('stocks')->where('produit_id',$produit)->first();
+                $stock = Stock::find($stock->id);
+                $stock->cmd = $request->qte[$index];
+                $stock->save();
+                $reception_produit = new ReceptionProduit();
+                $reception_produit->reception_id = $reception->id ;
+                $reception_produit->produit_id = $produit ;
+                $reception_produit->qte = $request->qte[$index];
+                $reception_produit->save();
+            }
+
+
+            return redirect()->route('reception.index');
+        }
     }
 
     /**
