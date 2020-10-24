@@ -34,7 +34,6 @@ class ReceptionController extends Controller
     public function index()
     {
         $users = [] ;
-        $stock = [];
         $produits= null ;
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
@@ -52,13 +51,31 @@ class ReceptionController extends Controller
             $produits= DB::table('produits')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->get();
 
         }
-       
+
+        $details = [];
+
+        //dd($receptions);
+        foreach($receptions as $index => $recep){
+            $reception_produits = DB::table('reception_produits')->where('reception_id',$recep->id)->get();
+            //dd($reception_produits);
+
+            foreach($reception_produits as $recet){
+                //dd($recet->produit_id);
+                 $produit =DB::table('produits')->where('id',$recet->produit_id)->get();
+                 //dd($produit);
+                 $details[$index][] = array("produit" => $produit[0] ,
+                                            "qte"=>$recet->qte    
+                                            );
+            }
+        }
+        //dd($details);
 
         return view('reception.index' , [
                                 'produits' => $produits, 
                                 'receptions' => $receptions, 
                                 'total'=>$total,
-                                'users'=>$users
+                                'users'=>$users,
+                                'details'=>$details
                                    ]);
     }
 

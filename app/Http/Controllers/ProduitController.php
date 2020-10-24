@@ -58,8 +58,8 @@ class ProduitController extends Controller
         }
 
         return view('produit.index' , ['produits' => $produits, 
-                                'total'=>$total,
-                                'users'=> $users,
+                                    'total'=>$total,
+                                    'users'=> $users,
                                     'stock'=>$stock]);
     }
 

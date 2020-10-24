@@ -63,7 +63,7 @@
                            <tr>
                             @can('ramassage-commande')
                             <th scope="row">
-                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
+                                <a  title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
                                        
                                             @can('edit-users')
                                                 href="{{route('admin.users.edit',$users[$index]->id)}}"
@@ -76,8 +76,48 @@
                             </th>
                             @endcan
 
-                    
-                            <td>{{$reception->reference}}</td>
+
+                            <div class="modal fade" id="detail_reception{{$reception->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLongTitle">Details de la reception : {{$reception->reference}}</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-group">
+                                            @foreach ($details[$index] as $detail)
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <a href="{{route('produit.show',$detail['produit']->id)}}">{{$detail['produit']->libelle}}</a>
+                                                <span class="badge badge-primary badge-pill">{{$detail['qte']}}</span>
+                                              </li>
+                                            @endforeach
+                                            
+                                           
+                                          </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      @can('edit-users')
+                                      @if ($reception->etat == 'Envoyé')
+
+                                      <a style="color: white"
+                                            title="Valider la reception" 
+                                            href="{{ route('reception.valide',$reception->id) }}"
+                                            class="btn btn-primary">Valider</a>
+                                        @endif
+                                      @endcan
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            <td>
+                                <a href="" style="color: white; background-color: #e85f03" class="badge badge-pill" data-toggle="modal" data-target="#detail_reception{{$reception->id}}" > 
+                                    <span style="font-size: 1.25em">{{$reception->reference}}</span> 
+                                </a>
+                            </td>
                             <td>{{$reception->colis}}</td>
                             <td>{{$reception->qte}}</td>
                             <td>{{$reception->created_at}}</td>
