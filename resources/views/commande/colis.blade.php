@@ -504,7 +504,7 @@
                                     <div class="col-sm-12">
                                         <select name="ville" class="form-control form-control-line" id="ville" onchange="myFunction()" required>
                                             <option checked>Choisissez la ville</option>
-                                            <option value="tanger">Tanger</option>
+                                            <option value="Tanger">Tanger</option>
                                             <option >Marrakech</option>
                                             <option >Kénitra</option>
                                             <option >Casablanca</option>

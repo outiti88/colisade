@@ -91,16 +91,13 @@
                                     badge-warning"
                                     @can('edit-users')
                                     title="Valider la reception" 
-                                     href="{{ route('reception.index') }}"
+                                     href="{{ route('reception.valide',$reception->id) }}"
                                     @endcan
                                         @break
-                                    
                                     @case("Validé")
                                     badge-success"
-                                    @if ($commande->facturer > 0)
                                         title="Voir le details" 
                                         href="{{route('reception.index')}}"
-                                        @endif
                                         @break
                                     @default
                                     badge-danger"

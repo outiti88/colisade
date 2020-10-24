@@ -30,7 +30,12 @@ Route::resource('/reception','ReceptionController')->except([
     'create', 'edit'
 ])->middleware('can:gestion-stock');
 
+Route::get('/reception/{id}/valide','ReceptionController@valide')->name('reception.valide')->middleware('can:manage-users');
+
 Route::get('showFromNotify/{commande}/{notification}' , 'CommandeController@showFromNotify')->name('commandes.showFromNotify');
+
+Route::get('showFromNotify/{reception}/{notification}' , 'ReceptionController@showFromNotify')->name('reception.showFromNotify');
+
 
 Route::get('/profil', 'ProfilController@index')->name('profil.index');
 

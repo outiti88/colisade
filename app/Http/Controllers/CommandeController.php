@@ -39,6 +39,7 @@ class CommandeController extends Controller
      */
     public function index()
     {
+        //dd(auth()->user()->unreadNotifications );
         //dd(Auth::user()->id );
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
         $users = [] ;
@@ -684,7 +685,7 @@ class CommandeController extends Controller
             
             //notification
             $user_notify = \App\User::find($commande->user_id);
-           $user_notify->notify(new statutChange($commande));
+            $user_notify->notify(new statutChange($commande));
             //dd($test);
             $request->session()->flash('edit', $commande->numero);
         }

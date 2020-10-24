@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\newReception;
 use App\Produit;
 use App\Reception;
 use App\ReceptionProduit;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\User;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -88,7 +90,7 @@ class ReceptionController extends Controller
 
                 $stock = DB::table('stocks')->where('produit_id',$produit)->first();
                 $stock = Stock::find($stock->id);
-                $stock->cmd = $request->qte[$index];
+                $stock->cmd += $request->qte[$index];
                 $stock->save();
                 $reception_produit = new ReceptionProduit();
                 $reception_produit->reception_id = $reception->id ;
@@ -97,9 +99,19 @@ class ReceptionController extends Controller
                 $reception_produit->save();
             }
 
+            //notification
+            $user_notify = \App\User::find(1);
+            $user_notify->notify(new newReception( Auth::user() , $reception));
 
             return redirect()->route('reception.index');
         }
+    }
+
+    public function showFromNotify(Reception $reception , DatabaseNotification $notification){
+
+        $notification->markAsRead();
+
+        return redirect()->route('reception.index');
     }
 
     /**
@@ -121,7 +133,6 @@ class ReceptionController extends Controller
      */
     public function edit($id)
     {
-        //
     }
 
     /**
@@ -133,7 +144,32 @@ class ReceptionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+
+    }
+
+    public function valide(Request $request, $id)
+    {
+        if(!Gate::denies('manage-users')){
+            $reception = Reception::findOrFail($id);
+            if($reception->etat == 'Envoyé'){
+                $reception->etat = "Validé";
+                $reception->save();
+
+                $reception_produits = DB::table('reception_produits')->where('reception_id',$id)->get();
+                foreach($reception_produits as $index => $reception_produit){
+                    $stock = DB::table('stocks')->where('produit_id',$reception_produit->produit_id)->first();
+                    $stock = Stock::findOrFail($stock->id);
+                    $stock->qte += $reception_produit->qte ;
+                    $stock->cmd -= $reception_produit->qte ;
+                    $stock->save();
+                }
+                //dd($reception_produits[0]);
+
+            }
+        }
+        return back();
+
     }
 
     /**

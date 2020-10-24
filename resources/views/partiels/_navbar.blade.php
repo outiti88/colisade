@@ -92,18 +92,34 @@
                                                 @foreach (auth()->user()->unreadNotifications as $notification)
                                                 
                                                 
+                                           
                                             
+                                                @if ($notification->type == 'App\Notifications\newCommande')
                                                 <li class="row">
-                                                    <a class="hoverNotif" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
-                                                        'notification' => $notification->id])}}">
-                                                        <div class="col-md-3 col-sm-3 col-xs-3"><div class="notify-img"><img width="35" class="rounded-circle" src="{{$notification->data['user']['image']}}" alt=""></div></div>
-                                                        <div class="col-md-9 col-sm-9 col-xs-9 pd-l0"><a href="{{route('admin.users.edit',$notification->data['user']['id'])}}">{{$notification->data['user']['name']}}</a> a ajouté une nouvelle commande. 
-                                                            <p>N°: <a href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
-                                                                'notification' => $notification->id])}}">{{$notification->data['commande']['numero']}}</a></p>
-                                                            <p class="proile-rating">{{date_format($notification->created_at,"Y/m/d")}}<span> {{date_format($notification->created_at,"H:i:s")}}</span></p>
-                                                            </div>
-                                                        </a>
+                                                <a class="hoverNotif" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
+                                                    'notification' => $notification->id])}}">
+                                                    <div class="col-md-3 col-sm-3 col-xs-3"><div class="notify-img"><img width="35" class="rounded-circle" src="{{$notification->data['user']['image']}}" alt=""></div></div>
+                                                    <div class="col-md-9 col-sm-9 col-xs-9 pd-l0"><a href="{{route('admin.users.edit',$notification->data['user']['id'])}}">{{$notification->data['user']['name']}}</a> a ajouté une nouvelle commande. 
+                                                        <p>N°: <a href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
+                                                            'notification' => $notification->id])}}">{{$notification->data['commande']['numero']}}</a></p>
+                                                        <p class="proile-rating">{{date_format($notification->created_at,"Y/m/d")}}<span> {{date_format($notification->created_at,"H:i:s")}}</span></p>
+                                                    </div>
+                                                </a>
                                                 </li>
+                                                @else
+                                                <li class="row">
+                                                <a class="hoverNotif" href="{{route('reception.showFromNotify',['reception' => $notification->data['reception']['id'] ,
+                                                    'notification' => $notification->id])}}">
+                                                    <div class="col-md-3 col-sm-3 col-xs-3"><div class="notify-img"><img width="35" class="rounded-circle" src="{{$notification->data['user']['image']}}" alt=""></div></div>
+                                                    <div class="col-md-9 col-sm-9 col-xs-9 pd-l0"><a href="{{route('admin.users.edit',$notification->data['user']['id'])}}">{{$notification->data['user']['name']}}</a> a envoyé une reception. 
+                                                        <p>Ref°: <a href="{{route('reception.showFromNotify',['reception' => $notification->data['reception']['id'] ,
+                                                            'notification' => $notification->id])}}">{{$notification->data['reception']['reference']}}</a></p>
+                                                        <p class="proile-rating">{{date_format($notification->created_at,"Y/m/d")}}<span> {{date_format($notification->created_at,"H:i:s")}}</span></p>
+                                                    </div>
+                                                </a>
+                                                </li>
+                                                @endif
+                                                
                                             
                                                 
                                                 @endforeach
