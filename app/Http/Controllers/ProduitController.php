@@ -93,7 +93,7 @@ class ProduitController extends Controller
                 $produit->categorie = $request->categorie;
                 $produit->description = $request->description;
                 $produit->reference = bin2hex(substr($produit->libelle, - strlen($produit->libelle) , 3)).date("mdis");
-
+                //dd($request);
                 if ($request->hasfile('photo')){
                    //dd($request->file('photo'));
                     $file = $request->file('photo');
@@ -133,7 +133,10 @@ class ProduitController extends Controller
             if($produit->user_id !== Auth::user()->id)
             return redirect()->route('produit.index');
         }
-        return view('produit.show', ['produit'=>$produit]);
+        $stock = DB::table('stocks')->where('produit_id',$produit->id)->first();
+        return view('produit.show', ['produit'=>$produit ,
+                                    'stock' =>$stock
+                                    ]);
     }
 
     /**
@@ -164,17 +167,13 @@ class ProduitController extends Controller
             $produit->prix = $request->prix;
             $produit->categorie = $request->categorie;
             $produit->description = $request->description;
-            /* if ($request->hasfile('photo')){
-                //dd($request->file('photo'));
+            if ($request->hasfile('photo')){
                  $file = $request->file('photo');
                  $extension = $file->getClientOriginalExtension(); //getting image extension
                  $filename = time() . '.' . $extension ;
                  $file->move('uploads/produit/',$filename);
                  $produit->photo = $filename ;
              }
-             else{
-                 $produit->photo =  $produit->categorie . '.png';
-             } */
              $produit->save();
                
              $request->session()->flash('produit', 'modifié');
