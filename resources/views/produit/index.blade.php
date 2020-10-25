@@ -85,12 +85,16 @@
                             <td>{{$produit->categorie}}</td>
                             <td>{{$produit->prix}} MAD</td>
                             <td>{{$stock[$index]->qte}}</td>
-                            <td>{{$stock[$index]->cmd}}</td>
+                            <td>
+                            <a href="{{route('reception.index')}}" style="color: white" 
+                                    class="badge badge-pill badge-danger">
+                                {{$stock[$index]->cmd}}
+                                </a>
+                            </td>
                             
          
                            <td style="font-size: 1.5em">
-                            <a style="color: #e85f03" href="/produit/{{$produit->id}}">
-                            <i class="mdi mdi-eye"></i></a>
+                           
                             <a style="color: #e85f03" href="/produit/{{$produit->id}}">
                                 <i class="ti-pencil""></i></a>
                             </td>

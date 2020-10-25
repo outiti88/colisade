@@ -11,6 +11,7 @@ use App\Notifications\newCommande;
 use App\Notifications\statutChange;
 use App\Produit;
 use App\Statut;
+use App\Stock;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\User;
@@ -46,7 +47,13 @@ class CommandeController extends Controller
         $produits = [];
 
         if(!Gate::denies('ecom')){
-            $produits = Produit::where('user_id',Auth::user()->id)->get();
+            $produits_total = Produit::where('user_id',Auth::user()->id)->get();
+            foreach($produits_total as $produit){
+                $stock = DB::table('stocks')->where('produit_id',$produit->id)->get();
+                if($stock[0]->qte > 0){
+                    $produits[] = $produit; 
+                }
+            }
             //dd($produits);
         }
 
@@ -332,9 +339,24 @@ class CommandeController extends Controller
         $commande->numero = substr($fournisseur->name, - strlen($fournisseur->name) , 3)."-".date("md-is");
 
         if(!Gate::denies('ecom')){
-            foreach ($request->produit as $index => $produit){
-                $prixProduit = Produit::find($produit)->prix * $request->qte[$index];
+            foreach ($request->produit as $index => $IdProduit){
+                $produit = Produit::find($IdProduit);
+                $prixProduit = $produit->prix * $request->qte[$index];
+
                 $commande->montant += $prixProduit;
+
+                $stock = Stock::where('produit_id',$IdProduit)->first();
+                //verification du stock
+                if($stock->qte >= $request->qte[$index]){
+                    $stock->qte -= $request->qte[$index];
+                    $stock->save();
+                }
+                else{
+                    $request->session()->flash('stock_insuf', $produit->libelle);
+                    return redirect('/commandes');
+
+                }
+                
             }
         }
         $commande->user()->associate($fournisseur)->save();
@@ -724,6 +746,18 @@ class CommandeController extends Controller
                 $statut->name = $commande->statut;
                 $statut->user()->associate(Auth::user())->save();
                 $request->session()->flash('edit', $commande->numero);
+
+                if($statut->name != "Livré"){
+                    $commande_produits = DB::table('commande_produits')->where('commande_id',$commande->id)->get();
+                    foreach($commande_produits as $commande_produit){
+                    //dd($commande_produit);
+                    $stock = Stock::where('produit_id',$commande_produit->produit_id)->first();
+                    $stock->qte += $commande_produit->qte;
+
+                    $stock->save();
+                }
+                }
+                
             }
             else{
                 

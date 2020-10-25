@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BonLivraison;
+use App\Produit;
 use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
@@ -293,6 +294,19 @@ class BonLivraisonController extends Controller
     public function search($id){
          //dd(Auth::user()->id );
          $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
+         $produits = [];
+
+        if(!Gate::denies('ecom')){
+            $produits_total = Produit::where('user_id',Auth::user()->id)->get();
+            foreach($produits_total as $produit){
+                $stock = DB::table('stocks')->where('produit_id',$produit->id)->get();
+                if($stock[0]->qte > 0){
+                    $produits[] = $produit; 
+                }
+            }
+            //dd($produits);
+        }
+
          $users = [] ;
          if(!Gate::denies('ramassage-commande')) {
              //session administrateur donc on affiche tous les commandes
@@ -316,7 +330,8 @@ class BonLivraisonController extends Controller
          return view('commande.colis',['commandes' => $commandes, 
                                      'total'=>$total,
                                      'users'=> $users,
-                                     'clients' => $clients]);
+                                     'clients' => $clients,
+                                     'produits'=>$produits]);
     }
 
 

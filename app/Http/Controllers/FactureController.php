@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facture;
 
 use App\BonLivraison;
+use App\Produit;
 use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
@@ -284,6 +285,19 @@ class FactureController extends Controller
         //dd(Auth::user()->id );
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
         $users = [] ;
+        $produits = [];
+
+        if(!Gate::denies('ecom')){
+            $produits_total = Produit::where('user_id',Auth::user()->id)->get();
+            foreach($produits_total as $produit){
+                $stock = DB::table('stocks')->where('produit_id',$produit->id)->get();
+                if($stock[0]->qte > 0){
+                    $produits[] = $produit; 
+                }
+            }
+            //dd($produits);
+        }
+
         if(!Gate::denies('ramassage-commande')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('deleted_at',NULL)->where('facturer',$id)->count();
@@ -308,7 +322,8 @@ class FactureController extends Controller
         return view('commande.colis',['commandes' => $commandes, 
                                     'total'=>$total,
                                     'users'=> $users,
-                                    'clients' => $clients]);
+                                    'clients' => $clients,
+                                    'produits'=>$produits]);
    }
 
    public function infos($id){
