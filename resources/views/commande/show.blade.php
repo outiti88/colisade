@@ -42,7 +42,7 @@ N: {{$commande->numero}}
             color: #333;
         }
         .profile-head h6{
-            color: #e85f03;
+            color: #f7941e;
         }
         .profile-edit-btn{
             border: none;
@@ -72,7 +72,7 @@ N: {{$commande->numero}}
         }
         .profile-head .nav-tabs .nav-link.active{
             border: none;
-            border-bottom:2px solid #e85f03;
+            border-bottom:2px solid #f7941e;
         }
         .profile-work{
             padding: 14%;
@@ -98,13 +98,13 @@ N: {{$commande->numero}}
         }
         .profile-tab p{
             font-weight: 600;
-            color: #e85f03;
+            color: #f7941e;
         }
         a {
-            color: #e85f03;
+            color: #f7941e;
         }
         a:hover {
-            color: #e85f03;
+            color: #f7941e;
         }
 
         .show .row{
@@ -129,7 +129,7 @@ N: {{$commande->numero}}
             <div class="d-flex align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Quickoo</a></li>
+                        <li class="breadcrumb-item"><a href="/">Colisade</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><a href="/commandes">Colis</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{$commande->numero}}</li>
                     </ol>
@@ -247,7 +247,7 @@ N: {{$commande->numero}}
             <div class="col-md-10">
                 <div class="profile-head">
                             <h5>
-                                Commande numero: <span style="color: #e85f03">{{$commande->numero}}</span>
+                                Commande numero: <span style="color: #f7941e">{{$commande->numero}}</span>
                                 <a  style="color: white" 
                                     class="badge badge-pill 
                                     @switch($commande->statut)

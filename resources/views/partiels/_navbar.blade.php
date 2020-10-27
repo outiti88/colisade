@@ -1,6 +1,6 @@
 <header class="topbar" data-navbarbg="skin5">
     <nav class="navbar top-navbar navbar-expand-md navbar-dark" style="border-bottom-style: solid;
-    border-bottom-color: #e85f03;">
+    border-bottom-color: #f7941e;">
         <div class="navbar-header" data-logobg="skin5">
             <!-- ============================================================== -->
             <!-- Logo -->
@@ -44,13 +44,13 @@
                 @guest
                             <li class="nav-item">
                                 <a style="
-                                color: #e85f03 !important;
+                                color: #f7941e !important;
                             " class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
                                     <a style="
-                                    color: #e85f03 !important;
+                                    color: #f7941e !important;
                                 " class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
@@ -59,7 +59,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic " 
                                 style="
-                                    color: #e85f03 !important;
+                                    color: #f7941e !important;
                                     font-size: 1.5em;"
                                  href="
                                  @can('client')

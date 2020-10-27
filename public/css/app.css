@@ -1,6 +1,6 @@
 a.notify,
 .drop-content li.row div a {
-    color: #e85f03;
+    color: #f7941e;
 }
 
 .proile-rating {
@@ -18,7 +18,7 @@ a.notify,
     border-radius: 50%;
     position: relative;
     width: 15px;
-    background-color: #e85f03;
+    background-color: #f7941e;
     height: 15px;
     color: #ffffff;
     text-align: center;

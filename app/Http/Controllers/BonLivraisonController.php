@@ -215,7 +215,7 @@ class BonLivraisonController extends Controller
             
                 body{
                     margin: 0px;
-                    background-image: url("https://i.ibb.co/rxQVYqw/3446949.png");
+                    background-image: url("https://i.ibb.co/fF2d3Hj/Bon-de-livraison-PNG.png");
                     width: 790px;
                     height: auto;
                     background-position: center;

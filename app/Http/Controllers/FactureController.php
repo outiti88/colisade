@@ -204,7 +204,7 @@ class FactureController extends Controller
             
                 body{
                     margin: 0px;
-                    background-image: url("https://i.ibb.co/4WmzVtW/facture.png");
+                    background-image: url("https://i.ibb.co/zV2y5m5/Facture-PNG.png");
                     width: 790px;
                     height: auto;
                     background-position: center;

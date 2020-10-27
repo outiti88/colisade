@@ -10,12 +10,12 @@
 @section('style')
     <style>
         .page-link {
-            color: #e85f03 !important;
+            color: #f7941e !important;
         }
         .page-item.active .page-link {
             
-            background-color: #e85f03 !important;
-            border-color: #e85f03 !important;
+            background-color: #f7941e !important;
+            border-color: #f7941e !important;
             color: #fff !important;
         }
     </style>
@@ -69,7 +69,7 @@
             <div class="d-flex align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Quickoo</a></li>
+                        <li class="breadcrumb-item"><a href="/">Colisade</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Facture</li>
                     </ol>
                 </nav>

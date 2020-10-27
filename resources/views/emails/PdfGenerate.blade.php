@@ -154,7 +154,7 @@
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                           <tr>
                             <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                              <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:20px;line-height:1;text-align:center;color:#e85f03;"><strong>Bonjour {{$details['user']->name}}</strong></div>
+                              <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:20px;line-height:1;text-align:center;color:#f7941e;"><strong>Bonjour {{$details['user']->name}}</strong></div>
                             </td>
                           </tr>
                           <tr>
@@ -164,14 +164,14 @@
                           </tr>
                           <tr>
                             <td align="center" style="font-size:0px;padding:0 25px;padding-top:20px;word-break:break-word;">
-                            <div style="font-family:Arial, sans-serif;font-size:25px;font-weight:bold;line-height:35px;text-align:center;color:#e85f03;">Facture <strong>N°:{{$details['facture']->numero}}</strong> <br> <span style="font-size:18px">Du: {{$details['facture']->created_at}}</span></div>
+                            <div style="font-family:Arial, sans-serif;font-size:25px;font-weight:bold;line-height:35px;text-align:center;color:#f7941e;">Facture <strong>N°:{{$details['facture']->numero}}</strong> <br> <span style="font-size:18px">Du: {{$details['facture']->created_at}}</span></div>
                             </td>
                           </tr>
                           <tr>
                             <td align="center" vertical-align="middle" style="font-size:0px;padding:20px 0 0 0;word-break:break-word;">
                               <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                 <tr>
-                                <td align="center" bgcolor="#8bb420" role="presentation" style="border:none;border-radius:3px;cursor:auto;mso-padding-alt:10px 25px;background:#e85f03;" valign="middle"> <a href="{{route('facture.gen',$details['facture']->id)}}"style="display: inline-block; background: #e85f03; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 120%; margin: 0; text-transform: none; padding: 10px 25px; mso-padding-alt: 0px; border-radius: 3px; text-decoration: none; color: white;"
+                                <td align="center" bgcolor="#8bb420" role="presentation" style="border:none;border-radius:3px;cursor:auto;mso-padding-alt:10px 25px;background:#f7941e;" valign="middle"> <a href="{{route('facture.gen',$details['facture']->id)}}"style="display: inline-block; background: #f7941e; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; line-height: 120%; margin: 0; text-transform: none; padding: 10px 25px; mso-padding-alt: 0px; border-radius: 3px; text-decoration: none; color: white;"
                                       target="_blank">
                                   Cliquez Ici pour l'ouvrir
                                 </a> </td>
@@ -181,7 +181,7 @@
                           </tr>
                           <tr>
                             <td align="center" style="font-size:0px;padding:0 25px;padding-top:40px;word-break:break-word;">
-                              <div style="font-family:Arial, sans-serif;font-size:14px;line-height:1;text-align:center;color:#000000;">Très cordialement, <br> L’équipe Quickoo.ma ©
+                              <div style="font-family:Arial, sans-serif;font-size:14px;line-height:1;text-align:center;color:#000000;">Très cordialement, <br> L’équipe Colisade.ma ©
                                 <p></p>
                               </div>
                             </td>

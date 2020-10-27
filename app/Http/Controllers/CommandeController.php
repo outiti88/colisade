@@ -318,7 +318,6 @@ class CommandeController extends Controller
         else{
             $commande->montant = 0;
         }
-       // dd($request);
         $commande->telephone = $request->telephone;
         $commande->ville = $request->ville;
         $commande->secteur = $request->secteur;
@@ -339,6 +338,11 @@ class CommandeController extends Controller
         $commande->numero = substr($fournisseur->name, - strlen($fournisseur->name) , 3)."-".date("md-is");
 
         if(!Gate::denies('ecom')){
+            if(!isset($request->produit)){
+                $request->session()->flash('produit_required');
+                    return redirect('/commandes');
+
+            }
             foreach ($request->produit as $index => $IdProduit){
                 $produit = Produit::find($IdProduit);
                 $prixProduit = $produit->prix * $request->qte[$index];
@@ -461,7 +465,7 @@ class CommandeController extends Controller
             $content .= '
             <div class="container">
                         
-                <h1 style="color:#E85F03">
+                <h1 style="color:#f7941e">
                     Ticket de Commande
                 </h1>
                 <div class="tableau">
@@ -531,7 +535,7 @@ class CommandeController extends Controller
                 <div style="display:flex ; justify-content: space-around; padding-bottom:20px">
                     <div class="logo-text" style="padding-top:20px" >
         
-                    <img src="https://quickoo.ma/assets/img/logo.png" style="
+                    <img src="https://i.ibb.co/NWQgqxd/logo-light-text.png" style="
                         WIDTH: 130PX;
                     "class="light-logo" alt="homepage" />
                     </div>
@@ -567,7 +571,7 @@ class CommandeController extends Controller
                     h2{
                         text-align : center;
                         font-size: 1.5em;
-                        border: 1px solid #e85f03;
+                        border: 1px solid #f7941e;
                     }
 
                 .container{
@@ -596,7 +600,7 @@ class CommandeController extends Controller
                     }
 
                     #customers td, #customers th {
-                    border: 1px solid #e85f03;
+                    border: 1px solid #f7941e;
                     }
 
                     #customers tr:nth-child(even){

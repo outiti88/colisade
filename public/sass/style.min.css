@@ -2956,8 +2956,8 @@ fieldset:disabled a.btn {
 
 .btn-danger {
     color: #fff;
-    background-color: #e85f03;
-    border-color: #e85f03
+    background-color: #f7941e;
+    border-color: #f7941e
 }
 
 .btn-danger:hover {
@@ -10627,7 +10627,7 @@ html[dir=ltr] body .p-l-0 {
 
 #main-wrapper[data-layout=horizontal] .left-sidebar[data-sidebarbg=skin6] .create-btn,
 #main-wrapper[data-layout=vertical] .left-sidebar[data-sidebarbg=skin6] .create-btn {
-    background: #e85f03
+    background: #f7941e
 }
 
 #main-wrapper {
@@ -11359,7 +11359,7 @@ ul.list-style-none li a:hover {
 
 .topbar .nav-toggler,
 .topbar .topbartoggler {
-    color: #e85f03;
+    color: #f7941e;
     padding: 0 15px
 }
 

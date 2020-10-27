@@ -27,7 +27,7 @@
 	<style type="text/css" media="screen">
 		/* Linked Styles */
 		body { padding:0 !important; margin:0 !important; display:block !important; min-width:100% !important; width:100% !important; background:#ffffff; -webkit-text-size-adjust:none; font-family:Arial,sans-serif !important;}
-		a { color:#e85f03; text-decoration:none }
+		a { color:#f7941e; text-decoration:none }
 		p { padding:0 !important; margin:0 !important } 
 		img { -ms-interpolation-mode: bicubic; /* Allow smoother rendering of resized image in Internet Explorer */ }
 		.mcnPreviewText { display: none !important; }
@@ -95,16 +95,16 @@
 									<td class="td" style="width:650px; min-width:650px; font-size:0pt; line-height:0pt; padding:0; margin:0; font-weight:normal;">
 										<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#f4f4f4">
 											<tr>
-												<td class="img" bgcolor="#e85f03" height="10" style="font-size:0pt; line-height:0pt; text-align:left;">&nbsp;</td>
+												<td class="img" bgcolor="#f7941e" height="10" style="font-size:0pt; line-height:0pt; text-align:left;">&nbsp;</td>
 											</tr>
 											<tr>
 												<td class="p30-15" style="padding: 25px 40px 50px 40px;">
 													<table width="100%" border="0" cellspacing="0" cellpadding="0">
 														<tr>
-															<td class="text-header center" style="padding-bottom: 50px; color:#999999; font-family:'Lora', Georgia, serif; font-size:12px; line-height:16px; text-align:center;"><a href="https://www.quickoo.ma" target="_blank" class="link2-u" style="color:#999999; text-decoration:underline;"><span class="link2-u" style="color:#999999; text-decoration:underline;">VISITEZ NOTRE SITE VITRINE</span></a></td>
+															<td class="text-header center" style="padding-bottom: 50px; color:#999999; font-family:'Lora', Georgia, serif; font-size:12px; line-height:16px; text-align:center;"><a href="https://www.Colisade.ma" target="_blank" class="link2-u" style="color:#999999; text-decoration:underline;"><span class="link2-u" style="color:#999999; text-decoration:underline;">VISITEZ NOTRE SITE VITRINE</span></a></td>
 														</tr>
 														<tr>
-															<td class="fluid-img img-center" style="font-size:0pt; line-height:0pt; text-align:center;"><img src="https://quickoo.ma/assets/img/logo.png" style="width: 50%" border="0" alt="" /></td>
+															<td class="fluid-img img-center" style="font-size:0pt; line-height:0pt; text-align:center;"><img src="{{url('/assets/images/logo.png')}} style="width: 50%" border="0" alt="" /></td>
 														</tr>
 													</table>
 												</td>
@@ -122,7 +122,7 @@
 				<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
 					<tr>
 						<td class="m-td" valign="top" style="font-size:0pt; line-height:0pt; text-align:left;"><table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;"><tr><td bgcolor="#ffffff" height="167" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;">&nbsp;</td></tr></table>
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#e85f03" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;"><tr><td bgcolor="#e85f03" height="250" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;">&nbsp;</td></tr></table>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#f7941e" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;"><tr><td bgcolor="#f7941e" height="250" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;">&nbsp;</td></tr></table>
                     </td>
 						<td align="center" width="650" class="mobile-shell">
 							<table width="650" border="0" cellspacing="0" cellpadding="0" class="mobile-shell">
@@ -155,7 +155,7 @@
 							</table>
 						</td>
 						<td class="m-td" valign="top" style="font-size:0pt; line-height:0pt; text-align:left;"><table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;"><tr><td bgcolor="#ffffff" height="167" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;">&nbsp;</td></tr></table>
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#e85f03" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;"><tr><td bgcolor="#e85f03" height="250" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;">&nbsp;</td></tr></table>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#f7941e" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;"><tr><td bgcolor="#f7941e" height="250" class="border" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%;">&nbsp;</td></tr></table>
                         </td>
 					</tr>
 				</table>
@@ -175,11 +175,11 @@
 													<table width="100%" border="0" cellspacing="0" cellpadding="0">
 														<tr>
 															<td class="h1 pb20" style="color:#000000; font-size:35px; line-height:42px; text-align:center; text-transform:uppercase; padding-bottom:20px;">
-																Bienvenue sur notre plateforme <span class="m-hide" style="color: #e85f03"><br /></span>Quickoo Tracking
+																Bienvenue sur notre plateforme <span class="m-hide" style="color: #f7941e"><br /></span>Colisade Tracking
 																<span style="font-size: 0.75em"> <br>
 																	Vous y êtes presque !
 																</span> <br>
-																<span style="font-size:0.5em">Modifier votre <b style="color: #e85f03">Mot de passe </b> pour finaliser votre inscription</span>
+																<span style="font-size:0.5em">Modifier votre <b style="color: #f7941e">Mot de passe </b> pour finaliser votre inscription</span>
 															</td>
 														</tr>
 													
@@ -188,7 +188,7 @@
                                                                 Votre Email : <strong>{{$details['email']}}</strong><br>
                                                                 Votre Mot de passe : <strong>{{$details['password']}}</strong>    
 																<span style="display: block ; padding-top:7px">
-																	<br>Merci d’avoir rejoint Quickoo! <br>
+																	<br>Merci d’avoir rejoint Colisade! <br>
 																Cliquez sur le bouton ci-dessous pour modifier votre mot de passe, <br>
 																et nous vous aiderons à bien démarrer.
 																</span>
@@ -200,7 +200,7 @@
 															<td align="center">
 																<table border="0" cellspacing="0" cellpadding="0">
 																	<tr>
-                                                                        <td class="text-button" style="color:#f4f4f4; background:#e85f03;  font-size:14px; line-height:28px; text-align:center; padding:8px 20px; text-transform:uppercase; font-weight:bold;">
+                                                                        <td class="text-button" style="color:#f4f4f4; background:#f7941e;  font-size:14px; line-height:28px; text-align:center; padding:8px 20px; text-transform:uppercase; font-weight:bold;">
 																		<a href="{{route('dashboard')}}" target="_blank" class="link-white" style="color:#ffffff; text-decoration:none;">
                                                                                 <span class="link-white" style="color:#ffffff; text-decoration:none;">Se Connecter</span>
 																			</a>
@@ -247,7 +247,7 @@
 									<td class="td" style="width:650px; min-width:650px; font-size:0pt; line-height:0pt; padding:0; margin:0; font-weight:normal;">
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tr>
-												<td style="padding: 0px 30px 60px 30px; border-bottom: 10px solid #e85f03;">
+												<td style="padding: 0px 30px 60px 30px; border-bottom: 10px solid #f7941e;">
 													<table width="100%" border="0" cellspacing="0" cellpadding="0">
 														
 														<tr>
@@ -256,14 +256,14 @@
 														</td>
 														</tr>
 														<tr>
-															<td class="text-footer2 pb30" style="color:#e85f03; font-family:Arial,sans-serif; font-size:12px; line-height:18px; text-align:center; padding-bottom:30px;">L'équipe Quickoo.ma</td>
+															<td class="text-footer2 pb30" style="color:#f7941e; font-family:Arial,sans-serif; font-size:12px; line-height:18px; text-align:center; padding-bottom:30px;">L'équipe Colisade.ma</td>
 														</tr>
 														<tr>
 															<td class="text-footer3" style="color:#666666; font-family:Arial,sans-serif; font-size:12px; line-height:18px; text-align:center;">
 																
 																	<span class="link4-u" style="color:#666666; text-decoration:underline;">Si vous avez besoin d'aide, veuillez nous envoyer un e-mail à 
-																		<a href="mailto:contact@quickoo.ma" target="_blank" class="link4-u" style="color:#666666; text-decoration:underline;">
-																			contact@quickoo.ma
+																		<a href="mailto:contact@Colisade.ma" target="_blank" class="link4-u" style="color:#666666; text-decoration:underline;">
+																			contact@Colisade.ma
 																		</a>
 																	
 																	</span>

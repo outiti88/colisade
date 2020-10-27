@@ -32,7 +32,7 @@
 
             a:hover {
                 text-decoration: none;
-                color: #e85f03;
+                color: #f7941e;
             }
 
 
@@ -221,7 +221,7 @@
 
             .login100-form-title {
                 font-size: 2.5em;
-                color: #e85f03;
+                color: #f7941e;
                 line-height: 1.2;
                 text-align: center;
                 width: 100%;
@@ -314,7 +314,7 @@
             }
 
             .input100:focus+.focus-input100+.symbol-input100 {
-                color: #e85f03;
+                color: #f7941e;
                 padding-left: 28px;
             }
 
@@ -341,7 +341,7 @@
                 width: 100%;
                 height: 50px;
                 border-radius: 25px;
-                background: #e85f03;
+                background: #f7941e;
                 display: -webkit-box;
                 display: -webkit-flex;
                 display: -moz-box;
@@ -358,8 +358,8 @@
 
             .login100-form-btn:hover {
                 background: #fff;
-                color: #e85f03;
-                border-color: #e85f03 ;
+                color: #f7941e;
+                border-color: #f7941e ;
                 border-style: solid;
             }
 

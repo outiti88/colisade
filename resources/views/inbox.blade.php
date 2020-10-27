@@ -15,7 +15,7 @@
             <div class="d-flex align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Quickoo</a></li>
+                        <li class="breadcrumb-item"><a href="/">Colisade</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Inbox</li>
                     </ol>
                 </nav>
@@ -81,12 +81,19 @@
                     @can('ramassage-commande')
                     {{$notification->data['user']['image']}}
                     @endcan
-                    @can('client')
-                    https://scontent.frba3-1.fna.fbcdn.net/v/t1.0-9/107093937_2858330454295626_6840339815783805174_o.png?_nc_cat=101&_nc_sid=174925&_nc_ohc=f7hP3-o3n4oAX9AW9GV&_nc_ht=scontent.frba3-1.fna&oh=a91e690eb2d5ab61a7bfc34535465f58&oe=5F8F82CD
+                    @can('fournisseur')
+                    {{url('/assets/images/favicon.png')}}
                     @endcan
                     "
-                    alt="user" width="50" class="rounded-circle"></div>
+                    alt="user" width="50" class="rounded-circle">
+                </div>
+
+                
                         <div class="comment-text w-100">
+
+
+
+                        @if ($notification->type != 'App\Notifications\newReception')
                             @can('ramassage-commande')
                                 <h4 class=" float-right">
                                     <a href="{{ route('commandeStatut',['id'=> $notification->data['commande']['id'] ]) }}">
@@ -98,13 +105,13 @@
                             @endcan
                             
 
-                            <h5 class="font-medium" style="color: #e85f03">
+                            <h5 class="font-medium" style="color: #f7941e">
                                 <b>
                                     @can('ramassage-commande')
                                     {{$notification->data['user']['name']}}
                                     @endcan
-                                    @can('client')
-                                    Quickoo Delivery
+                                    @can('fournisseur')
+                                    Colisade Delivery
                                     @endcan
                                 </b>
                             </h5>
@@ -114,7 +121,7 @@
                                     @can('ramassage-commande')
                                     A ajouté une nouvelle commande avec le numero :
                                     @endcan
-                                    @can('client')
+                                    @can('fournisseur')
                                     A modifié le staut de la commande :
                                     @endcan
                                 
@@ -128,19 +135,19 @@
                                     @can('ramassage-commande')
                                     {{date_format($notification->created_at,"Y/m/d")}}
                                     @endcan
-                                    @can('client')
+                                    @can('fournisseur')
                                     {{date_format($notification->updated_at,"Y/m/d")}}
                                     @endcan
                                     <p class="proile-rating"><span> 
                                         @can('ramassage-commande')
                                         {{date_format($notification->created_at,"H:i:s")}}
                                         @endcan
-                                        @can('client')
+                                        @can('fournisseur')
                                         {{date_format($notification->updated_at,"H:i:s")}}
                                         @endcan
                                     </span></p>
                                 </span>
-                                <span class="label label-rounded create-btn" style="background-color: #e85f03"><a style="color:white" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
+                                <span class="label label-rounded create-btn" style="background-color: #f7941e"><a style="color:white" href="{{route('commandes.showFromNotify',['commande' => $notification->data['commande']['id'] ,
                                     'notification' => $notification->id])}}">
                                     Voir le detail
                                 </a>
@@ -152,6 +159,53 @@
                                         <a href="{{route('inbox.destroy', $notification->id)}}" data-toggle="tooltip" data-placement="top" title="supprimer"><i class="ti-close"></i></a>    
                                     </span>
                             </div>
+
+
+                            @else
+                            @can('ramassage-commande')
+                            <h5 class="font-medium" style="color: #f7941e">
+                                <b>
+                                    
+                                    {{$notification->data['user']['name']}}
+                          
+                                </b>
+                            </h5>
+
+
+                            <span class="m-b-15 d-block">
+                                    A envoyé une reception de Ref°: <a style="color:black"  href="{{route('reception.showFromNotify',['reception' => $notification->data['reception']['id'] ,
+                                        'notification' => $notification->id])}}">
+                                    <b>{{$notification->data['reception']['reference']}}</b>    
+                                    </a>
+                            
+                            </span>
+                            <div class="comment-footer">
+                                <span class="text-muted float-right">
+                                    {{date_format($notification->created_at,"Y/m/d")}}
+
+                                    <p class="proile-rating"><span> 
+                                        {{date_format($notification->created_at,"H:i:s")}}
+                           
+                                    </span></p>
+                                </span>
+                                <span class="label label-rounded create-btn" style="background-color: #f7941e"><a style="color:white" href="{{route('reception.showFromNotify',['reception' => $notification->data['reception']['id'] ,
+                                    'notification' => $notification->id])}}">
+                                    Voir le detail
+                                </a>
+                                </span>
+                                <span class="action-icons">
+                                        <a href="{{route('reception.showFromNotify',['reception' => $notification->data['reception']['id'] ,
+                                            'notification' => $notification->id])}}" data-toggle="tooltip" data-placement="top" title="Modifier"><i class="ti-pencil-alt"></i></a>
+                                        <a href="{{route('inbox.show', $notification->id)}}" data-toggle="tooltip" data-placement="top" title="marquer lu"><i class="ti-check"></i></a>
+                                        <a href="{{route('inbox.destroy', $notification->id)}}" data-toggle="tooltip" data-placement="top" title="supprimer"><i class="ti-close"></i></a>    
+                                    </span>
+                            </div>
+                            @endcan
+
+                            @endif
+
+
+
                         </div>
                     </div>
                     @endforeach
