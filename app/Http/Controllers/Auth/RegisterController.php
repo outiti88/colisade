@@ -60,6 +60,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'ville'=> ['required'],
         ]);
     }
 
@@ -71,8 +72,9 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+
         if(empty($data['image'])) $data['image']="https://quickoo.ma/assets/img/icon4.png";
-            if(empty($data['description'])) $data['description']="Sans Description";
+            if(empty($data['description'])) $data['description']=" ";
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -81,11 +83,12 @@ class RegisterController extends Controller
             'telephone'=>$data['telephone'],
             'adresse'=>$data['adresse'],
             'ville'=>$data['ville'],
-            'image'=>$data['image']
+            'image'=>$data['image'],
+            'statut'=>$data['statut']
             
         ]);
         if(empty($data['roles'])){
-        $role = Role::select('id')->where('name','client')->first();
+        $role = Role::select('id')->where('name','nouveau')->first();
         $user->roles()->attach($role);
         }
         else {

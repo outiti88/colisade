@@ -255,6 +255,13 @@
                                         @endif
                                         
                                         @break
+                                    @case("Validé")
+                                        badge-secondary"
+                                        @can('ramassage-commande')
+                                        title="Rammaser la commande" 
+                                         href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                        @endcan
+                                    @break
                                     @case("Livré")
                                     badge-success"
                                     @if ($commande->facturer > 0)

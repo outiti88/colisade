@@ -6,21 +6,23 @@ use Illuminate\Support\Facades\Auth;
 
 
 
-Route::get('/', 'DashboardController@dash')->name('dashboard');
+Route::get('/', 'DashboardController@dash')->name('dashboard')->middleware('can:valide');
 
-Route::get('/commandes/{id}/statut', 'CommandeController@changeStatut')->name('commandeStatut');
+Route::get('/commandes/{id}/statut', 'CommandeController@changeStatut')->name('commandeStatut')->middleware('can:valide');
 
-Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('statut.admin');
+Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('statut.admin')->middleware('can:valide');
 
-Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen');
+Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen')->middleware('can:valide');
 
-Route::get('/search', 'CommandeController@search')->name('commande.search');
+Route::get('/search', 'CommandeController@search')->name('commande.search')->middleware('can:valide');
 
-Route::get('/commandes/filter', 'CommandeController@filter')->name('commande.filter');
+Route::get('/commandes/filter', 'CommandeController@filter')->name('commande.filter')->middleware('can:valide');
+
+//Route::post('/user/register', 'CommandeController@filter')->name('user.register');
 
 Route::resource('/commandes','CommandeController')->except([
     'create', 'edit'
-]);
+])->middleware('can:valide');
 
 Route::resource('/produit','ProduitController')->except([
     'create', 'edit'
@@ -32,14 +34,14 @@ Route::resource('/reception','ReceptionController')->except([
 
 Route::get('/reception/{id}/valide','ReceptionController@valide')->name('reception.valide')->middleware('can:manage-users');
 
-Route::get('showFromNotify/{commande}/{notification}' , 'CommandeController@showFromNotify')->name('commandes.showFromNotify');
+Route::get('showFromNotify/{commande}/{notification}' , 'CommandeController@showFromNotify')->name('commandes.showFromNotify')->middleware('can:valide');
 
-Route::get('showFromNotify/{reception}/{notification}' , 'ReceptionController@showFromNotify')->name('reception.showFromNotify');
+Route::get('showFromNotify/{reception}/{notification}' , 'ReceptionController@showFromNotify')->name('reception.showFromNotify')->middleware('can:valide');
 
 
-Route::get('/profil', 'ProfilController@index')->name('profil.index');
+Route::get('/profil', 'ProfilController@index')->name('profil.index')->middleware('can:valide');
 
-Route::match(['put', 'patch'],'/profil/{user}', 'ProfilController@update')->name('profil.update');
+Route::match(['put', 'patch'],'/profil/{user}', 'ProfilController@update')->name('profil.update')->middleware('can:valide');
 
 Auth::routes();
 
@@ -47,30 +49,32 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('/bonlivraison','BonLivraisonController')->only([
     'index', 'store'
-]);
+])->middleware('can:valide');
 
-Route::get('/bonlivraison/{id}/infos','BonLivraisonController@infos')->name('bon.infos');
+Route::get('/bonlivraison/{id}/infos','BonLivraisonController@infos')->name('bon.infos')->middleware('can:valide');
 
-Route::get('/bonlivraison/{id}/pdf','BonLivraisonController@gen')->name('bon.gen');
+Route::get('/bonlivraison/{id}/pdf','BonLivraisonController@gen')->name('bon.gen')->middleware('can:valide');
 
-Route::get('/bonlivraison/{id}/details','BonLivraisonController@search')->name('bon.search');
+Route::get('/bonlivraison/{id}/details','BonLivraisonController@search')->name('bon.search')->middleware('can:valide');
 
 Route::resource('/facture','FactureController')->only([
     'index', 'store'
-]);
+])->middleware('can:valide');
 
-Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen');
+Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen')->middleware('can:valide');
 
-Route::get('/facture/{id}/details','FactureController@search')->name('facture.search');
+Route::get('/facture/{id}/details','FactureController@search')->name('facture.search')->middleware('can:valide');
 
-Route::get('/facture/{id}/infos','FactureController@infos')->name('facture.infos');
+Route::get('/facture/{id}/infos','FactureController@infos')->name('facture.infos')->middleware('can:valide');
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
-    Route::resource('/users','UsersController',['except' => ['show','create','store']]);
+    Route::resource('/users','UsersController',['except' => ['show','create','store']])->middleware('can:valide');
 });
 
 Route::get('/facture/{id}/send','EmailController@sendFacture')->name('email.facture')->middleware('can:ramassage-commande');
 
-Route::get('/inbox','NotificationController@index')->name('inbox.index');
-Route::get('/{notifications}/show','NotificationController@show')->name('inbox.show');
-Route::get('/{notifications}/delete','NotificationController@destroy')->name('inbox.destroy');
+Route::get('/inbox','NotificationController@index')->name('inbox.index')->middleware('can:valide');
+Route::get('/{notifications}/show','NotificationController@show')->name('inbox.show')->middleware('can:valide');
+Route::get('/{notifications}/delete','NotificationController@destroy')->name('inbox.destroy')->middleware('can:valide');
+
+Route::get('/{notifications}/delete','NotificationController@destroy')->name('inbox.destroy')->middleware('can:nouveau');

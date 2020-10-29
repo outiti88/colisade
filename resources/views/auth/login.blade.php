@@ -527,6 +527,11 @@
                                         {{ __('Mot de passe oublié?') }}
                                     </a>
                                 </div>
+                                <div class="text-center p-t-30" style="padding-top: 10px">
+                                    <a class="txt2" href="{{ route('password.request') }}">
+                                        {{ __('Inscrivez vous') }}
+                                    </a>
+                                </div>
                                 @endif
                             </div>
                         </div>

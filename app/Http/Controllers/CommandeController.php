@@ -306,9 +306,6 @@ class CommandeController extends Controller
 
             
 
-            if($request->ville != "Tanger" ) {
-                return redirect('/commandes');
-            }
             $commande = new Commande() ;
             $statut = new Statut();
             

@@ -83,6 +83,11 @@
 
                             <div class="col-md-4">
                                 <input id="ville" type="text" class="form-control" value="{{ old('ville') }}"  name="ville">
+                                @error('ville')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                             </div>
                         </div>
 
@@ -90,7 +95,7 @@
                             <label for="telephone" class="col-md-2 col-form-label text-md-right">{{ __('Téléphone') }}</label>
 
                             <div class="col-md-4">
-                                <input id="telephone" type="text" class="form-control" name="telephone" value="{{ old('telephone') }}"   required >
+                                <input id="telephone" type="text" class="form-control" name="telephone" value="{{ old('telephone') }}"    >
                             </div>
                             <label for="image" class="col-md-2 col-form-label text-md-right">{{ __('Url de l\'image') }}</label>
 
@@ -107,7 +112,7 @@
                             <label for="adresse" class="col-md-2 col-form-label text-md-right">{{ __('Adresse') }}</label>
 
                             <div class="col-md-10">
-                                <textarea name="adresse" id="adresse" cols="100" rows="5"></textarea required>
+                                <textarea name="adresse" id="adresse" cols="100" rows="5"></textarea >
                             </div>
                             
                             
@@ -131,7 +136,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="roles" class="col-md-2 col-form-label text-md-right">Rôles Colisade: </label>
+                            <label for="roles" class="col-md-12 col-form-label text-center font-bold font-16">Rôles Colisade : </label>
+                            <label for="roles" class="col-md-2 col-form-label text-md-right">Rôle : </label>
                             <div class="col-md-10 d-flex p-t-10 justify-content-around">
                                 <div class="form-check">
                                     <input type="radio" name="roles[]" value="1" id="admin" >
@@ -146,19 +152,35 @@
                                     <label for="Personnel">Personnel</label>
                                 </div>
                             </div>
-                            <label for="roles" class="col-md-2 col-form-label text-md-right">Client : </label>
+                            <label for="roles" class="col-md-12 col-form-label text-center font-bold font-16">Utilisateur Client : </label>
+                            <label for="roles" class="col-md-2 col-form-label text-md-right">Service : </label>
                             <div class="col-md-10 d-flex p-t-10 justify-content-around">
                             <div class="form-check">
                                 <input type="radio" name="roles[]" value="2" id="cl" checked>
-                                <label for="cl">Particulier</label>
+                                <label for="cl">Collecte, Stockage</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" name="roles[]" value="5" id="cls">
-                                <label for="cls">Client VIP</label>
+                                <label for="cls">Collecte, Stockage, Livraison</label>
                             </div>
                           
                         
                             </div>
+                            
+
+                                <label for="type" class="col-md-2 col-form-label text-md-right">Statut : </label>
+                                <div class="col-md-10 d-flex p-t-10 justify-content-around">
+                                <div class="form-check">
+                                    <input type="radio" name="statut" value="0" id="Premium" checked>
+                                    <label for="Premium">Premium</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" name="statut" value="1" id="VIP">
+                                    <label for="VIP">VIP</label>
+                                </div>
+                            
+                                </div>
+
                         </div>
 
                         <div class="form-group row">
