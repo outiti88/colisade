@@ -55,7 +55,7 @@
                     <div class="form-group row">
                         <label for="name" class="col-md-2 col-form-label text-md-right">Nom & Prénom: </label>
 
-                        <div class="col-md-6">
+                        <div class="col-md-10">
                             <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $user->name }}" required  autofocus>
 
                             @error('name')
@@ -69,7 +69,7 @@
                     <div class="form-group row">
                         <label for="email" class="col-md-2 col-form-label text-md-right">Email: </label>
 
-                        <div class="col-md-6">
+                        <div class="col-md-10">
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $user->email }}" required>
 
                             @error('email')
@@ -81,42 +81,72 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label text-md-right">Url de l'image</label>
-                        <div class="col-md-6">
+                        <div class="col-md-10">
                             <input name="image" type="text" value="{{$user->image}}"class="form-control form-control-line">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-2 col-form-label text-md-right">ICE</label>
-                        <div class="col-md-6">
-                            <input name="description" type="text" value="{{$user->description}}"class="form-control form-control-line">
+                        <label class="col-md-2 col-form-label text-md-right">Ville</label>
+                        <div class="col-md-10">
+                            <input name="ville" type="text" value="{{$user->ville}}"class="form-control form-control-line">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="roles" class="col-md-2 col-form-label text-md-right">Rôles: </label>
-                        <div class="col-md-6">
-                    @foreach ($roles as $role)
-                        <div class="form-check">
-                            @if (in_array($role->name, $user->roles()->get()->pluck('name')->toArray()) )
-                            <input type="radio" name="roles[]" value="{{$role->id}}" id="{{$role->name}}" checked>
-                            @else
-                            <input type="radio" name="roles[]" value="{{$role->id}}" id="{{$role->name}}">
-                            @endif
-                            <label for="{{$role->name}}">
-                                @switch($role->name)
-                                    @case('client')
-                                     Collecte, Livraison
-                                        @break
-                                    @case('ecom')
-                                    Collecte, livraison, stockage
-                                        @break
-                                    @default
-                                    {{$role->name}}
-                                @endswitch
-                            </label>
+                        <label class="col-md-2 col-form-label text-md-right">ICE</label>
+                        <div class="col-md-10">
+                            <input name="description" type="text" value="{{$user->description}}"class="form-control form-control-line">
                         </div>
-                    @endforeach
                     </div>
-                </div>
+
+                    
+                    
+                    <div class="form-group row">
+                        <label for="roles" class="col-md-12 col-form-label text-center font-bold font-16">Rôles Colisade : </label>
+                        <label for="roles" class="col-md-2 col-form-label text-md-right">Rôle : </label>
+                        <div class="col-md-10 d-flex p-t-10 justify-content-around">
+                            <div class="form-check">
+                                <input type="radio" name="roles[]" value="1" id="admin" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "admin") checked @endif>
+                                <label for="admin">Admin</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" name="roles[]" value="3" id="Livreur" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "livreur") checked @endif >
+                                <label for="Livreur">Livreur</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" name="roles[]" value="4" id="Personnel" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "personnel") checked @endif>
+                                <label for="Personnel">Personnel</label>
+                            </div>
+                        </div>
+                        <label for="roles" class="col-md-12 col-form-label text-center font-bold font-16">Utilisateur Client : </label>
+                        <label for="roles" class="col-md-2 col-form-label text-md-right">Service : </label>
+                        <div class="col-md-10 d-flex p-t-10 justify-content-around">
+                        <div class="form-check">
+                            <input type="radio" name="roles[]" value="2" id="cl" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "client") checked @endif>
+                            <label for="cl">Collecte, Stockage</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" name="roles[]" value="5" id="cls" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "ecom") checked @endif>
+                            <label for="cls">Collecte, Stockage, Livraison</label>
+                        </div>
+                      
+                    
+                        </div>
+                        
+
+                            <label for="type" class="col-md-2 col-form-label text-md-right">Statut : </label>
+                            <div class="col-md-10 d-flex p-t-10 justify-content-around">
+                            <div class="form-check">
+                                <input type="radio" name="statut" value="0" id="Premium" @if( !$user->statut) checked @endif>
+                                <label for="Premium">Premium</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" name="statut" value="1" id="VIP" @if($user->statut) checked @endif>
+                                <label for="VIP">VIP</label>
+                            </div>
+                        
+                            </div>
+
+                    </div>
                     <button type="submit" class="btn btn-primary">Modifier</button>
                 </form>
                   

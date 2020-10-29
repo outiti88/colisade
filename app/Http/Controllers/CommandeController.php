@@ -317,7 +317,7 @@ class CommandeController extends Controller
         }
         $commande->telephone = $request->telephone;
         $commande->ville = $request->ville;
-        $commande->secteur = $request->secteur;
+        $commande->secteur = ($request->secteur) ? $request->secteur : $request->ville;
         $commande->adresse = $request->adresse;
 
         $HorsTanger = array("Cap spartel","Du Golf","manar","Aviation","Mghogha","Zone Industrielle Mghogha","Achakar");

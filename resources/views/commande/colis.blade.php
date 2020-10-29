@@ -185,7 +185,12 @@
                            <tr>
                             @can('ramassage-commande')
                             <th scope="row">
-                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
+                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic 
+                                    @if($users[$index]->statut)
+                                        vip
+                                    @endif
+                                    
+                                    " 
                                        
                                             @can('edit-users')
                                                 href="{{route('admin.users.edit',$users[$index]->id)}}"
@@ -536,7 +541,7 @@
                                 <div style="display: none"  class="form-group" id="secteur">
                                     <label class="col-sm-12">Secteur :</label>
                                     <div class="col-sm-12">
-                                      <select  value="{{ old('secteur') }}" name="secteur" class="form-control form-control-line" required>
+                                      <select  value="{{ old('secteur') }}" name="secteur" class="form-control form-control-line" >
   
                                           <option value="">Tous les secteurs</option>
                                               <option>Aviation</option>

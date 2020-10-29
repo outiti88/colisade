@@ -27,7 +27,6 @@ class StoreCommande extends FormRequest
             
             'telephone' =>'required|min:10|max:10',
             'ville' =>'required',
-            'secteur' => 'required',
             'adresse' =>'required',
             'colis' =>'required',
             'poids' =>'required',
