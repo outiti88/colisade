@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>S'inscrire - Colisade</title>
+	<title>Se Connecter - Colisade</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -10,9 +10,10 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" type="text/css" href="{{url('/assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css')}}">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+	<link rel="stylesheet" type="text/css" href="{{url('/assets/fonts/Linearicons-Free-v1.0.0/icon-font.min.css')}}">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
 <!--===============================================================================================-->	
@@ -24,8 +25,8 @@
 <!--===============================================================================================-->	
 	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" type="text/css"  href="{{url('/css/inscription/css/util.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{url('/css/inscription/css/main.css')}}">
 <!--===============================================================================================-->
 </head>
 <body>
@@ -33,75 +34,38 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-                <form class="login100-form validate-form" style="position:relative;top:-250px;" method="POST" action="{{ route('register') }}">
-
+                <form class="login100-form validate-form" style="position:relative;top:-100px;" method="POST" action="{{ route('login') }}">
+                    @csrf
 					<span class="login100-form-title p-b-34">
-				        Créez votre espace
+				        Se Connecter à votre espace
 					</span>
 					
-					<div class="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="">
-						<input id="name" class="input100  @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus type="text" placeholder="Nom Complet">
+					<div class="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="Vérifiez votre Adresse Email">
+						<input id="first-name form-control @error('email') is-invalid @enderror" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Votre Email">
                         <span class="focus-input100"></span>
-                        @error('name')
+                        @error('email')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
 					</div>
-					<div class="wrap-input100 rs2-wrap-input100 validate-input m-b-20" data-validate="Vérifiez votre email">
-						<input class="input100 @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" type="email" placeholder="Email">
-                        <span class="focus-input100"></span>
-                        @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-					</div>
-                    <div class="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="">
-						<input id="description" class="input100" type="text" placeholder="ICE"  name="description" value="{{ old('description') }}">
-						<span class="focus-input100"></span>
-					</div>
-                    <div class="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="">
-						<input id="first-name" class="input100" value="{{ old('rib') }}" type="text" name="rib" placeholder="RIB">
-						<span class="focus-input100"></span>
-					</div>
-					<div class="wrap-input100 rs2-wrap-input100 validate-input m-b-20" data-validate="">
-						<input class="input100" type="text" name="ville" placeholder="Ville" value="{{ old('ville') }}" value="{{ old('ville') }}"  name="ville">
-                        <span class="focus-input100"></span>
-                        @error('ville')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-					</div>
-                    <div class="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="">
-						<input id="first-name" class="input100" type="tel"  name="telephone" value="{{ old('telephone') }}" placeholder="Téléphone">
-						<span class="focus-input100"></span>
-					</div>
-					<div class="wrap-input100 rs2-wrap-input100 validate-input m-b-20" data-validate="" style="width: 100%;">
-						<input class="input100" type="text" name="adresse" value="{{ old('adresse') }}" placeholder="Adresse">
-						<span class="focus-input100"></span>
-					</div>
-                    <div class="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="">
-						<input id="first-name" class="input100 @error('password') is-invalid @enderror" type="password"  name="password" required autocomplete="new-password" placeholder="Mot de passe">
+					<div class="wrap-input100 rs2-wrap-input100 validate-input m-b-20" data-validate="Vérifiez votre mot de passe">
+						<input class="input100  @error('password') is-invalid @enderror" type="password" name="password" placeholder="Password" required autocomplete="current-password">
                         <span class="focus-input100"></span>
                         @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                @enderror
-					</div>
-					<div class="wrap-input100 rs2-wrap-input100 validate-input m-b-20" data-validate="">
-						<input id="password-confirm" class="input100" type="password"  name="password_confirmation" required autocomplete="new-password" placeholder="Confirmez votre Mot de passe">
-						<span class="focus-input100"></span>
+                            @enderror
+                        
 					</div>
 					
 					<div class="container-login100-form-btn">
 						<button type="submit"  class="login100-form-btn">
-							S'inscrire
+							Se Connecter
 						</button>
 					</div>
-
+                    @if (Route::has('password.request'))
 					<div class="w-full text-center p-t-27 ">
                         <a href="#" class="txt2">
 							Utilisateur
@@ -119,13 +83,13 @@
 
 					<div class="w-full text-center">
 						<a href="#" class="txt2">
-							Se connecter
+							Créer un nouveau Compte?
 						</a>
-					</div>
+                    </div>
+                    @endif
 				</form>
 
-				<div class="login100-more" style="background-image: url('/assets/images/bg-02.jpg'); background-size: 102%;
-    background-position: top;"></div>
+				<div class="login100-more" style="background-image: url('images/bg-01.jpg'); "></div>
 			</div>
 		</div>
 	</div>
@@ -133,12 +97,7 @@
 	
 
 	<div id="dropDownSelect1"></div>
-    
-      <script src="{{ url('/assets/libs/jquery/dist/jquery.min.js') }}"></script>
-    <!-- Bootstrap tether Core JavaScript -->
-    <script src="{{ url('/assets/libs/popper.js/dist/umd/popper.min.js') }}"></script>
-    <script src="{{ url('/assets/libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url('/js/app-style-switcher.js') }}" ></script>
+	
 <!--===============================================================================================-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->

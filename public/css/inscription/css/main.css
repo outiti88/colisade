@@ -181,6 +181,21 @@ iframe {
     color: #007db2;
 }
 
+.txt4 {
+    font-family: Poppins-Regular;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #f16821;
+}
+
+.inscrire {
+    background-color: #f16821 !important;
+}
+
+.inscrire:hover {
+    background-color: #007db2 !important;
+}
+
 .txt3 {
     font-family: Poppins-Regular;
     font-size: 15px;
@@ -436,7 +451,6 @@ input.input100 {
     .login100-form {
         padding-left: 15px;
         padding-right: 15px;
-        padding-top: 150px;
     }
     .rs1-wrap-input100,
     .rs2-wrap-input100 {
@@ -444,6 +458,9 @@ input.input100 {
     }
     .rs2-wrap-input100 {
         border-left: 1px solid #e6e6e6;
+    }
+    .wrap-login100 {
+        height: 150%;
     }
 }
 

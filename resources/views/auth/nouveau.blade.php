@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/icon.ico"/>
+<link rel="icon" type="image/png" sizes="16x16" href="{{url('/assets/images/favicon.png')}}">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
@@ -97,34 +97,20 @@
 					</div>
 					
 					<div class="container-login100-form-btn">
-						<button type="submit"  class="login100-form-btn">
+						<button type="submit"  class="login100-form-btn inscrire">
 							S'inscrire
 						</button>
 					</div>
 
-					<div class="w-full text-center p-t-27 ">
-                        <a href="#" class="txt2">
-							Utilisateur
-						</a>
-                        <span class="txt1">
-							ou
-						</span>
-                        <a href="#" class="txt2">
-							Mot de passe
-						</a>
-                        <span class="txt1">
-							Oublié?
-						</span>
-					</div>
 
-					<div class="w-full text-center">
-						<a href="/login" class="txt2">
+					<div class="w-full text-center p-t-27 ">
+						<a href="/login" class="txt4" >
 							Se connecter
 						</a>
 					</div>
 				</form>
 
-				<div class="login100-more" style="background-image: url('/assets/images/bg-02.jpg'); background-size: 102%;
+				<div class="login100-more" style="background-image: url('/assets/images/bg-01.jpg'); background-size: 102%;
     background-position: top;"></div>
 			</div>
 		</div>
