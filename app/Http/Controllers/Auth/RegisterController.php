@@ -38,15 +38,15 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    /*public function __construct()
     {
-        $this->middleware('auth');
-    }
-   /* public function __construct()
+        //$this->middleware('auth');
+    }*/
+    public function __construct()
     {
         $this->middleware('guest');
     }
-    */
+    
 
     /**
      * Get a validator for an incoming registration request.
@@ -84,7 +84,6 @@ class RegisterController extends Controller
             'adresse'=>$data['adresse'],
             'ville'=>$data['ville'],
             'image'=>$data['image'],
-            'statut'=>$data['statut']
             
         ]);
         if(empty($data['roles'])){
@@ -97,5 +96,9 @@ class RegisterController extends Controller
         //dd($user);
 
         return $user;
+    }
+
+    protected function nouveau(){
+        return view('auth.nouveau');
     }
 }

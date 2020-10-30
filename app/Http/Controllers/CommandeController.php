@@ -686,20 +686,33 @@ class CommandeController extends Controller
     { //changement de statut du expidé à en cours
         //dd(!Gate::denies('ramassage-commande'));
         $commande = Commande::findOrFail($id);
-        //dd($commande);
         //$factureExist = DB::table('factures')->where('user_id',$commande->user_id )->whereDate('created_at',$commande->created_at)->count();
 
         if(Gate::denies('ramassage-commande') ){
             $request->session()->flash('noedit', $commande->numero);
             return redirect(route('commandes.index'));
         }
-         $commande = Commande::findOrFail($id);
          //pour traiter la commande à ramassée , faut verifier deux conditons:
             // commande est expidiée + traiter = 0         
         // dd($blExist);
-        if($commande->statut === "expidié" && $commande->traiter == 0)
+        
+        if(($commande->statut === "expidié" || $commande->statut === "Ramassée") && $commande->traiter == 0)
         {
-            $commande->statut= "En cours";
+            $user_ville = User::findOrFail($commande->user_id);
+            
+            if ($commande->statut === "Ramassée") {
+                $commande->statut= "En cours"; 
+            } else {
+                if ($user_ville->ville == $commande->ville || $commande->ville == "Rabat") {
+                    $commande->statut= "En cours"; 
+                } else {
+                    $commande->statut = "Ramassée";
+                }
+            }
+            
+            
+            
+            
             $commande->save();
             $statut = new Statut();
             $statut->commande_id = $commande->id;

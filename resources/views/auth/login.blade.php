@@ -528,7 +528,7 @@
                                     </a>
                                 </div>
                                 <div class="text-center p-t-30" style="padding-top: 10px">
-                                    <a class="txt2" href="{{ route('password.request') }}">
+                                    <a class="txt2" href="{{ route('user.nouveau') }}">
                                         {{ __('Inscrivez vous') }}
                                     </a>
                                 </div>

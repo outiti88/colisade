@@ -260,10 +260,10 @@
                                         @endif
                                         
                                         @break
-                                    @case("Validé")
+                                    @case("Ramassée")
                                         badge-secondary"
                                         @can('ramassage-commande')
-                                        title="Rammaser la commande" 
+                                        title="Valider la commande" 
                                          href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
                                         @endcan
                                     @break
@@ -358,6 +358,7 @@
                                             <option>Expidié</option>
                                             <option>en cours</option>
                                             <option>Livré</option>
+                                            <option>Ramassée</option>
                                             <option>Retour Complet</option>
                                             <option>Retour Partiel</option>
                                             <option>Reporté</option>
@@ -827,7 +828,7 @@
                               <div style="display: none"  class="form-group" id="secteur">
                                   <label class="col-sm-12">Secteur :</label>
                                   <div class="col-sm-12">
-                                    <select  value="{{ old('secteur') }}" name="secteur" class="form-control form-control-line" required>
+                                    <select  value="{{ old('secteur') }}" name="secteur" class="form-control form-control-line">
 
                                         <option value="">Tous les secteurs</option>
                                             <option>Aviation</option>

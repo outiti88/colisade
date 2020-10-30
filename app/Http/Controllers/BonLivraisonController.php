@@ -76,7 +76,7 @@ class BonLivraisonController extends Controller
             $user = Auth::user()->id ; //session du client
         }
         $date = now();
-        $cmdExist =  DB::table('commandes')->where('statut','en cours')->where('traiter','0')->where('user_id',$user)->count();
+        $cmdExist =  DB::table('commandes')->where('statut','en cours')->where('traiter','0')->where('ville',$request->ville)->where('user_id',$user)->count();
 
        // dd($cmdExist , $user);
 
@@ -88,14 +88,14 @@ class BonLivraisonController extends Controller
         }
         else{
             $bonLivraison = new BonLivraison();
-            $bonLivraison->colis = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->sum('colis');
-            $bonLivraison->commande = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->count();
-            $bonLivraison->prix = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->sum('prix');
-            $bonLivraison->montant = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->sum('montant');
+            $bonLivraison->colis = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->where('ville',$request->ville)->sum('colis');
+            $bonLivraison->commande = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->where('ville',$request->ville)->count();
+            $bonLivraison->prix = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->where('ville',$request->ville)->sum('prix');
+            $bonLivraison->montant = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter','0')->where('ville',$request->ville)->sum('montant');
             $bonLivraison->nonRammase = 0 ;
             $bonLivraison->user()->associate($user)->save();
 
-            $affected = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('traiter', '=', '0')->update(array('traiter' => $bonLivraison->id));
+            $affected = DB::table('commandes')->where('user_id',$user)->where('statut','en cours')->where('ville',$request->ville)->where('traiter', '=', '0')->update(array('traiter' => $bonLivraison->id));
             //dd($affected);
 
             $request->session()->flash('ajoute');

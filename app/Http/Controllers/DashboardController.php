@@ -25,6 +25,10 @@ class DashboardController extends Controller
     
     public function dash(){
 
+        if(!Gate::denies('nouveau')){
+            return redirect()->route('home');            
+        }
+
     /*    if(!Gate::denies('ramassage-commande')) {
             $factures = DB::table('factures')->where('numero','like','%'.$request->search.'%')->get();
             $clients = User::whereHas('roles', function($q){$q->where('name','client');})->get();

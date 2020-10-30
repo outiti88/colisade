@@ -3423,8 +3423,8 @@ fieldset:disabled a.btn {
 .btn-outline-danger:not(:disabled):not(.disabled):active,
 .show>.btn-outline-danger.dropdown-toggle {
     color: #fff;
-    background-color: #f62d51;
-    border-color: #f62d51
+    background-color: #f7941e;
+    border-color: #f7941e
 }
 
 .btn-outline-danger:not(:disabled):not(.disabled).active:focus,
@@ -12036,9 +12036,9 @@ html body .waves-notransition {
 }
 
 .error-box .error-title {
-    font-size: 210px;
+    font-size: 150px;
     font-weight: 900;
-    text-shadow: 4px 4px 0 #fff, 6px 6px 0 #343a40;
+    text-shadow: 4px 4px 0 #fff, 6px 6px 0 #f7941e;
     line-height: 210px
 }
 

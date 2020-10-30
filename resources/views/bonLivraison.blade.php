@@ -174,6 +174,18 @@
                                         </select>
                                         
                                     </div>
+
+                                    <label for="ville" class="col-sm-12">Ville :</label>
+                                  <div class="col-sm-12">
+                                      <select value="{{ old('ville') }}" name="ville" class="form-control form-control-line" id="ville" required>
+                                          <option checked>Choisissez la ville</option>
+                                          <option value="Tanger">Tanger</option>
+                                          <option >Marrakech</option>
+                                          <option >Kénitra</option>
+                                          <option >Casablanca</option>
+                                          <option >Rabat</option>
+                                      </select>
+                                  </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
