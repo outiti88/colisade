@@ -10,9 +10,9 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{{url('/assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css')}}">
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{{url('/assets/fonts/Linearicons-Free-v1.0.0/icon-font.min.css')}}">
+	<link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
 <!--===============================================================================================-->	
@@ -24,8 +24,8 @@
 <!--===============================================================================================-->	
 	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css"  href="{{url('/css/inscription/css/util.css')}}">
-	<link rel="stylesheet" type="text/css" href="{{url('/css/inscription/css/main.css')}}">
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
 </head>
 <body>
@@ -34,7 +34,7 @@
 		<div class="container-login100">
 			<div class="wrap-login100">
                 <form class="login100-form validate-form" style="position:relative;top:-250px;" method="POST" action="{{ route('register') }}">
-                    @csrf
+
 					<span class="login100-form-title p-b-34">
 				        Créez votre espace
 					</span>
@@ -118,7 +118,7 @@
 					</div>
 
 					<div class="w-full text-center">
-						<a href="/login" class="txt2">
+						<a href="#" class="txt2">
 							Se connecter
 						</a>
 					</div>
