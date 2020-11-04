@@ -97,6 +97,12 @@
                             <input name="description" type="text" value="{{$user->description}}"class="form-control form-control-line">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label text-md-right">RIB</label>
+                        <div class="col-md-10">
+                            <input name="rib" type="text" value="{{$user->rib}}"class="form-control form-control-line">
+                        </div>
+                    </div>
 
                     
                     
@@ -120,9 +126,13 @@
                         <label for="roles" class="col-md-12 col-form-label text-center font-bold font-16">Utilisateur Client : </label>
                         <label for="roles" class="col-md-2 col-form-label text-md-right">Service : </label>
                         <div class="col-md-10 d-flex p-t-10 justify-content-around">
+                            <div class="form-check">
+                                <input type="radio" name="roles[]" value="6" id="cl" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "nouveau") checked @endif>
+                                <label for="cl">Nouveau</label>
+                            </div>
                         <div class="form-check">
                             <input type="radio" name="roles[]" value="2" id="cl" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "client") checked @endif>
-                            <label for="cl">Collecte, Stockage</label>
+                            <label for="cl">Collecte, Livraison</label>
                         </div>
                         <div class="form-check">
                             <input type="radio" name="roles[]" value="5" id="cls" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "ecom") checked @endif>

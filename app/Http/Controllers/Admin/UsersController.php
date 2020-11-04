@@ -79,6 +79,7 @@ class UsersController extends Controller
        $user->ville=$request->ville;
        $user->description = $request->description;
        $user->statut = $request->statut;
+       $user->rib = $request->rib;
        $user->save();
        
        return redirect()->route('admin.users.index');

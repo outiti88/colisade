@@ -400,6 +400,17 @@
                                       <input class="form-control" type="number" name="prixMax" value="0" id="example-date-input">
                                     </div>
                                   </div>
+
+                                  <div class="from-group row">
+                                      <label for="bl" class="col-sm-3">BL générée</label>
+                                      <div class="col-3">
+                                        <input class="form-control" name="bl" type="checkbox" value="1" id="bl">
+                                      </div>
+                                      <label for="facture" class="col-sm-3">Facturée</label>
+                                      <div class="col-3">
+                                        <input class="form-control" name="facturer" type="checkbox" value="1" id="facture">
+                                      </div>
+                                  </div>
                                 
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
@@ -491,13 +502,13 @@
                                             <div class="form-check">
                                               <input  onclick="myFunction2(this.value)" class="form-check-input" type="radio" name="mode" id="cd" value="cd" checked>
                                               <label class="form-check-label" for="cd">
-                                                Cash on delivery
+                                                à la livraison
                                               </label>
                                             </div>
                                             <div class="form-check">
                                               <input  onclick="myFunction2(this.value)" class="form-check-input" type="radio" name="mode" id="cp" value="cp">
                                               <label class="form-check-label" for="cp">
-                                                Card payment
+                                                carte bancaire
                                               </label>
                                             </div>
                                         
@@ -782,13 +793,13 @@
                                           <div class="form-check">
                                             <input class="form-check-input" type="radio" name="mode" id="cd" value="cd" checked>
                                             <label class="form-check-label" for="cd">
-                                              Cash on delivery
+                                              à la livraison
                                             </label>
                                           </div>
                                           <div class="form-check">
                                             <input  class="form-check-input" type="radio" name="mode" id="cp" value="cp">
                                             <label class="form-check-label" for="cp">
-                                              Card payment
+                                              carte bancaire
                                             </label>
                                           </div>
                                       

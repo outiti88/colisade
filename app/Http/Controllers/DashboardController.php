@@ -25,7 +25,7 @@ class DashboardController extends Controller
     
     public function dash(){
 
-        if(!Gate::denies('nouveau')){
+        if(!Gate::denies('nouveau') || Gate::denies('valide')){
             return redirect()->route('home');            
         }
 

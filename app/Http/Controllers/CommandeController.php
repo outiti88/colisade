@@ -132,8 +132,16 @@ class CommandeController extends Controller
             $commandes->where('montant','<=',$request->prixMax);
         }
 
+        if($request->filled('bl')){
+            $commandes->where('traiter','<>',0)->where('facturer',0);
+        }
+
+        if($request->filled('facturer')){
+            $commandes->where('facturer','<>',0);
+        }
+
         $total = $commandes->count() ;
-        $commandes = $commandes->paginate(15);
+        $commandes = $commandes->paginate(25);
         foreach($commandes as $commande){
             if(!empty(User::find($commande->user_id)))
             $users[] =  User::find($commande->user_id) ;

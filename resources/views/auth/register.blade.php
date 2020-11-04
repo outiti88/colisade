@@ -106,7 +106,14 @@
                             </div>
                         </div>
 
-                        
+                        <div class="form-group row">
+                            <label for="rib" class="col-md-2 col-form-label text-md-right">{{ __('RIB') }}</label>
+
+                            <div class="col-md-10">
+                                <input id="rib" type="text" class="form-control" name="rib" value="{{ old('rib') }}"    >
+                            </div>
+                           
+                        </div>
 
                         <div class="form-group row">
                             <label for="adresse" class="col-md-2 col-form-label text-md-right">{{ __('Adresse') }}</label>
@@ -157,7 +164,7 @@
                             <div class="col-md-10 d-flex p-t-10 justify-content-around">
                             <div class="form-check">
                                 <input type="radio" name="roles[]" value="2" id="cl" checked>
-                                <label for="cl">Collecte, Stockage</label>
+                                <label for="cl">Collecte, Livraison</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" name="roles[]" value="5" id="cls">

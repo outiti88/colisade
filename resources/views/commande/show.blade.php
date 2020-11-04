@@ -584,13 +584,13 @@ N: {{$commande->numero}}
                                             <div class="form-check">
                                               <input  onclick="myFunctionEdit2(this.value)" class="form-check-input" type="radio" name="mode" id="cd" value="cd" checked>
                                               <label class="form-check-label" for="cd">
-                                                Cash on delivery
+                                                à la livraison
                                               </label>
                                             </div>
                                             <div class="form-check">
                                               <input  onclick="myFunctionEdit2(this.value)" class="form-check-input" type="radio" name="mode" id="cp" value="cp">
                                               <label class="form-check-label" for="cp">
-                                                Card payment
+                                                carte bancaire
                                               </label>
                                             </div>
                                         

@@ -31,8 +31,9 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::USER;
+    protected $redirectTo =  RouteServiceProvider::USER;
 
+   
     /**
      * Create a new controller instance.
      *
@@ -84,6 +85,7 @@ class RegisterController extends Controller
             'adresse'=>$data['adresse'],
             'ville'=>$data['ville'],
             'image'=>$data['image'],
+            'rib'=>$data['rib'],
             
         ]);
         if(empty($data['roles'])){
