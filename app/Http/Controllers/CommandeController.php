@@ -57,10 +57,17 @@ class CommandeController extends Controller
             //dd($produits);
         }
 
-        if(!Gate::denies('ramassage-commande')) {
+        if(!Gate::denies('manage-users')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('deleted_at',NULL)->count();
             $commandes= DB::table('commandes')->where('deleted_at',NULL)->orderBy('updated_at', 'DESC')->paginate(10);
+
+            //dd($clients[0]->id);
+        }
+        elseif(!Gate::denies('livreur')) {
+            //session administrateur donc on affiche tous les commandes
+            $total = DB::table('commandes')->where('deleted_at',NULL)->where('ville',Auth::user()->ville)->count();
+            $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('ville',Auth::user()->ville)->orderBy('updated_at', 'DESC')->paginate(10);
 
             //dd($clients[0]->id);
         }
@@ -116,7 +123,13 @@ class CommandeController extends Controller
             $commandes->where('nom','like','%'.$request->nom.'%');
         }
         if($request->filled('ville')){
-            $commandes->where('ville','like','%'.$request->ville.'%');
+            if(!Gate::denies('livreur')){
+                $commandes->where('ville',Auth::user()->ville);
+            }
+            else{
+                $commandes->where('ville','like','%'.$request->ville.'%');
+
+            }
         }
         
         if($request->filled('dateMin')){
@@ -164,7 +177,7 @@ class CommandeController extends Controller
         if(strcmp(substr($request->search,-strlen($request->search),4) , "FAC_") == 0){  
             $clients = [];  
             $users = []; 
-            if(!Gate::denies('ramassage-commande')) {
+            if(!Gate::denies('manage-users')) {
                 $factures = DB::table('factures')->where('numero','like','%'.$request->search.'%')->get();
                 $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
             }
@@ -196,7 +209,7 @@ class CommandeController extends Controller
             $clients = [];  
             $id_bon = (int)substr($request->search,9);
 
-            if(!Gate::denies('ramassage-commande')) {
+            if(!Gate::denies('manage-users')) {
                 $bonLivraisons = DB::table('bon_livraisons')->where('id',$id_bon)->get();
                 //dd($bonLivraisons->count());
                 $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
@@ -213,7 +226,7 @@ class CommandeController extends Controller
             }
             if($total > 0){
                 $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','en cours')->where('traiter','0')->count();
-                $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->where('traiter','0')->count();
+                $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','envoyée')->where('traiter','0')->count();
         
                 return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
                                         'total' => $total,
@@ -330,13 +343,12 @@ class CommandeController extends Controller
 
         $HorsTanger = array("Cap spartel","Du Golf","manar","Aviation","Mghogha","Zone Industrielle Mghogha","Achakar");
         $prixVille = (in_array($request->secteur,$HorsTanger)) ? 25 : 17 ;
-        $prixPoids = (($request->poids==="normal") ? 0 : 18);
-        $commande->prix = $prixVille + $prixPoids;
+        $commande->prix = $prixVille ;
         $commande->prix = ($commande->prix == 43 ) ? 45 : $commande->prix ;
         if($request->ville != 0 ) $commande->prix += 20 ;
-        $commande->statut = "expidié";
+        $commande->statut = "envoyée";
         $commande->colis = $request->colis;
-        $commande->poids = $request->poids;
+        $commande->poids = '';
         $commande->nom = $request->nom;
         $commande->traiter = 0;
         $commande->facturer = 0;
@@ -648,7 +660,7 @@ class CommandeController extends Controller
             return redirect()->route('commandes.index');
         }
 
-        if(Gate::denies('client-admin') || $commande->statut !== "expidié"){
+        if(Gate::denies('client-admin') || $commande->statut !== "envoyée"){
             //dd( $commande->staut );
             $request->session()->flash('noupdate', $commande->numero);
         }
@@ -664,9 +676,7 @@ class CommandeController extends Controller
                 }
                 
 
-                if($request->ville != "Tanger" ) {
-                    return redirect('/commandes');
-                }
+              
                 
                 $commande->telephone = $request->telephone;
                 $commande->ville = $request->ville;
@@ -675,12 +685,10 @@ class CommandeController extends Controller
                 //dd($request->secteur);
                 $HorsTanger = array("Cap spartel","Du Golf","manar","Aviation","Mghogha","Zone Industrielle Mghogha","Achakar");
                 $prixVille = (in_array($request->secteur,$HorsTanger)) ? 25 : 17 ;
-                $prixPoids = (($request->poids==="normal") ? 0 : 18);
-                $commande->prix = $prixVille + $prixPoids;
+                $commande->prix = $prixVille ;
                 $commande->prix = ($commande->prix == 43 ) ? 45 : $commande->prix ;
                 
                 $commande->colis = $request->colis;
-                $commande->poids = $request->poids;
                 $commande->nom = $request->nom;
                 $commande->save();
                
@@ -701,16 +709,21 @@ class CommandeController extends Controller
             return redirect(route('commandes.index'));
         }
          //pour traiter la commande à ramassée , faut verifier deux conditons:
-            // commande est expidiée + traiter = 0         
+            // commande est envoyéee + traiter = 0         
         // dd($blExist);
         
-        if(($commande->statut === "expidié" || $commande->statut === "Ramassée") && $commande->traiter == 0)
+        if(($commande->statut === "envoyée" || $commande->statut === "Ramassée" || $commande->statut === "Expidiée") && $commande->traiter == 0)
         {
             $user_ville = User::findOrFail($commande->user_id);
             
             if ($commande->statut === "Ramassée") {
+                $commande->statut= "Expidiée"; 
+            }
+            
+            elseif ($commande->statut === "Expidiée") {
                 $commande->statut= "En cours"; 
-            } else {
+            }
+            else {
                 if ($user_ville->ville == $commande->ville || $commande->ville == "Rabat") {
                     $commande->statut= "En cours"; 
                 } else {
@@ -735,7 +748,7 @@ class CommandeController extends Controller
         }
         else {
            
-            if($commande->statut != "expidié"){
+            if($commande->statut != "envoyée"){
                 $request->session()->flash('nonExpidie', $commande->numero);
             }
             else{
@@ -753,7 +766,7 @@ class CommandeController extends Controller
 
         $user = User::find($commande->user_id);
        // dd($date_bl);
-        if(Gate::denies('ramassage-commande') || $commande->statut === 'expidié'){
+        if(Gate::denies('ramassage-commande') || $commande->statut === 'envoyée'){
             $request->session()->flash('noedit', $commande->numero);
         }
 
@@ -817,7 +830,7 @@ class CommandeController extends Controller
             $request->session()->flash('nodelete', $commande->numero);
             return redirect()->route('commandes.show',['commande' => $commande->id]);
                 }
-        if($commande->statut === "expidié") {
+        if($commande->statut === "envoyée") {
 
             $numero = $commande->numero;
             $statut = DB::table('statuts')->where('commande_id',$commande->id)->get()->first()  ;

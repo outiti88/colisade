@@ -147,7 +147,7 @@ N: {{$commande->numero}}
                     @endif
                     @endcan
                     @can('delete-commande')
-                    @if ($commande->statut === "expidié")
+                    @if ($commande->statut === "envoyée")
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
                      
                     
@@ -251,8 +251,22 @@ N: {{$commande->numero}}
                                 <a  style="color: white" 
                                     class="badge badge-pill 
                                     @switch($commande->statut)
-                                    @case("expidié")
+                                    @case("envoyée")
                                     badge-warning"
+                                    @can('ramassage-commande')
+                                    title="Rammaser la commande" 
+                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                    @endcan
+                                        @break
+                                        @case("Ramassée")
+                                    badge-secondary"
+                                    @can('ramassage-commande')
+                                    title="Envoyer la commande" 
+                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                    @endcan
+                                        @break
+                                        @case("Expidiée")
+                                    badge-primary"
                                     @can('ramassage-commande')
                                     title="Rammaser la commande" 
                                      href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
@@ -357,14 +371,7 @@ N: {{$commande->numero}}
                                         <p>{{$commande->secteur}}</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Type de poids :</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>{{$commande->poids}}</p>
-                                    </div>
-                                </div>
+                             
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Montant :</label>
@@ -435,8 +442,22 @@ N: {{$commande->numero}}
                                         <a  style="color: white" 
                                     class="badge badge-pill 
                                     @switch($statut->name)
-                                    @case("expidié")
+                                    @case("envoyée")
                                     badge-warning"
+                                    @can('ramassage-commande')
+                                    title="Rammaser la commande" 
+                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                    @endcan
+                                        @break
+                                        @case("Ramassée")
+                                    badge-secondary"
+                                    @can('ramassage-commande')
+                                    title="Rammaser la commande" 
+                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                    @endcan
+                                        @break
+                                        @case("Expidiée")
+                                    badge-primary"
                                     @can('ramassage-commande')
                                     title="Rammaser la commande" 
                                      href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
@@ -524,7 +545,7 @@ N: {{$commande->numero}}
 </div>
    
 @can('delete-commande')
-@if ($commande->statut === "expidié")
+@if ($commande->statut === "envoyée")
 <div class="container my-4">    
     <div class="modal fade" id="modalSubscriptionFormEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
@@ -548,7 +569,7 @@ N: {{$commande->numero}}
                                 </div>
                                
                                 <div class="row">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="example-email" class="col-md-12">Nombre de Colis :</label>
                                         <div class="col-md-12">
                                             <input  value="{{ old('colis',$commande->colis) }}" type="number" class="form-control form-control-line" name="colis" id="example-email">
@@ -556,28 +577,8 @@ N: {{$commande->numero}}
                                     </div>
     
     
-                                    <fieldset class="form-group col-md-4">
-                                        <div class="row">
-                                          <legend class="col-form-label  pt-0">Poids :</legend>
-                                          <div class="col-sm-12">
-                                            <div class="form-check">
-                                              <input   class="form-check-input" type="radio" name="poids" id="normal" value="normal" {{ ($commande->poids=="normal")? "checked" : "" }}>
-                                              <label class="form-check-label" for="normal">
-                                                P. Normal
-                                              </label>
-                                            </div>
-                                            <div class="form-check">
-                                              <input   class="form-check-input" type="radio" name="poids" id="voluminaux" value="voluminaux" {{ ($commande->poids=="voluminaux")? "checked" : "" }}>
-                                              <label class="form-check-label" for="voluminaux">
-                                                P. Volumineux
-                                              </label>
-                                            </div>
-                                        
-                                          </div>
-                                        </div>
-                                      </fieldset>
                                       @can('gestion-commande')
-                                      <fieldset class="form-group col-md-4">
+                                      <fieldset class="form-group col-md-6">
                                         <div class="row">
                                           <legend class="col-form-label  pt-0">Mode de paiement :</legend>
                                           <div class="col-sm-12">
@@ -636,7 +637,7 @@ N: {{$commande->numero}}
                                 <div   class="form-group" id="secteur2">
                                     <label class="col-sm-12">Secteur :</label>
                                     <div class="col-sm-12">
-                                        <select  value="{{ old('secteur',$commande->secteur) }}" name="secteur" class="form-control form-control-line" required>
+                                        <select  value="{{ old('secteur',$commande->secteur) }}" name="secteur" class="form-control form-control-line">
                                             <option value="{{$commande->secteur}}" checked>{{$commande->secteur}}</option>
                                             <option>Aviation</option>
                                             <option>Al Kasaba</option>

@@ -226,7 +226,7 @@
           </button>
         </div>
         <div class="modal-body">
-          Voud avez {{$ramasse}} de commandes Rammassées sur {{$nonRamasse + $ramasse}} commandes expidiées
+          Voud avez {{$ramasse}} de commandes Rammassées sur {{$nonRamasse + $ramasse}} commandes envoyées
         </div>
         <div class="modal-body">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">

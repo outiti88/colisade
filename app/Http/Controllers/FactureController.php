@@ -33,7 +33,7 @@ class FactureController extends Controller
     {
         $clients = []; //tableau des clients existe dans la base de données
         $users = []; //les users qui seront affichés avec leur bon de livraison
-        if(!Gate::denies('ramassage-commande')) {
+        if(!Gate::denies('manage-users')) {
             $factures = DB::table('factures')->orderBy('created_at', 'DESC')->get();
             $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();        }
         else{
@@ -62,7 +62,7 @@ class FactureController extends Controller
     public function store(Request $request)
     {
         $user = $request->client;
-        if(!Gate::denies('ramassage-commande')) {
+        if(!Gate::denies('manage-users')) {
         $nbrCmdLivre =  DB::table('commandes')->where('statut','Livré')->where('user_id',$user)->where('facturer','0')->count();
         $nbrCmdRamasse =  DB::table('commandes')->where('statut','En cours')->where('user_id',$user)->where('facturer','0')->count();
 
@@ -298,7 +298,7 @@ class FactureController extends Controller
             //dd($produits);
         }
 
-        if(!Gate::denies('ramassage-commande')) {
+        if(!Gate::denies('manage-users')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('deleted_at',NULL)->where('facturer',$id)->count();
             $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('facturer',$id)->orderBy('created_at', 'DESC')->paginate(10);
@@ -329,7 +329,7 @@ class FactureController extends Controller
    public function infos($id){
         $clients = [];  
         $users = []; 
-        if(!Gate::denies('ramassage-commande')) {
+        if(!Gate::denies('manage-users')) {
             $factures = DB::table('factures')->where('id',$id)->get();
             $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
         }

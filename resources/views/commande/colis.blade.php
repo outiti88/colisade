@@ -143,7 +143,7 @@
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Attention !</strong>Commande déjà traitée  {{session()->get('nonExpidie')}} <br>
-                vous pouvez modifier que les statuts des commandes qui ont le statut <b>Expidié</b>
+                vous pouvez modifier que les statuts des commandes qui ont le statut <b>envoyée</b>
         </div>
         @endif
         @if (session()->has('blgenere'))
@@ -241,7 +241,7 @@
                                 <a  style="color: white" 
                                     class="badge badge-pill 
                                     @switch($commande->statut)
-                                    @case("expidié")
+                                    @case("envoyée")
                                     badge-warning"
                                     @can('ramassage-commande')
                                     title="Rammaser la commande" 
@@ -262,6 +262,13 @@
                                         @break
                                     @case("Ramassée")
                                         badge-secondary"
+                                        @can('ramassage-commande')
+                                        title="Envoyer la commande" 
+                                         href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                        @endcan
+                                    @break
+                                    @case("Expidiée")
+                                        badge-primary"
                                         @can('ramassage-commande')
                                         title="Valider la commande" 
                                          href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
@@ -355,10 +362,11 @@
                                     <div class="col-sm-8">
                                         <select name="statut" class="form-control form-control-line">
                                             <option selected disabled>Choisissez le statut</option>
-                                            <option>Expidié</option>
+                                            <option>envoyée</option>
+                                            <option>Ramassée</option>
+                                            <option>Expidiée</option>
                                             <option>en cours</option>
                                             <option>Livré</option>
-                                            <option>Ramassée</option>
                                             <option>Retour Complet</option>
                                             <option>Retour Partiel</option>
                                             <option>Reporté</option>
@@ -377,6 +385,8 @@
                                       <input class="form-control" name="dateMax"  type="date" value="{{now()}}" id="example-date-input">
                                     </div>
                                   </div>
+                                  @cannot('livreur')
+                                      
                                   <div class="form-group row">
                                     <label class="col-sm-4">Ville :</label>
                                     <div class="col-sm-8">
@@ -390,7 +400,8 @@
                                         </select>
                                     </div>
                                 </div>
-                                  <div class="form-group row">
+                                @endcannot
+                                <div class="form-group row">
                                     <label for="example-date-input" class="col-3 col-form-label">Montant Min</label>
                                     <div class="col-3">
                                       <input class="form-control" name="prixMin" type="number" value="0" id="example-date-input">
@@ -467,35 +478,14 @@
                                 </div>
                                
                                 <div class="row">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="example-email" class="col-md-12">Nombre de Colis :</label>
                                         <div class="col-md-12">
                                             <input  value="{{ old('colis') }}" type="number" class="form-control form-control-line" name="colis" id="example-email">
                                         </div>
                                     </div>
     
-    
-                                    <fieldset class="form-group col-md-4">
-                                        <div class="row">
-                                          <legend class="col-form-label  pt-0">Poids :</legend>
-                                          <div class="col-sm-12">
-                                            <div class="form-check">
-                                              <input   class="form-check-input" type="radio" name="poids" id="normal" value="normal" checked>
-                                              <label class="form-check-label" for="normal">
-                                                P. Normal
-                                              </label>
-                                            </div>
-                                            <div class="form-check">
-                                              <input   class="form-check-input" type="radio" name="poids" id="voluminaux" value="voluminaux">
-                                              <label class="form-check-label" for="voluminaux">
-                                                P. Volumineux
-                                              </label>
-                                            </div>
-                                        
-                                          </div>
-                                        </div>
-                                      </fieldset>
-                                      <fieldset class="form-group col-md-4">
+                                      <fieldset class="form-group col-md-6">
                                         <div class="row">
                                           <legend class="col-form-label  pt-0">Mode de paiement :</legend>
                                           <div class="col-sm-12">
@@ -757,7 +747,7 @@
                               </div>
                              
                               <div class="row form-group ">
-                                  <div class="form-group col-md-4">
+                                  <div class="form-group col-md-6">
                                       <label for="qte" class="col-md-12">Nombre de Colis :</label>
                                       <div class="col-md-12">
                                           <input  value="{{ old('colis') }}" type="number" class="form-control form-control-line" name="colis" id="qte">
@@ -765,28 +755,8 @@
                                   </div>
   
   
-                                  <fieldset class="form-group col-md-4">
-                                      <div class="row">
-                                        <legend class="col-form-label  pt-0">Poids :</legend>
-                                        <div class="col-sm-12">
-                                          <div class="form-check">
-                                            <input   class="form-check-input" type="radio" name="poids" id="normal" value="normal" checked>
-                                            <label class="form-check-label" for="normal">
-                                              P. Normal
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input   class="form-check-input" type="radio" name="poids" id="voluminaux" value="voluminaux">
-                                            <label class="form-check-label" for="voluminaux">
-                                              P. Volumineux
-                                            </label>
-                                          </div>
-                                      
-                                        </div>
-                                      </div>
-                                    </fieldset>
   
-                                    <fieldset class="form-group col-md-4">
+                                    <fieldset class="form-group col-md-6">
                                       <div class="row">
                                         <legend class="col-form-label  pt-0">Mode de paiement :</legend>
                                         <div class="col-sm-12">

@@ -65,7 +65,7 @@
                     <div class="feed-widget">
                         <ul class="list-style-none feed-body m-0 p-b-20">
                             <li class="feed-item">
-                                <div class="feed-icon bg-warning"><i class="ti-shopping-cart"></i></div> {{$tab['expidie']['nbr']}} Commandes <br> Expidiées. <span class="ml-auto font-12 text-muted">{{$tab['expidie']['date']}}</span></li>
+                                <div class="feed-icon bg-warning"><i class="ti-shopping-cart"></i></div> {{$tab['expidie']['nbr']}} Commandes <br> envoyées. <span class="ml-auto font-12 text-muted">{{$tab['expidie']['date']}}</span></li>
                             <li class="feed-item">
                                 <div class="feed-icon bg-info"><i class="mdi mdi-truck"></i></div> {{$tab['en_cours']['nbr']}} Commandes <br> Ramassées.<span class="ml-auto font-12 text-muted">{{$tab['en_cours']['date']}}</span></li>
                             <li class="feed-item">

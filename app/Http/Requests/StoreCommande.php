@@ -29,7 +29,6 @@ class StoreCommande extends FormRequest
             'ville' =>'required',
             'adresse' =>'required',
             'colis' =>'required',
-            'poids' =>'required',
             'nom' =>'required'
         ];
     }

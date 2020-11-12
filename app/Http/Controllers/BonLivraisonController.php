@@ -30,7 +30,7 @@ class BonLivraisonController extends Controller
     public function index()
     {
         $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','en cours')->where('traiter','0')->count();
-        $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->where('traiter','0')->count();
+        $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','envoyée')->where('traiter','0')->count();
 
         $clients = []; //tableau des clients existe dans la base de données
         $users = []; //les users qui seront affichés avec leur bon de livraison
@@ -124,7 +124,7 @@ class BonLivraisonController extends Controller
         foreach ($commandes as $index => $commande) {
             if(($index >= $i * 12) && ($index < 12*($i+1))) { //les infromations de la table depe,d de la page actuelle
                 
-            if ($commande->statut === 'expidié'){
+            if ($commande->statut === 'envoyée'){
                 $commande->prix = 0;
             }
             if($commande->montant == 0){
@@ -356,7 +356,7 @@ class BonLivraisonController extends Controller
         }
         if($total > 0){
             $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','en cours')->where('traiter','0')->count();
-            $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','expidié')->where('traiter','0')->count();
+            $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','envoyée')->where('traiter','0')->count();
     
             return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
                                     'total' => $total,
