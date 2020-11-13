@@ -56,6 +56,7 @@ return array(
     'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
     'App\\Reception' => $baseDir . '/app/Reception.php',
     'App\\ReceptionProduit' => $baseDir . '/app/ReceptionProduit.php',
+    'App\\Relance' => $baseDir . '/app/Relance.php',
     'App\\Role' => $baseDir . '/app/Role.php',
     'App\\Statut' => $baseDir . '/app/Statut.php',
     'App\\Stock' => $baseDir . '/app/Stock.php',

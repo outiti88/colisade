@@ -295,6 +295,8 @@ class BonLivraisonController extends Controller
          //dd(Auth::user()->id );
          $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
          $produits = [];
+         $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
+
 
         if(!Gate::denies('ecom')){
             $produits_total = Produit::where('user_id',Auth::user()->id)->get();
@@ -331,7 +333,8 @@ class BonLivraisonController extends Controller
                                      'total'=>$total,
                                      'users'=> $users,
                                      'clients' => $clients,
-                                     'produits'=>$produits]);
+                                     'produits'=>$produits,
+                                     'livreurs' => $livreurs]);
     }
 
 

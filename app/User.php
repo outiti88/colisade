@@ -89,7 +89,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Statut');
     }
 
-    
+    public function relances()
+    {
+        return $this->hasMany('App\Relance');
+    }
 
     public static function boot(){
         parent::boot();

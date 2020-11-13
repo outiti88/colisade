@@ -14,5 +14,11 @@ class Commande extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function relances()
+    {
+        return $this->hasMany('App\Relance');
+    }
+
+
     
 }

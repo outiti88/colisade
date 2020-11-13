@@ -349,6 +349,25 @@
                                         
                                     </div>
                                 </div>
+                               
+                                @endcan
+
+                                @can('manage-users')
+                                <div class="form-group row">
+                                    <label for="livreur" class="col-sm-4">Livreur :</label>
+                                    <div class="col-sm-8">
+                                        <select name="livreur" id="livreur" class="form-control form-control-line" value="{{ old('livreur') }}">
+                                            <option value="" disabled selected>Choisissez le livreur</option>
+                                            @foreach ($livreurs as $livreur)
+                                        <option value="{{$livreur->id}}" class="rounded-circle">
+                                            {{$livreur->name}}
+                                        </option>
+                                            @endforeach
+                                           
+                                        </select>
+                                        
+                                    </div>
+                                </div>
                                 @endcan
                                 
                                 <div class="form-group row">

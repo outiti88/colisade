@@ -144,6 +144,55 @@ N: {{$commande->numero}}
                     @can('ramassage-commande')
                     @if ($commande->statut === "En cours" && $commande->traiter != 0)
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
+                    @if ($Rtotal < 3)
+                    <a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormRelance"><i class="fas fa-bullhorn"></i> Relancer</a>
+                    @endif
+                    <div class="container my-4">    
+                        <div class="modal fade" id="modalSubscriptionFormRelance" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header text-center">
+                                              <h4 class="modal-title w-100 font-weight-bold">Relancer la commande</h4>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body mx-3">
+                                                <form class="form-horizontal form-material" method="POST" action="{{route('commande.relancer',['id' => $commande->id])}}">
+                                                    @csrf
+                                                
+                                                    <div class="form-group">
+                                                        <label class="col-sm-12">Commentaire :</label>
+                                                        <div class="col-sm-12">
+                                                            <textarea  name="comment" rows="5" class="form-control form-control-line">{{ old('comment') }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="modal-footer d-flex justify-content-center">
+                                                            <button class="btn btn-warning">Relancer</button>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                @if ($errors->any())
+                                                <div class="alert alert-dismissible alert-danger">
+                                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                    <ul>
+                                                        @foreach ($errors->all() as $error)
+                                                            <li>
+                                                            <strong>{{$error}}</strong>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                  </div>
+                                                  @endif
+                                            </div>
+                                
+                                          </div>
+                                        </div>
+                        </div>
+                    </div>
                     @endif
                     @endcan
                     @can('delete-commande')
@@ -211,6 +260,12 @@ N: {{$commande->numero}}
             <strong>Succés !</strong> La commande à été bien Modifiée </a>.
               </div>
             @endif
+            @if (session()->has('relance'))
+            <div class="alert alert-dismissible alert-success col-12">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Succés !</strong> Vous avez relancé la commande {{session()->get('relance')}}</a>.
+              </div>
+            @endif
             @if (session()->has('edit'))
         <div class="alert alert-dismissible alert-info col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -245,6 +300,11 @@ N: {{$commande->numero}}
         @endif
 
             <div class="col-md-10">
+                <div class="row">
+                    <h5>
+                     Nombre de relance : {{$Rtotal}}
+                    </h5>
+                </div>
                 <div class="profile-head">
                             <h5>
                                 Commande numero: <span style="color: #f7941e">{{$commande->numero}}</span>
@@ -304,7 +364,7 @@ N: {{$commande->numero}}
                                 </a>
                             </h5>
                            
-                           
+                          
                             <p class="proile-rating">Date d'ajout : {{date_format($commande->created_at,"Y/m/d")}}<span> {{date_format($commande->created_at,"H:i:s")}}</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -317,6 +377,13 @@ N: {{$commande->numero}}
                         <li class="nav-item">
                             <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
                         </li>
+                        @endcan
+                        @can('ramassage-commande')
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" id="relances-tab" data-toggle="tab" href="#relances" role="tab" aria-controls="relances" aria-selected="false">Relances</a>
+                        </li>
+                       
                         @endcan
                         
                     </ul>
@@ -535,6 +602,41 @@ N: {{$commande->numero}}
                                 </div>
                             </div>
                         @endforeach
+                    </div>
+                    @endcan
+
+                    @can('ramassage-commande')
+                    <div class="tab-pane fade" id="relances" role="tabpanel" aria-labelledby="relances-tab">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Date de relance</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Commentaire</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p>Relancée par</p>
+                            </div>
+                        </div>
+                        @forelse ($relances as $index => $relance)
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>{{$relance->created_at}}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p style="text-transform: uppercase">{{$relance->comment}}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p style="text-transform: uppercase">{{$Rpar[$index]->name}}</p>
+                                </div>
+                            </div>
+                            @empty
+                            <div class="row">
+                                <div class="col-md-12">
+                                    Aucune Relance 
+                                </div>
+                            </div>
+                        @endforelse
                     </div>
                     @endcan
                 </div>

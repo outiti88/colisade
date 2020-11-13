@@ -568,6 +568,7 @@ class ComposerStaticInit8c870f6fb27df92856cbc90053827a28
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'App\\Reception' => __DIR__ . '/../..' . '/app/Reception.php',
         'App\\ReceptionProduit' => __DIR__ . '/../..' . '/app/ReceptionProduit.php',
+        'App\\Relance' => __DIR__ . '/../..' . '/app/Relance.php',
         'App\\Role' => __DIR__ . '/../..' . '/app/Role.php',
         'App\\Statut' => __DIR__ . '/../..' . '/app/Statut.php',
         'App\\Stock' => __DIR__ . '/../..' . '/app/Stock.php',

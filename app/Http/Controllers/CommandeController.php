@@ -10,6 +10,7 @@ use App\Http\Requests\StoreCommande;
 use App\Notifications\newCommande;
 use App\Notifications\statutChange;
 use App\Produit;
+use App\Relance;
 use App\Statut;
 use App\Stock;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +44,8 @@ class CommandeController extends Controller
         //dd(auth()->user()->unreadNotifications );
         //dd(Auth::user()->id );
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
+        $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
+
         $users = [] ;
         $produits = [];
 
@@ -87,6 +90,7 @@ class CommandeController extends Controller
                                     'total'=>$total,
                                     'users'=> $users,
                                     'clients' => $clients,
+                                    'livreurs'=>$livreurs,
                                     'produits'=>$produits]);
     }
 
@@ -95,6 +99,7 @@ class CommandeController extends Controller
        
         $commandes = DB::table('commandes')->where('deleted_at',NULL);
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
+        $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
 
         $users = [];
         $produits = [];
@@ -107,6 +112,7 @@ class CommandeController extends Controller
         if(Gate::denies('ramassage-commande')) { //session client donc on cherche saulement dans ses propres commandes
             $commandes->where('user_id',Auth::user()->id );
             $clients = null;
+            $livreurs = null;
         }
 
         if($request->filled('statut')){
@@ -117,6 +123,11 @@ class CommandeController extends Controller
 
         if($request->filled('client')){
             $commandes->where('user_id',$request->client);
+        }
+
+        if($request->filled('livreur')){
+            $livreur =  User::find($request->livreur);
+            $commandes->where('ville',$livreur->ville);
         }
         
         if($request->filled('nom')){
@@ -165,7 +176,8 @@ class CommandeController extends Controller
             'total'=>$total,
             'users'=> $users,
             'clients' => $clients,
-            'produits' => $produits
+            'produits' => $produits,
+            'livreurs'=>$livreurs
 
             ]);
     }
@@ -280,12 +292,15 @@ class CommandeController extends Controller
                 $users[] =  User::find($commande->user_id) ;
              
             }
+            $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
+
             $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();  
             return view('commande.colis',['commandes' => $commandes, 
             'total'=>$total,
             'users'=> $users,
             'clients' => $clients,
-            'produits' => $produits
+            'produits' => $produits,
+            'livreurs'=>$livreurs
             ]);
          
            
@@ -429,27 +444,30 @@ class CommandeController extends Controller
     public function show(Commande $commande)
     {
 
+        if(!Gate::denies('livreur')){
+            if($commande->ville!== Auth::user()->ville)
+            return redirect()->route('commandes.index');
+        }
+
         if(Gate::denies('ramassage-commande')){
             if($commande->user_id !== Auth::user()->id)
             return redirect()->route('commandes.index');
         }
         
-        if($commande->statut == 'Livré'){
-            $timestamp1 = strtotime($commande->created_at);
-            $timestamp2 = strtotime($commande->updated_at);
-            $hour = abs($timestamp2 - $timestamp1)/(3600);
-            $minute = ($hour - (int)$hour ) * 60 ;
-            $seconde = ($minute - (int)$minute ) * 60 ;
-            //dd((int)$hour , (int)$minute ,(int)$seconde);
-        }
        
         //return $commande;
         //dd($produits);
         $statuts = DB::table('statuts')->where('commande_id',$commande->id)->get();
         foreach($statuts as $statut){
             $users[] =  User::find($statut->user_id) ;
-
         }
+        $total = DB::table('relances')->where('commande_id',$commande->id)->count();
+        $relances = DB::table('relances')->where('commande_id',$commande->id)->get();
+        $Rpar = null;
+        foreach($relances as $relance){
+            $Rpar[] =  User::find($relance->user_id) ; //relancée par
+        }
+
         if(!Gate::denies('gestion-stock')){
             $produits = [] ;
             $liaisons = DB::table('commande_produits')->where('commande_id',$commande->id)->get();
@@ -459,13 +477,19 @@ class CommandeController extends Controller
         return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 
                                     'par' => $users,
                                     'produits' => $produits,
-                                    'liaisons' => $liaisons
+                                    'liaisons' => $liaisons,
+                                    'relances' => $relances,
+                                    'Rpar' => $Rpar,
+                                    'Rtotal' => $total
                                     ]);
 
         }   
         //dd($users);
         return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 
-                                    'par' => $users
+                                    'par' => $users,
+                                    'relances' => $relances,
+                                    'Rpar' => $Rpar,
+                                    'Rtotal' => $total
                                     ]);
     }
 
@@ -814,6 +838,23 @@ class CommandeController extends Controller
     }
 
 
+    public function relancer(Request $request, $id){
+        if(!Gate::denies('ramassage-commande')) {
+            $commande = Commande::findOrFail($id);
+            $total = DB::table('relances')->where('commande_id',$commande->id)->count();
+            if($total < 3){
+                $relance = new Relance();
+            $relance->commande_id = $commande->id;
+            $relance->comment = $request->comment;
+            $relance->user()->associate(Auth::user())->save();
+            $request->session()->flash('relance', $commande->numero);
+
+            }
+
+        }
+
+        return back();
+    }
 
     
 

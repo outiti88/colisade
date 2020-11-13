@@ -18,6 +18,8 @@ Route::get('/search', 'CommandeController@search')->name('commande.search')->mid
 
 Route::get('/commandes/filter', 'CommandeController@filter')->name('commande.filter')->middleware('can:valide');
 
+Route::post('/commandes/{id}/relance', 'CommandeController@relancer')->name('commande.relancer')->middleware('can:ramassage-commande');
+
 Route::get('/user/new', 'Auth\RegisterController@nouveau')->name('user.nouveau');
 
 Route::resource('/commandes','CommandeController')->except([

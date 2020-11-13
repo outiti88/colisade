@@ -284,6 +284,8 @@ class FactureController extends Controller
     public function search($id){
         //dd(Auth::user()->id );
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
+        $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
+
         $users = [] ;
         $produits = [];
 
@@ -323,6 +325,7 @@ class FactureController extends Controller
                                     'total'=>$total,
                                     'users'=> $users,
                                     'clients' => $clients,
+                                    'livreurs' => $livreurs,
                                     'produits'=>$produits]);
    }
 
