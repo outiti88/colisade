@@ -371,6 +371,7 @@ class CommandeController extends Controller
 
         if(!Gate::denies('ecom')){
             if(!isset($request->produit)){
+                dd("salut");
                 $request->session()->flash('produit_required');
                     return redirect('/commandes');
 

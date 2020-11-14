@@ -386,6 +386,9 @@
                                             <option>Expidiée</option>
                                             <option>en cours</option>
                                             <option>Livré</option>
+                                            <option>Injoignable</option>
+                                            <option>Refusée</option>
+                                            <option>Annulée</option>
                                             <option>Retour Complet</option>
                                             <option>Retour Partiel</option>
                                             <option>Reporté</option>
@@ -734,7 +737,7 @@
                                     <div class="form-group col-md-6">
                                       <label for="produit" class="col-sm-12">Produit :</label>
                                       <div class="col-md-12">
-                                          <select name="produit[]" id="produit" class="form-control form-control-line" value="{{ old('produit') }}">
+                                          <select name="produit[]" id="produit" class="form-control form-control-line" value="{{ old('produit') }}" required>
                                               <option value="" disabled selected>Produit</option>
                                               @foreach ($produits as $produit)
                                           <option value="{{$produit->id}}" class="rounded-circle">
@@ -749,7 +752,7 @@
                                       <div class="form-group col-md-4 input-group">
                                         <label for="qte" class="col-md-12">Quantité:</label>
                                         <div class="col-md-12">
-                                            <input  value="{{ old('qte') }}" type="number" class="form-control form-control-line" name="qte[]" id="qte">
+                                            <input  value="{{ old('qte') }}" type="number" class="form-control form-control-line" name="qte[]" id="qte" required>
                                         </div>
                                         
                                     </div>

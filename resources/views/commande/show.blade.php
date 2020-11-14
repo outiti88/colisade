@@ -904,6 +904,9 @@ N: {{$commande->numero}}
                                     <div class="col-sm-12">
                                         <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}">
                                             <option>Livré</option>
+                                            <option>Injoignable</option>
+                                            <option>Refusée</option>
+                                            <option>Annulée</option>
                                             <option>Retour Complet</option>
                                             <option>Retour Partiel</option>
                                             <option>Reporté</option>
