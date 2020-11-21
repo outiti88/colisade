@@ -33,6 +33,8 @@ class ReceptionController extends Controller
      */
     public function index()
     {
+        $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['ecom']);})->get();
+
         $users = [] ;
         $produits= null ;
         if(!Gate::denies('ramassage-commande')) {
@@ -68,6 +70,7 @@ class ReceptionController extends Controller
                                             );
             }
         }
+
         //dd($details);
 
         return view('reception.index' , [
@@ -75,9 +78,74 @@ class ReceptionController extends Controller
                                 'receptions' => $receptions, 
                                 'total'=>$total,
                                 'users'=>$users,
-                                'details'=>$details
+                                'details'=>$details,
+                                'clients' => $clients
                                    ]);
     }
+
+    public function filter(Request $request){
+       
+        $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['ecom']);})->get();
+        $receptions= DB::table('receptions')->orderBy('created_at', 'DESC');
+        $users = [] ;
+        $produits= null ;
+
+
+        if($request->filled('valide')){
+            $receptions->where('etat','Validé');
+        }
+
+        if($request->filled('envoyer')){
+            $receptions->where('etat','Envoyé');
+        }
+
+        if(!Gate::denies('ramassage-commande')) {
+            if($request->filled('client')){
+                $receptions->where('user_id',$request->client);
+            }
+            $total = $receptions->count();
+
+            $receptions = $receptions->paginate(10);
+            foreach($receptions as $reception){
+                if(!empty(User::find($reception->user_id)))
+                $users[] =  User::find($reception->user_id) ;
+            }
+            //dd($clients[0]->id);
+        }
+        else{
+            $receptions = $receptions->where('user_id',Auth::user()->id )->paginate(10);
+            $total =DB::table('receptions')->where('user_id',Auth::user()->id )->count();
+            $produits= DB::table('produits')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->get();
+
+        }
+
+        $details = [];
+
+        //dd($receptions);
+        foreach($receptions as $index => $recep){
+            $reception_produits = DB::table('reception_produits')->where('reception_id',$recep->id)->get();
+            //dd($reception_produits);
+
+            foreach($reception_produits as $recet){
+                //dd($recet->produit_id);
+                 $produit =DB::table('produits')->where('id',$recet->produit_id)->get();
+                 //dd($produit);
+                 $details[$index][] = array("produit" => $produit[0] ,
+                                            "qte"=>$recet->qte    
+                                            );
+            }
+        }
+
+        return view('reception.index' , [
+            'produits' => $produits, 
+            'receptions' => $receptions, 
+            'total'=>$total,
+            'users'=>$users,
+            'details'=>$details,
+            'clients' => $clients
+               ]);
+    }
+
 
  
 
@@ -165,6 +233,8 @@ class ReceptionController extends Controller
 
     }
 
+
+
     public function valide(Request $request, $id)
     {
         if(!Gate::denies('manage-users')){
@@ -179,6 +249,7 @@ class ReceptionController extends Controller
                     $stock = Stock::findOrFail($stock->id);
                     $stock->qte += $reception_produit->qte ;
                     $stock->cmd -= $reception_produit->qte ;
+                    $stock->etat = "Apro";
                     $stock->save();
                 }
                 //dd($reception_produits[0]);

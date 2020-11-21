@@ -35,6 +35,7 @@ class ProduitController extends Controller
      */
     public function index()
     {
+        $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['ecom']);})->get();
         $users = [] ;
         $stock = [];
         if(!Gate::denies('ramassage-commande')) {
@@ -60,8 +61,60 @@ class ProduitController extends Controller
         return view('produit.index' , ['produits' => $produits, 
                                     'total'=>$total,
                                     'users'=> $users,
+                                    'clients' =>$clients,
                                     'stock'=>$stock]);
     }
+
+
+
+
+    public function filter(Request $request){
+       
+        $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['ecom']);})->get();
+        $produits= DB::table('produits')->orderBy('created_at', 'DESC');
+        $users = [] ;
+        $stock = [];
+
+
+
+        if($request->filled('categorie') && $request->categorie != "Tous"){
+            $produits->where('categorie',$request->categorie);
+        }
+
+        if(!Gate::denies('ramassage-commande')) {
+            if($request->filled('client')){
+                $produits->where('user_id',$request->client);
+            }
+            $total = $produits->count();
+
+            $produits = $produits->paginate(10);
+            foreach($produits as $produit){
+                if(!empty(User::find($produit->user_id)))
+                $users[] =  User::find($produit->user_id) ;
+            }
+            //dd($clients[0]->id);
+        }
+        else{
+            $produits = $produits->where('user_id',Auth::user()->id )->paginate(10);
+            $total =DB::table('produits')->where('user_id',Auth::user()->id )->count();
+
+        }
+
+            foreach($produits as $produit){
+                $dbStock = DB::table('stocks')->where('produit_id',$produit->id)->first();
+                $stock[] =  $dbStock ;
+        } 
+        
+
+   
+
+        return view('produit.index' , ['produits' => $produits, 
+                                    'total'=>$total,
+                                    'users'=> $users,
+                                    'clients' =>$clients,
+                                    'stock'=>$stock]);
+    }
+
 
     /**
      * Show the form for creating a new resource.

@@ -5,6 +5,64 @@
 @endsection
 
 @section('content')
+<div class="container my-4">    
+    <div class="modal fade" id="modalReceptionSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header text-center">
+                          <h4 class="modal-title w-100 font-weight-bold">Rechercher sur les receptions</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <form class="form-horizontal form-material" method="GET" action="{{route('reception.filter')}}">
+                                @csrf
+                                @can('ramassage-commande')
+                                <div class="form-group row">
+                                    <label for="client" class="col-sm-4">Fournisseur :</label>
+                                    <div class="col-sm-8">
+                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
+                                            <option value="" disabled selected>Choisissez le fournisseur</option>
+                                            @foreach ($clients as $client)
+                                        <option value="{{$client->id}}" class="rounded-circle">
+                                            {{$client->name}}
+                                        </option>
+                                            @endforeach
+                                           
+                                        </select>
+                                        
+                                    </div>
+                                </div>
+                               
+                                @endcan
+
+
+                                  <div class="from-group row">
+                                      <label for="envoyer" class="col-sm-3">Envoyée</label>
+                                      <div class="col-3">
+                                        <input class="form-control" name="envoyer" type="checkbox" value="1" id="envoyer">
+                                      </div>
+                                      <label for="valide" class="col-sm-3">Validée</label>
+                                      <div class="col-3">
+                                        <input class="form-control" name="valide" type="checkbox" value="1" id="valide">
+                                      </div>
+                                  </div>
+                                
+                                <div class="form-group">
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-warning"><i class="fa fa-search"></i> Rechercher</button>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+            
+                      </div>
+                    </div>
+    </div>
+</div>
 <div class="page-breadcrumb">
     <div class="row align-items-center">
         <div class="col-5">
@@ -21,9 +79,11 @@
         <div class="col-7">
         <div class="row float-right d-flex ">
             <div class=m-r-5" style="margin-right: 10px;">
-                <a  class="btn btn-warning text-white"  data-toggle="modal" data-target="#modalStockSearch"><i class="fa fa-search"></i></a>
+                <a  class="btn btn-warning text-white"  data-toggle="modal" data-target="#modalReceptionSearch"><i class="fa fa-search"></i></a>
             </div>
-            @can('gestion-stock')
+          
+            
+            @can('ecom')
             <div class="m-r-5">
                 <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalReception"><i class="fa fa-plus-square"></i> Envoyer</a>
             </div>

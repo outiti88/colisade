@@ -18,6 +18,12 @@ Route::get('/search', 'CommandeController@search')->name('commande.search')->mid
 
 Route::get('/commandes/filter', 'CommandeController@filter')->name('commande.filter')->middleware('can:valide');
 
+Route::get('/receptions/filter', 'ReceptionController@filter')->name('reception.filter')->middleware('can:gestion-stock');
+
+Route::get('/stock/filter', 'ProduitController@filter')->name('stock.filter')->middleware('can:gestion-stock');
+
+
+
 Route::post('/commandes/{id}/relance', 'CommandeController@relancer')->name('commande.relancer')->middleware('can:ramassage-commande');
 
 Route::get('/user/new', 'Auth\RegisterController@nouveau')->name('user.nouveau');
@@ -61,7 +67,7 @@ Route::get('/bonlivraison/{id}/details','BonLivraisonController@search')->name('
 
 Route::resource('/facture','FactureController')->only([
     'index', 'store'
-])->middleware('can:manage-users');
+])->middleware('can:delete-commande');
 
 Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen')->middleware('can:manage-users');
 

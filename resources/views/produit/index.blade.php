@@ -5,6 +5,72 @@
 @endsection
 
 @section('content')
+
+<div class="container my-4">    
+    <div class="modal fade" id="modalStockSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header text-center">
+                          <h4 class="modal-title w-100 font-weight-bold">Rechercher sur les receptions</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <form class="form-horizontal form-material" method="GET" action="{{route('stock.filter')}}">
+                                @csrf
+                                @can('ramassage-commande')
+                                <div class="form-group row">
+                                    <label for="client" class="col-sm-4">Fournisseur :</label>
+                                    <div class="col-sm-8">
+                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
+                                            <option value="" disabled selected>Choisissez le fournisseur</option>
+                                            @foreach ($clients as $client)
+                                        <option value="{{$client->id}}" class="rounded-circle">
+                                            {{$client->name}}
+                                        </option>
+                                            @endforeach
+                                           
+                                        </select>
+                                        
+                                    </div>
+                                </div>
+                               
+                                @endcan
+
+
+                                  <div class="from-group row">
+                                    <label class="col-sm-4">Categorie :</label>
+                                    <div class="col-sm-8">
+                                        <select name="categorie" class="form-control form-control-line" >
+                                            <option >Tous</option>
+                                            <option >Vêtements</option>
+                                            <option >Chaussures</option>
+                                            <option >Bijoux et accessoires</option>
+                                            <option >Produits Cosmétiques</option>
+                                            <option >Produits High Tech</option>
+                                            <option >Librairie</option>
+                                            <option >Maroquinerie</option>
+                                            <option >Végétaux</option>
+                                            <option >Autres</option>
+                                        </select>
+                                    </div>
+                                  </div>
+                                
+                                <div class="form-group">
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-warning"><i class="fa fa-search"></i> Rechercher</button>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+            
+                      </div>
+                    </div>
+    </div>
+</div>
 <div class="page-breadcrumb">
     <div class="row align-items-center">
         <div class="col-5">
@@ -23,7 +89,7 @@
             <div class=m-r-5" style="margin-right: 10px;">
                 <a  class="btn btn-warning text-white"  data-toggle="modal" data-target="#modalStockSearch"><i class="fa fa-search"></i></a>
             </div>
-            @can('gestion-stock')
+            @can('ecom')
             <div class="m-r-5">
                 <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalStockAdd"><i class="fa fa-plus-square"></i> Ajouter</a>
             </div>
@@ -84,13 +150,41 @@
                             <td>{{$produit->libelle}}</td>
                             <td>{{$produit->categorie}}</td>
                             <td>{{$produit->prix}} MAD</td>
-                            <td>{{$stock[$index]->qte}}</td>
                             <td>
-                            <a href="{{route('reception.index')}}" style="color: white" 
-                                    class="badge badge-pill badge-danger">
-                                {{$stock[$index]->cmd}}
+                                @if ($stock[$index]->qte > 0)
+                                    
+                                <a href="{{route('reception.index')}}" style="color: white" 
+                                    class="badge badge-pill badge-success">
+                                    {{$stock[$index]->qte}}
                                 </a>
-                            </td>
+                                @else
+                                    @if ($stock[$index]->etat == 'Nouveau' )
+                                    <a href="{{route('reception.index')}}" style="color: white" 
+                                        class="badge badge-pill badge-primary">
+                                        Nouveau
+                                    </a> 
+                                    @else
+                                    <a href="{{route('reception.index')}}" style="color: white" 
+                                        class="badge badge-pill badge-danger">
+                                        RUPTURE
+                                    </a>
+                                    @endif
+                                @endif
+                                </td>
+                                <td>
+                                    @if ($stock[$index]->cmd > 0)
+                                        <a href="{{route('reception.index')}}" style="color: white" 
+                                            class="badge badge-pill badge-info">
+                                            {{$stock[$index]->cmd}}
+                                        </a>
+                                    @else
+                                    <a href="{{route('reception.index')}}" style="color: white" 
+                                            class="badge badge-pill badge-warning">
+                                            PAS DE RECEPTION
+                                        </a>
+                                    @endif
+                                
+                                </td>
                             
          
                            <td style="font-size: 1.5em">
