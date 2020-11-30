@@ -124,6 +124,12 @@ Relances
 @section('content')
 
 <div class="container-fluid">
+    @if (session()->has('relance'))
+            <div class="alert alert-dismissible alert-success col-12">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Succés !</strong> Vous avez relancé la commande {{session()->get('relance')}}</a>.
+              </div>
+            @endif
     <div class="container emp-profile">
         <div class="row">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -148,8 +154,8 @@ Relances
                 <div class="tab-pane fade show active" id="vip" role="tabpanel" aria-labelledby="vip-tab">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Relances 1 </h4>
-                            <h6 class="card-subtitle">Vous pouvez <code>Relancer</code> tous ces commandes deux fois de plus.</h6>
+                            <h4 class="card-title">Commandes non relancées </h4>
+                            <h6 class="card-subtitle">Vous pouvez <code>Relancer</code> tous ces commandes trois fois.</h6>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped">
@@ -173,13 +179,74 @@ Relances
                                                 <img src="{{$commande->image}}" alt="user" class="rounded-circle" width="31">
                                             </a>
                                         </th>
-                                        <td>{{$commande->numero}}</td>
+                                        <td><a href="/commandes/{{$commande->id}}">{{$commande->numero}} </a></td>
                                         <td>{{$commande->nom}}</td>
                                         <td>{{$commande->telephone}}</td>
                                         <td>{{$commande->ville}}</td>
                                         <td>{{$commande->created_at}}</td>
                                         <td>{{$commande->statut}}</td>
+                                    <td><a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#RelanceVIP{{$index}}"><i class="fas fa-bullhorn"></i> Relancer</a>
+                                        </td>
+
                                     </tr>
+                                    <div class="container my-4">    
+                                        <div class="modal fade" id="RelanceVIP{{$index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                          <div class="modal-content">
+                                                            <div class="modal-header text-center">
+                                                              <h4 class="modal-title w-100 font-weight-bold">Relancer la commande {{$commande->numero}}</h4>
+                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="modal-body mx-3">
+                                                                <form class="form-horizontal form-material" method="POST" action="{{route('relance.relancer',['id' => $commande->id])}}">
+                                                                    @csrf
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12">Statut :</label>
+                                                                        <div class="col-sm-12">
+                                                                            <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
+                                                                                <option>Livré</option>
+                                                                                <option>Injoignable</option>
+                                                                                <option>Refusée</option>
+                                                                                <option>Retour Complet</option>
+                                                                                <option>Retour Partiel</option>
+                                                                                <option>Reporté</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12">Commentaire :</label>
+                                                                        <div class="col-sm-12">
+                                                                            <textarea  name="comment" rows="5" class="form-control form-control-line">{{ old('comment') }}</textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <div class="modal-footer d-flex justify-content-center">
+                                                                            <button class="btn btn-warning">Relancer</button>
+                                                                            
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                @if ($errors->any())
+                                                                <div class="alert alert-dismissible alert-danger">
+                                                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                    <ul>
+                                                                        @foreach ($errors->all() as $error)
+                                                                            <li>
+                                                                            <strong>{{$error}}</strong>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                  </div>
+                                                                  @endif
+                                                            </div>
+                                                
+                                                          </div>
+                                                        </div>
+                                        </div>
+                                    </div>
                                     @empty
                                     <tr>
                                         <td colspan="10" style="text-align: center">Aucune commande enregistrée!</td>
@@ -194,57 +261,331 @@ Relances
                 </div>
                 
                 <div class="tab-pane fade" id="relance1" role="tabpanel" aria-labelledby="relance1-tab">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Relances 1 </h4>
-                                <h6 class="card-subtitle">Vous pouvez <code>Relancer</code> tous ces commandes deux fois de plus.</h6>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Client</th>
-                                            <th scope="col">Numero commande</th>
-                                            <th scope="col">Nom Complet</th>
-                                            <th scope="col">Téléphone</th>
-                                            <th scope="col">Ville</th>
-                                            <th scope="col">Date</th>
-                                            <th scope="col">Statut</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse ($relance1 as $index => $commande)
-                                        <tr>
-                                            <th scope="row">
-                                                <a class=" text-muted waves-effect waves-dark pro-pic vip" >
-                                                    <img src="{{$commande->image}}" href="{{route('admin.users.edit',$commande->user_id)}}" alt="user" class="rounded-circle" width="31">
-                                                </a>
-                                            </th>
-                                            <td>{{$commande->numero}}</td>
-                                            <td>{{$commande->nom}}</td>
-                                            <td>{{$commande->telephone}}</td>
-                                            <td>{{$commande->ville}}</td>
-                                            <td>{{$commande->created_at}}</td>
-                                            <td>{{$commande->statut}}</td>
-                                        </tr>
-                                        @empty
-                                        <tr>
-                                            <td colspan="10" style="text-align: center">Aucune commande enregistrée!</td>
-                                        </tr>
-                                        
-                                        @endforelse
-                                     
-                                    </tbody>
-                                </table>
-                            </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Commandes relancées une fois </h4>
+                            <h6 class="card-subtitle">Vous pouvez <code>Relancer</code> tous ces commandes trois fois de plus.</h6>
                         </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Client</th>
+                                        <th scope="col">Numero commande</th>
+                                        <th scope="col">Nom Complet</th>
+                                        <th scope="col">Téléphone</th>
+                                        <th scope="col">Ville</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Statut</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($relance1 as $index => $commande)
+                                    <tr>
+                                        <th scope="row">
+                                            <a class=" text-muted waves-effect waves-dark pro-pic vip" >
+                                                <img src="{{$commande->image}}" alt="user" class="rounded-circle" width="31">
+                                            </a>
+                                        </th>
+                                        <td><a href="/commandes/{{$commande->id}}">{{$commande->numero}} </a></td>
+                                        <td>{{$commande->nom}}</td>
+                                        <td>{{$commande->telephone}}</td>
+                                        <td>{{$commande->ville}}</td>
+                                        <td>{{$commande->created_at}}</td>
+                                        <td>{{$commande->statut}}</td>
+                                        <td><a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#Relance1{{$index}}"><i class="fas fa-bullhorn"></i> Relancer</a>
+                                        </td>
+
+                                    </tr>
+                                    <div class="container my-4">    
+                                        <div class="modal fade" id="Relance1{{$index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                          <div class="modal-content">
+                                                            <div class="modal-header text-center">
+                                                            <h4 class="modal-title w-100 font-weight-bold">Relancer la commande {{$commande->numero}}</h4>
+                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="modal-body mx-3">
+                                                                <form class="form-horizontal form-material" method="POST" action="{{route('relance.relancer',['id' => $commande->id])}}">
+                                                                    @csrf
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12">Statut :</label>
+                                                                        <div class="col-sm-12">
+                                                                            <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
+                                                                                <option>Livré</option>
+                                                                                <option>Injoignable</option>
+                                                                                <option>Refusée</option>
+                                                                                <option>Retour Complet</option>
+                                                                                <option>Retour Partiel</option>
+                                                                                <option>Reporté</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12">Commentaire :</label>
+                                                                        <div class="col-sm-12">
+                                                                            <textarea  name="comment" rows="5" class="form-control form-control-line">{{ old('comment') }}</textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <div class="modal-footer d-flex justify-content-center">
+                                                                            <button class="btn btn-warning">Relancer</button>
+                                                                            
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                @if ($errors->any())
+                                                                <div class="alert alert-dismissible alert-danger">
+                                                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                    <ul>
+                                                                        @foreach ($errors->all() as $error)
+                                                                            <li>
+                                                                            <strong>{{$error}}</strong>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                  </div>
+                                                                  @endif
+                                                            </div>
+                                                
+                                                          </div>
+                                                        </div>
+                                        </div>
+                                    </div>
+                                    @empty
+                                    <tr>
+                                        <td colspan="10" style="text-align: center">Aucune commande enregistrée!</td>
+                                    </tr>
+                                    
+                                    @endforelse
+                                 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="tab-pane fade" id="relance2" role="tabpanel" aria-labelledby="relance2-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Commandes relancées deux fois </h4>
+                            <h6 class="card-subtitle">Vous pouvez <code>Relancer</code> tous ces commandes deux fois de plus.</h6>
+                         </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Client</th>
+                                        <th scope="col">Numero commande</th>
+                                        <th scope="col">Nom Complet</th>
+                                        <th scope="col">Téléphone</th>
+                                        <th scope="col">Ville</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Statut</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($relance2 as $index => $commande)
+                                    <tr>
+                                        <th scope="row">
+                                            <a class=" text-muted waves-effect waves-dark pro-pic vip" >
+                                                <img src="{{$commande->image}}" alt="user" class="rounded-circle" width="31">
+                                            </a>
+                                        </th>
+                                        <td><a href="/commandes/{{$commande->id}}">{{$commande->numero}} </a></td>
+                                        <td>{{$commande->nom}}</td>
+                                        <td>{{$commande->telephone}}</td>
+                                        <td>{{$commande->ville}}</td>
+                                        <td>{{$commande->created_at}}</td>
+                                        <td>{{$commande->statut}}</td>
+                                        <td><a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#Relance2{{$index}}"><i class="fas fa-bullhorn"></i> Relancer</a>
+                                        </td>
+
+                                    </tr>
+                                    <div class="container my-4">    
+                                        <div class="modal fade" id="Relance2{{$index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                          <div class="modal-content">
+                                                            <div class="modal-header text-center">
+                                                              <h4 class="modal-title w-100 font-weight-bold">Relancer la commande {{$commande->numero}} </h4>
+                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="modal-body mx-3">
+                                                                <form class="form-horizontal form-material" method="POST" action="{{route('relance.relancer',['id' => $commande->id])}}">
+                                                                    @csrf
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12">Statut :</label>
+                                                                        <div class="col-sm-12">
+                                                                            <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
+                                                                                <option>Livré</option>
+                                                                                <option>Injoignable</option>
+                                                                                <option>Refusée</option>
+                                                                                <option>Retour Complet</option>
+                                                                                <option>Retour Partiel</option>
+                                                                                <option>Reporté</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12">Commentaire :</label>
+                                                                        <div class="col-sm-12">
+                                                                            <textarea  name="comment" rows="5" class="form-control form-control-line">{{ old('comment') }}</textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <div class="modal-footer d-flex justify-content-center">
+                                                                            <button class="btn btn-warning">Relancer</button>
+                                                                            
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                @if ($errors->any())
+                                                                <div class="alert alert-dismissible alert-danger">
+                                                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                    <ul>
+                                                                        @foreach ($errors->all() as $error)
+                                                                            <li>
+                                                                            <strong>{{$error}}</strong>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                  </div>
+                                                                  @endif
+                                                            </div>
+                                                
+                                                          </div>
+                                                        </div>
+                                        </div>
+                                    </div>
+                                    @empty
+                                    <tr>
+                                        <td colspan="10" style="text-align: center">Aucune commande enregistrée!</td>
+                                    </tr>
+                                    
+                                    @endforelse
+                                 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="relance3" role="tabpanel" aria-labelledby="relance3-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Commandes relancées trois fois </h4>
+                            <h6 class="card-subtitle">Vous pouvez <code>Relancer</code> tous ces commandes pour une dernière fois.</h6>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Client</th>
+                                        <th scope="col">Numero commande</th>
+                                        <th scope="col">Nom Complet</th>
+                                        <th scope="col">Téléphone</th>
+                                        <th scope="col">Ville</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Statut</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($relance3 as $index => $commande)
+                                    <tr>
+                                        <th scope="row">
+                                            <a class=" text-muted waves-effect waves-dark pro-pic vip" >
+                                                <img src="{{$commande->image}}" alt="user" class="rounded-circle" width="31">
+                                            </a>
+                                        </th>
+                                        <td><a href="/commandes/{{$commande->id}}">{{$commande->numero}} </a></td>
+                                        <td>{{$commande->nom}}</td>
+                                        <td>{{$commande->telephone}}</td>
+                                        <td>{{$commande->ville}}</td>
+                                        <td>{{$commande->created_at}}</td>
+                                        <td>{{$commande->statut}}</td>
+                                        <td><a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#Relance3{{$index}}"><i class="fas fa-bullhorn"></i> Relancer</a>
+                                        </td>
+
+                                    </tr>
+                                    <div class="container my-4">    
+                                        <div class="modal fade" id="Relance3{{$index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                          <div class="modal-content">
+                                                            <div class="modal-header text-center">
+                                                              <h4 class="modal-title w-100 font-weight-bold">Relancer la commande {{$commande->numero}} </h4>
+                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                              </button>
+                                                            </div>
+                                                            <div class="modal-body mx-3">
+                                                                <form class="form-horizontal form-material" method="POST" action="{{route('relance.relancer',['id' => $commande->id])}}">
+                                                                    @csrf
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12">Statut :</label>
+                                                                        <div class="col-sm-12">
+                                                                            <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
+                                                                                <option>Livré</option>
+                                                                                <option>Injoignable</option>
+                                                                                <option>Refusée</option>
+                                                                                <option>Retour Complet</option>
+                                                                                <option>Retour Partiel</option>
+                                                                                <option>Reporté</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-12">Commentaire :</label>
+                                                                        <div class="col-sm-12">
+                                                                            <textarea  name="comment" rows="5" class="form-control form-control-line">{{ old('comment') }}</textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <div class="modal-footer d-flex justify-content-center">
+                                                                            <button class="btn btn-warning">Relancer</button>
+                                                                            
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                @if ($errors->any())
+                                                                <div class="alert alert-dismissible alert-danger">
+                                                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                    <ul>
+                                                                        @foreach ($errors->all() as $error)
+                                                                            <li>
+                                                                            <strong>{{$error}}</strong>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                  </div>
+                                                                  @endif
+                                                            </div>
+                                                
+                                                          </div>
+                                                        </div>
+                                        </div>
+                                    </div>
+                                    @empty
+                                    <tr>
+                                        <td colspan="10" style="text-align: center">Aucune commande enregistrée!</td>
+                                    </tr>
+                                    
+                                    @endforelse
+                                 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
                 </div>
-                <div class="tab-pane fade" id="relance3" role="tabpanel" aria-labelledby="relance3-tab">Relance 3</div>
             </div>
         </div>
     </div>

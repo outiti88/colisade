@@ -29,6 +29,8 @@ class BonLivraisonController extends Controller
      */
     public function index()
     {
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
         $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','Ramassée')->where('traiter','0')->count();
         $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','envoyée')->where('traiter','0')->count();
 
@@ -49,7 +51,7 @@ class BonLivraisonController extends Controller
         }
         $total = $bonLivraisons->count();
         //dd($users);
-        return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
+        return view('bonLivraison',['nouveau'=>$nouveau,'bonLivraisons'=>$bonLivraisons ,
                                         'total' => $total,
                                          'users'=> $users,
                                          'clients' => $clients,
@@ -293,6 +295,8 @@ class BonLivraisonController extends Controller
 
     public function search($id){
          //dd(Auth::user()->id );
+         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
          $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
          $produits = [];
          $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
@@ -329,7 +333,7 @@ class BonLivraisonController extends Controller
                  $users[] =  User::find($commande->user_id) ;
              }
          //$commandes = Commande::all()->paginate(3) ;
-         return view('commande.colis',['commandes' => $commandes, 
+         return view('commande.colis',['nouveau'=>$nouveau,'commandes' => $commandes, 
                                      'total'=>$total,
                                      'users'=> $users,
                                      'clients' => $clients,
@@ -341,6 +345,7 @@ class BonLivraisonController extends Controller
     public function infos($id){
         $clients = [];  
         $id_bon = $id;
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
         if(!Gate::denies('ramassage-commande')) {
             $bonLivraisons = DB::table('bon_livraisons')->where('id',$id_bon)->get();
@@ -361,7 +366,7 @@ class BonLivraisonController extends Controller
             $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','Ramassée')->where('traiter','0')->count();
             $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','envoyée')->where('traiter','0')->count();
     
-            return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
+            return view('bonLivraison',['nouveau'=>$nouveau,'bonLivraisons'=>$bonLivraisons ,
                                     'total' => $total,
                                      'users'=> $users,
                                      'clients' => $clients,

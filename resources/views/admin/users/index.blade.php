@@ -91,12 +91,47 @@
                                     <a href="{{route('admin.users.edit',$user->id)}}">
                                        <button class="btn btn-primary float-lef"><i class="mdi mdi-account-edit"></i></button>
                                    </a>
+                                <a class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#FormDelete{{$user->id}}"><i class="fas fa-trash-alt"></i></a>
+                               
+                                <div class="modal fade" id="FormDelete{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer cet utilisateur ?</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>
+                                                Nom Complet: {{$user->name}}
+                                            </h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                Cliquez sur <b>Ok</b> pour confirmer ou <b>fermer</b> pour annuler la suppression
+
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                  <span aria-hidden="true">&times;</span>
+                                                </button>
+                                              </div>
+                                          </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                          
+                                            <form action="{{route('admin.users.destroy',$user->id)}}" method="POST" class="float-left">
+                                                @csrf
+                                                @method("DELETE")
+                                                <button type="submit" class="btn btn-danger text-white m-r-5">Ok</button> 
+                                            </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+
                                    <a href="{{route('admin.users.destroy',$user->id)}}">
-                                       <form action="{{route('admin.users.destroy',$user->id)}}" method="POST" class="float-left">
-                                           @csrf
-                                           @method("DELETE")
-                                           <button class="btn btn-warning"><i class="mdi mdi-delete"></i></button>
-                                       </form>
+                                       
                                        
                                    </a>
                                </td>

@@ -29,9 +29,11 @@ class UsersController extends Controller
      */
     public function index()
     {
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
         $users = User::all();
         //dd($users);
-        return view('admin.users.index')->with('users',$users);
+        return view('admin.users.index')->with(['users'=>$users,'nouveau'=>$nouveau]);
     }
 
   
@@ -44,6 +46,8 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
         if(Gate::denies('edit-users')){
             return redirect(route('admin.users.index'));
         }
@@ -51,6 +55,7 @@ class UsersController extends Controller
         $roles = Role::all();
         //dd($user->roles()->get()->pluck('name')->toArray());
         return view('admin.users.edit')->with([
+            'nouveau'=>$nouveau,
             'user'=>$user,
             'roles'=>$roles
         ]);

@@ -35,6 +35,8 @@ class ProduitController extends Controller
      */
     public function index()
     {
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['ecom']);})->get();
         $users = [] ;
         $stock = [];
@@ -58,7 +60,7 @@ class ProduitController extends Controller
             $stock[] =  $dbStock ;
         }
 
-        return view('produit.index' , ['produits' => $produits, 
+        return view('produit.index' , ['produits' => $produits, 'nouveau'=>$nouveau,
                                     'total'=>$total,
                                     'users'=> $users,
                                     'clients' =>$clients,
@@ -74,6 +76,7 @@ class ProduitController extends Controller
         $produits= DB::table('produits')->orderBy('created_at', 'DESC');
         $users = [] ;
         $stock = [];
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
 
 
@@ -108,7 +111,7 @@ class ProduitController extends Controller
 
    
 
-        return view('produit.index' , ['produits' => $produits, 
+        return view('produit.index' , ['nouveau'=>$nouveau,'produits' => $produits, 
                                     'total'=>$total,
                                     'users'=> $users,
                                     'clients' =>$clients,
@@ -181,13 +184,14 @@ class ProduitController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Produit $produit)
-    {
+    {        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
         if(Gate::denies('ramassage-commande')){
             if($produit->user_id !== Auth::user()->id)
             return redirect()->route('produit.index');
         }
         $stock = DB::table('stocks')->where('produit_id',$produit->id)->first();
-        return view('produit.show', ['produit'=>$produit ,
+        return view('produit.show', ['nouveau'=>$nouveau,'produit'=>$produit ,
                                     'stock' =>$stock
                                     ]);
     }

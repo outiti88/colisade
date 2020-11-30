@@ -127,8 +127,8 @@
                         <label for="roles" class="col-md-2 col-form-label text-md-right">Service : </label>
                         <div class="col-md-10 d-flex p-t-10 justify-content-around">
                             <div class="form-check">
-                                <input type="radio" name="roles[]" value="6" id="cl" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "nouveau") checked @endif>
-                                <label for="cl">Nouveau</label>
+                                <input type="radio" name="roles[]" value="6" id="nv" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "nouveau") checked @endif>
+                                <label for="nv">Nouveau</label>
                             </div>
                         <div class="form-check">
                             <input type="radio" name="roles[]" value="2" id="cl" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "client") checked @endif>

@@ -24,7 +24,7 @@ Route::get('/stock/filter', 'ProduitController@filter')->name('stock.filter')->m
 
 
 
-Route::post('/commandes/{id}/relance', 'CommandeController@relancer')->name('commande.relancer')->middleware('can:ramassage-commande');
+Route::post('/commandes/{id}/relance', 'RelanceController@relancer')->name('relance.relancer')->middleware('can:ramassage-commande');
 
 Route::get('/user/new', 'Auth\RegisterController@nouveau')->name('user.nouveau');
 
@@ -60,7 +60,7 @@ Route::resource('/bonlivraison','BonLivraisonController')->only([
 ])->middleware('can:valide');
 
 Route::resource('/Relance','RelanceController')->only([
-    'index', 'store'
+    'index', 'edit'
 ])->middleware('can:manage-users');
 
 Route::get('/bonlivraison/{id}/infos','BonLivraisonController@infos')->name('bon.infos')->middleware('can:valide');

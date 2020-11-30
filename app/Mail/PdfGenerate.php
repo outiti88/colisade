@@ -38,7 +38,7 @@ class PdfGenerate extends Mailable
             return $this->subject('Facture générée')->view('emails.PdfGenerate');
         }
         if($this->motif === "register"){
-            return $this->subject('Bienvenue chez Quickoo Delivery')->view('emails.register');
+            return $this->subject('Bienvenue chez Colisade Delivery')->view('emails.register');
         }
     }
 }

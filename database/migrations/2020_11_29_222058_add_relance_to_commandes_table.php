@@ -17,7 +17,6 @@ class AddRelanceToCommandesTable extends Migration
             $table->integer('relance')->nullable();
         });
     }
-
     /**
      * Reverse the migrations.
      *

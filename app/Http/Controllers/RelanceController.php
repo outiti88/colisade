@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Commande;
+use App\Relance;
+use App\Statut;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+
 use Illuminate\Support\Facades\DB;
 
 class RelanceController extends Controller
@@ -28,46 +34,80 @@ class RelanceController extends Controller
      */
     public function index()
     {
-        $all = DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','>=','0')
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
+
+        $all = DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','>=','0')->where('commandes.statut','not like', "%Livré%")
             ->join('users', 'users.id', '=', 'commandes.user_id')
-            ->select('commandes.*','users.*')
+            ->select('commandes.*','users.image')
             ->whereNotNull('users.statut')
             ->orderBy('commandes.updated_at', 'DESC')->get();
 
 
-        $vip =  DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','0')
+        $vip =  DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','0')->where('commandes.statut','not like', "%Livré%")
         ->join('users', 'users.id', '=', 'commandes.user_id')
         ->select('commandes.*','users.image')
         ->whereNotNull('users.statut')
         ->orderBy('commandes.updated_at', 'DESC')->get();
             
-         //dd($vip);
 
-        $relance1 = DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','1')
+        $relance1 = DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','1')->where('commandes.statut','not like', "%Livré%")
         ->join('users', 'users.id', '=', 'commandes.user_id')
         ->select('commandes.*','users.image')
         ->whereNotNull('users.statut')
         ->orderBy('commandes.updated_at', 'DESC')->get();
 
-        $relance2 = $relance1 = DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','2')
+
+
+        $relance2 =  DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','2')->where('commandes.statut','not like', "%Livré%")
         ->join('users', 'users.id', '=', 'commandes.user_id')
-        ->select('commandes.*','users.*')
+        ->select('commandes.*','users.image')
         ->whereNotNull('users.statut')
         ->orderBy('commandes.updated_at', 'DESC')->get();
 
-        $relance3 = $relance1 = DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','3')
+        //dd($relance2);
+
+
+        $relance3 =  DB::table('commandes')->where('commandes.deleted_at',NULL)->where('commandes.relance','3')->where('commandes.statut','not like', "%Livré%")
         ->join('users', 'users.id', '=', 'commandes.user_id')
-            ->select('commandes.*','users.*')
+        ->select('commandes.*','users.image')
             ->whereNotNull('users.statut')
             ->orderBy('commandes.updated_at', 'DESC')->get();
 
 
-        return view('relance',['all'=>$all,
+        return view('relance',['all'=>$all,'nouveau'=>$nouveau,
                                 'vip'=>$vip ,
                                 'relance1' => $relance1,
                                 'relance2'=> $relance2,
                                 'relance3' => $relance3
                                 ]);
+    }
+
+    public function relancer(Request $request, $id){
+        
+        if(!Gate::denies('ramassage-commande')) {
+            $commande = Commande::findOrFail($id);
+            if($commande->relance >=0 && $commande->relance < 4){
+                $statut = new Statut();
+                $statut->commande_id = $commande->id;
+                $statut->name = $request->statut;
+                if($commande->relance == 4 && $request->statut != "Livré") $commande->statut = "Annulée";
+                $statut->user()->associate(Auth::user())->save();
+                $commande->statut = $request->statut;
+                $commande->relance++;
+                
+                $commande->save();
+                $relance = new Relance();
+            $relance->commande_id = $commande->id;
+            $relance->comment = $request->comment;
+            $relance->user()->associate(Auth::user())->save();
+            $request->session()->flash('relance', $commande->numero);
+
+            }
+        
+        }
+
+        return back();
     }
 
     /**

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 class NotificationController extends Controller
 {
     public function index(){
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
 
         if(!Gate::denies('ramassage-commande')){
            
@@ -25,6 +27,7 @@ class NotificationController extends Controller
         }
 
         return view('inbox' , [
+            'nouveau'=>$nouveau,
             'notifications' => $notifications
         ]);
     }

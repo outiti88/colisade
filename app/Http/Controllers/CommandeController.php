@@ -45,6 +45,7 @@ class CommandeController extends Controller
         //dd(Auth::user()->id );
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
         $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
         $users = [] ;
         $produits = [];
@@ -86,7 +87,7 @@ class CommandeController extends Controller
                 $users[] =  User::find($commande->user_id) ;
             }
         //$commandes = Commande::all()->paginate(3) ;
-        return view('commande.colis',['commandes' => $commandes, 
+        return view('commande.colis',['nouveau'=>$nouveau,'commandes' => $commandes, 
                                     'total'=>$total,
                                     'users'=> $users,
                                     'clients' => $clients,
@@ -100,6 +101,7 @@ class CommandeController extends Controller
         $commandes = DB::table('commandes')->where('deleted_at',NULL);
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
         $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
         $users = [];
         $produits = [];
@@ -173,6 +175,7 @@ class CommandeController extends Controller
 
 
         return view('commande.colis',['commandes' => $commandes, 
+        'nouveau'=>$nouveau,
             'total'=>$total,
             'users'=> $users,
             'clients' => $clients,
@@ -185,6 +188,7 @@ class CommandeController extends Controller
 
 
     public function search(Request $request ) {
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
         if(strcmp(substr($request->search,-strlen($request->search),4) , "FAC_") == 0){  
             $clients = [];  
@@ -205,7 +209,7 @@ class CommandeController extends Controller
             }
             if($total > 0){
                 //dd($factures);
-                return view('facture',['factures'=>$factures ,
+                return view('facture',['factures'=>$factures ,'nouveau'=>$nouveau,
                                         'total' => $total,
                                          'users'=> $users,
                                          'clients' => $clients]);
@@ -240,7 +244,7 @@ class CommandeController extends Controller
                 $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','Rammasée')->where('traiter','0')->count();
                 $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','envoyée')->where('traiter','0')->count();
         
-                return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
+                return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,'nouveau'=>$nouveau,
                                         'total' => $total,
                                          'users'=> $users,
                                          'clients' => $clients,
@@ -295,7 +299,7 @@ class CommandeController extends Controller
             $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
 
             $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();  
-            return view('commande.colis',['commandes' => $commandes, 
+            return view('commande.colis',['commandes' => $commandes, 'nouveau'=> $nouveau,
             'total'=>$total,
             'users'=> $users,
             'clients' => $clients,
@@ -444,6 +448,8 @@ class CommandeController extends Controller
      */
     public function show(Commande $commande)
     {
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
 
         if(!Gate::denies('livreur')){
             if($commande->ville!== Auth::user()->ville)
@@ -475,7 +481,7 @@ class CommandeController extends Controller
             foreach($liaisons as $produit){
             $produits[] = Produit::find($produit->produit_id);
         }
-        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 
+        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 'nouveau'=>$nouveau,
                                     'par' => $users,
                                     'produits' => $produits,
                                     'liaisons' => $liaisons,
@@ -486,7 +492,7 @@ class CommandeController extends Controller
 
         }   
         //dd($users);
-        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 
+        return view('commande.show', ['commande'=>$commande , 'statuts' => $statuts , 'nouveau'=>$nouveau,
                                     'par' => $users,
                                     'relances' => $relances,
                                     'Rpar' => $Rpar,

@@ -25,10 +25,11 @@ class ProfilController extends Controller
 
     public function index(){
         $user = Auth::user();
-        
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
         $total =DB::table('commandes')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->count();
         $facture = DB::table('factures')->where('user_id',Auth::user()->id )->count();
-        return view('profil')->with(['user'=> $user , 'total' => $total , 'facture' => $facture]);
+        return view('profil')->with(['nouveau'=>$nouveau,'user'=> $user , 'total' => $total , 'facture' => $facture]);
     }
 
     /**

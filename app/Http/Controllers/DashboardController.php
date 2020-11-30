@@ -28,6 +28,7 @@ class DashboardController extends Controller
         if(!Gate::denies('nouveau') || Gate::denies('valide')){
             return redirect()->route('home');            
         }
+        if( !Gate::denies('livreur') ) return redirect()->route('commandes.index'); 
 
     /*    if(!Gate::denies('ramassage-commande')) {
             $factures = DB::table('factures')->where('numero','like','%'.$request->search.'%')->get();
@@ -38,6 +39,10 @@ class DashboardController extends Controller
 
         }*/
         $users = [];
+
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
+//dd($nouveau);
         $c_total = DB::table('commandes')->where('statut','En cours')->where('deleted_at',NULL);
         $l_total = DB::table('commandes')->where('statut','livré')->where('deleted_at',NULL);
         $r_total = DB::table('commandes')->where('statut','like','retour%')->where('deleted_at',NULL);
@@ -129,7 +134,7 @@ class DashboardController extends Controller
            $livre=json_encode($chart['livre'],JSON_NUMERIC_CHECK);
            $retour=json_encode($chart['retour'],JSON_NUMERIC_CHECK);
 
-        return view('dashboard' , ['tab'=>$tab , 'livre'=>$livre , 'retour'=>$retour , 'topCmds' => $topCmd , 'users' => $users]);
+        return view('dashboard' , ['nouveau'=>$nouveau,'tab'=>$tab , 'livre'=>$livre , 'retour'=>$retour , 'topCmds' => $topCmd , 'users' => $users]);
         
     }
 }

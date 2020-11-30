@@ -31,6 +31,8 @@ class FactureController extends Controller
      */
     public function index()
     {
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
         $clients = []; //tableau des clients existe dans la base de données
         $users = []; //les users qui seront affichés avec leur bon de livraison
         if(!Gate::denies('manage-users')) {
@@ -46,7 +48,7 @@ class FactureController extends Controller
         }
         $total = $factures->count();
         //dd($users);
-        return view('facture',['factures'=>$factures ,
+        return view('facture',['nouveau'=>$nouveau,'factures'=>$factures ,
                                         'total' => $total,
                                          'users'=> $users,
                                          'clients' => $clients]);
@@ -283,6 +285,8 @@ class FactureController extends Controller
  
     public function search($id){
         //dd(Auth::user()->id );
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
         $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
 
@@ -321,7 +325,7 @@ class FactureController extends Controller
                 $users[] =  User::find($commande->user_id) ;
             }
         //$commandes = Commande::all()->paginate(3) ;
-        return view('commande.colis',['commandes' => $commandes, 
+        return view('commande.colis',['nouveau'=>$nouveau,'commandes' => $commandes, 
                                     'total'=>$total,
                                     'users'=> $users,
                                     'clients' => $clients,
@@ -330,6 +334,8 @@ class FactureController extends Controller
    }
 
    public function infos($id){
+    $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+
         $clients = [];  
         $users = []; 
         if(!Gate::denies('manage-users')) {
@@ -348,7 +354,7 @@ class FactureController extends Controller
         }
         if($total > 0){
             //dd($factures);
-            return view('facture',['factures'=>$factures ,
+            return view('facture',['nouveau'=>$nouveau,'factures'=>$factures ,
                                     'total' => $total,
                                     'users'=> $users,
                                     'clients' => $clients]);

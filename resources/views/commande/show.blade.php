@@ -144,55 +144,7 @@ N: {{$commande->numero}}
                     @can('ramassage-commande')
                     @if ($commande->statut === "En cours" && $commande->traiter != 0)
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
-                    @if ($Rtotal < 3)
-                    <a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormRelance"><i class="fas fa-bullhorn"></i> Relancer</a>
-                    @endif
-                    <div class="container my-4">    
-                        <div class="modal fade" id="modalSubscriptionFormRelance" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                          <div class="modal-content">
-                                            <div class="modal-header text-center">
-                                              <h4 class="modal-title w-100 font-weight-bold">Relancer la commande</h4>
-                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                              </button>
-                                            </div>
-                                            <div class="modal-body mx-3">
-                                                <form class="form-horizontal form-material" method="POST" action="{{route('commande.relancer',['id' => $commande->id])}}">
-                                                    @csrf
-                                                
-                                                    <div class="form-group">
-                                                        <label class="col-sm-12">Commentaire :</label>
-                                                        <div class="col-sm-12">
-                                                            <textarea  name="comment" rows="5" class="form-control form-control-line">{{ old('comment') }}</textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="modal-footer d-flex justify-content-center">
-                                                            <button class="btn btn-warning">Relancer</button>
-                                                            
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                                @if ($errors->any())
-                                                <div class="alert alert-dismissible alert-danger">
-                                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                                    <ul>
-                                                        @foreach ($errors->all() as $error)
-                                                            <li>
-                                                            <strong>{{$error}}</strong>
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                  </div>
-                                                  @endif
-                                            </div>
-                                
-                                          </div>
-                                        </div>
-                        </div>
-                    </div>
+                 
                     @endif
                     @endcan
                     @can('delete-commande')
@@ -260,12 +212,7 @@ N: {{$commande->numero}}
             <strong>Succés !</strong> La commande à été bien Modifiée </a>.
               </div>
             @endif
-            @if (session()->has('relance'))
-            <div class="alert alert-dismissible alert-success col-12">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Succés !</strong> Vous avez relancé la commande {{session()->get('relance')}}</a>.
-              </div>
-            @endif
+            
             @if (session()->has('edit'))
         <div class="alert alert-dismissible alert-info col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -906,7 +853,6 @@ N: {{$commande->numero}}
                                             <option>Livré</option>
                                             <option>Injoignable</option>
                                             <option>Refusée</option>
-                                            <option>Annulée</option>
                                             <option>Retour Complet</option>
                                             <option>Retour Partiel</option>
                                             <option>Reporté</option>

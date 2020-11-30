@@ -34,6 +34,7 @@ class ReceptionController extends Controller
     public function index()
     {
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['ecom']);})->get();
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
         $users = [] ;
         $produits= null ;
@@ -74,6 +75,7 @@ class ReceptionController extends Controller
         //dd($details);
 
         return view('reception.index' , [
+                                'nouveau'=>$nouveau,
                                 'produits' => $produits, 
                                 'receptions' => $receptions, 
                                 'total'=>$total,
@@ -89,6 +91,7 @@ class ReceptionController extends Controller
         $receptions= DB::table('receptions')->orderBy('created_at', 'DESC');
         $users = [] ;
         $produits= null ;
+        $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
 
         if($request->filled('valide')){
@@ -137,6 +140,7 @@ class ReceptionController extends Controller
         }
 
         return view('reception.index' , [
+            'nouveau'=>$nouveau,
             'produits' => $produits, 
             'receptions' => $receptions, 
             'total'=>$total,
