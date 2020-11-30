@@ -59,6 +59,10 @@ Route::resource('/bonlivraison','BonLivraisonController')->only([
     'index', 'store'
 ])->middleware('can:valide');
 
+Route::resource('/Relance','RelanceController')->only([
+    'index', 'store'
+])->middleware('can:manage-users');
+
 Route::get('/bonlivraison/{id}/infos','BonLivraisonController@infos')->name('bon.infos')->middleware('can:valide');
 
 Route::get('/bonlivraison/{id}/pdf','BonLivraisonController@gen')->name('bon.gen')->middleware('can:valide');

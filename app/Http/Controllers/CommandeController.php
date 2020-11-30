@@ -237,7 +237,7 @@ class CommandeController extends Controller
                 $users[] =  User::find($bonLivraison->user_id) ;
             }
             if($total > 0){
-                $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','en cours')->where('traiter','0')->count();
+                $ramasse = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','Rammasée')->where('traiter','0')->count();
                 $nonRammase = DB::table('commandes')->where('user_id',Auth::user()->id)->where('statut','envoyée')->where('traiter','0')->count();
         
                 return view('bonLivraison',['bonLivraisons'=>$bonLivraisons ,
@@ -734,27 +734,42 @@ class CommandeController extends Controller
             return redirect(route('commandes.index'));
         }
          //pour traiter la commande à ramassée , faut verifier deux conditons:
-            // commande est envoyéee + traiter = 0         
+            // commande est envoyée + traiter = 0         
         // dd($blExist);
         
-        if(($commande->statut === "envoyée" || $commande->statut === "Ramassée" || $commande->statut === "Expidiée") && $commande->traiter == 0)
+        if(($commande->statut === "envoyée" || $commande->statut === "Reçue" || $commande->statut === "Ramassée" || $commande->statut === "Expidiée") )
         {
             $user_ville = User::findOrFail($commande->user_id);
-            
-            if ($commande->statut === "Ramassée") {
-                $commande->statut= "Expidiée"; 
-            }
-            
-            elseif ($commande->statut === "Expidiée") {
-                $commande->statut= "En cours"; 
-            }
-            else {
-                if ($user_ville->ville == $commande->ville || $commande->ville == "Rabat") {
-                    $commande->statut= "En cours"; 
-                } else {
-                    $commande->statut = "Ramassée";
+            if( $commande->traiter == 0){
+                if ($commande->statut === "envoyée") {
+                    $commande->statut= "Ramassée"; 
+                }
+                else{
+                    $request->session()->flash('blNongenere', $commande->numero);
+                    return back();
                 }
             }
+        else{
+                if ($commande->statut === "Ramassée") {
+                    $commande->statut= "Reçue"; 
+                }
+    
+                elseif ($commande->statut === "Reçue") {
+                    $commande->statut= "Expidiée"; 
+                }
+                
+                elseif ($commande->statut === "Expidiée") {
+                    $commande->statut= "En cours"; 
+                }
+                else {
+                    if ($user_ville->ville == $commande->ville || $commande->ville == "Rabat") {
+                        $commande->statut= "En cours"; 
+                    } else {
+                        $commande->statut = "Ramassée";
+                    }
+                }
+            }
+            
             
             
             
@@ -800,7 +815,7 @@ class CommandeController extends Controller
             if($commande->statut === 'En cours' && $commande->traiter > 0){ //bach traiter commande khass tkoun en cours w bl dyalha kyn
                 $commande->statut= $request->statut;
                 $commande->commentaire= $request->commentaire;
-                $commande->save();
+                
                 $statut = new Statut();
                 $statut->commande_id = $commande->id;
                 $statut->name = $commande->statut;
@@ -808,6 +823,8 @@ class CommandeController extends Controller
                 $request->session()->flash('edit', $commande->numero);
 
                 if($statut->name != "Livré"){
+                    $commande->relance = 0;
+
                     $commande_produits = DB::table('commande_produits')->where('commande_id',$commande->id)->get();
                     foreach($commande_produits as $commande_produit){
                     //dd($commande_produit);
@@ -817,7 +834,7 @@ class CommandeController extends Controller
                     $stock->save();
                 }
                 }
-                
+                $commande->save();
             }
             else{
                 

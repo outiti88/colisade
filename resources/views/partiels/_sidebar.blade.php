@@ -67,6 +67,7 @@
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('reception.index')}}" aria-expanded="false"><i class="mdi mdi-truck"></i><span class="hide-menu">Reception</span></a></li>
                 @endcan
                 @can('manage-users')
+                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('Relance.index')}}" aria-expanded="false"><i class="mdi mdi-account-switch"></i><span class="hide-menu">Commandes VIP</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('admin.users.index')}}" aria-expanded="false"><i class="mdi mdi-account-switch"></i><span class="hide-menu">Utilisateurs</span></a></li>
                 @endcan
             </ul>

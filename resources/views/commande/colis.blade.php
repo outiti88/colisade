@@ -153,6 +153,13 @@
                 => le bon de livraison pour cette commande à été déjà généré
         </div>
         @endif
+        @if (session()->has('blNongenere'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Attention !</strong>vous ne pouvez pas changer le statut de La commande numero {{session()->get('blNongenere')}} sans générer le bon de livraison <br>
+                
+        </div>
+        @endif
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -261,12 +268,19 @@
                                         
                                         @break
                                     @case("Ramassée")
-                                        badge-secondary"
+                                    badge-secondary"
                                         @can('ramassage-commande')
-                                        title="Envoyer la commande" 
+                                        title="Recevoir la commande" 
                                          href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
                                         @endcan
                                     @break
+                                    @case("Reçue")
+                                    badge-dark"
+                                    @can('ramassage-commande')
+                                    title="Envoyer la commande" 
+                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                    @endcan
+                                @break
                                     @case("Expidiée")
                                         badge-primary"
                                         @can('ramassage-commande')
@@ -383,6 +397,7 @@
                                             <option selected disabled>Choisissez le statut</option>
                                             <option>envoyée</option>
                                             <option>Ramassée</option>
+                                            <option>Reçue</option>
                                             <option>Expidiée</option>
                                             <option>en cours</option>
                                             <option>Livré</option>
