@@ -66,7 +66,33 @@
 						<span class="focus-input100"></span>
 					</div>
 					<div class="wrap-input100 rs2-wrap-input100 validate-input m-b-20" data-validate="">
-						<input class="input100" type="text" name="ville" placeholder="Ville" value="{{ old('ville') }}" value="{{ old('ville') }}"  name="ville">
+						<select style="
+						border: 6px solid transparent;
+					"  value="{{ old('ville') }}"  name="ville" class="input100" id="ville" onchange="myFunction()" required >
+							<option value="Agadir"> Agadir</option>
+								<option value="Al Hoceima"> Al Hoceima</option>
+								<option value="Béni Mellal"> Béni Mellal</option>
+								<option value="Casablanca">Casablanca</option>
+								<option value="El Jadida"> El Jadida</option>
+								<option value="Errachidia"> Errachidia</option>
+								<option value="Fès"> Fès</option>
+								<option value="Khénifra"> Khénifra</option>
+								<option value="Khouribga"> Khouribga</option>
+								<option value="Kénitra">Kénitra</option>
+								<option value="Larache"> Larache</option>
+								<option value="Marrakech">Marrakech</option>
+								<option value="Meknès"> Meknès</option>
+								<option value="Nador"> Nador</option>
+								<option value="Ouarzazate"> Ouarzazate</option>
+								<option value="Oujda"> Oujda</option>
+								<option value="Rabat"> Rabat</option>
+								<option value="Safi"> Safi</option>
+								<option value="Settat"> Settat</option>
+								<option value="Salé"> Salé</option>
+								<option value="Tanger"> Tanger</option>
+								<option value="Taza"> Taza</option>
+								<option value="Tétouan"> Tétouan</option>
+						</select>
                         <span class="focus-input100"></span>
                         @error('ville')
                                 <span class="invalid-feedback" role="alert">
