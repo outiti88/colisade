@@ -119,6 +119,9 @@ class CommandeController extends Controller
 
         if($request->filled('statut')){
             //dd("salut");
+            if($request->statut === 'en cours' )
+            $commandes->whereIn('statut', array('Reporté', 'Relancée', 'Modifiée'));
+            else
             $commandes->where('statut','like','%'.$request->statut.'%');
            //dd($commandes->count());
         }
@@ -449,7 +452,12 @@ class CommandeController extends Controller
     public function show(Commande $commande)
     {
         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
-
+        $etat = array("Injoignable", "Refusée", "Retour Complet");
+        if((Gate::denies('client-admin') || $commande->statut !== "envoyée") && (Gate::denies('manage-users') || !in_array($commande->statut, $etat)) ){
+            
+            $modify = 0;
+        }
+        else $modify = 1;
 
         if(!Gate::denies('livreur')){
             if($commande->ville!== Auth::user()->ville)
@@ -461,7 +469,9 @@ class CommandeController extends Controller
             return redirect()->route('commandes.index');
         }
         
-       
+        $etat = array("Injoignable", "Refusée", "Retour Complet");
+
+        
         //return $commande;
         //dd($produits);
         $statuts = DB::table('statuts')->where('commande_id',$commande->id)->get();
@@ -487,7 +497,8 @@ class CommandeController extends Controller
                                     'liaisons' => $liaisons,
                                     'relances' => $relances,
                                     'Rpar' => $Rpar,
-                                    'Rtotal' => $total
+                                    'Rtotal' => $total,
+                                    'modify' => $modify
                                     ]);
 
         }   
@@ -496,7 +507,8 @@ class CommandeController extends Controller
                                     'par' => $users,
                                     'relances' => $relances,
                                     'Rpar' => $Rpar,
-                                    'Rtotal' => $total
+                                    'Rtotal' => $total,
+                                    'modify' => $modify
                                     ]);
     }
 
@@ -690,8 +702,9 @@ class CommandeController extends Controller
             if($commande->user_id !== Auth::user()->id)
             return redirect()->route('commandes.index');
         }
+        $etat = array("Injoignable", "Refusée", "Retour Complet");
 
-        if(Gate::denies('client-admin') || $commande->statut !== "envoyée"){
+        if((Gate::denies('client-admin') || $commande->statut !== "envoyée") && (Gate::denies('manage-users') || !in_array($commande->statut, $etat)) ){
             //dd( $commande->staut );
             $request->session()->flash('noupdate', $commande->numero);
         }
@@ -705,6 +718,8 @@ class CommandeController extends Controller
                         $commande->montant = 0;
                     }
                 }
+
+                
                 
 
               
@@ -721,7 +736,17 @@ class CommandeController extends Controller
                 
                 $commande->colis = $request->colis;
                 $commande->nom = $request->nom;
-                $commande->save();
+                
+                if(!Gate::denies('manage-users') || in_array($commande->statut, $etat)){
+                    $commande->statut = "Modifiée";
+                    $commande->relance =null;
+                    $commande->save();
+                    $statut = new Statut();
+                    $statut->commande_id = $commande->id;
+                    $statut->name = $commande->statut;
+                    $statut->user()->associate(Auth::user())->save();
+                }
+                else $commande->save();
                
                 $request->session()->flash('statut', 'modifié');
             }
@@ -818,19 +843,21 @@ class CommandeController extends Controller
 
 
         else{
-            if($commande->statut === 'En cours' && $commande->traiter > 0){ //bach traiter commande khass tkoun en cours w bl dyalha kyn
+            if(($commande->statut === 'En cours' || $commande->statut === 'Modifiée' || $commande->statut === 'Relancée' || $commande->statut === 'Reporté') && $commande->traiter > 0){ //bach traiter commande khass tkoun en cours w bl dyalha kyn
                 $commande->statut= $request->statut;
                 $commande->commentaire= $request->commentaire;
-                
+                if($commande->statut === 'Reporté'){
+                    if($request->filled('prevu_at')) $commande->postponed_at = $request->prevu_at;
+                    else $request->prevu_at = now() ;
+                }
                 $statut = new Statut();
                 $statut->commande_id = $commande->id;
                 $statut->name = $commande->statut;
                 $statut->user()->associate(Auth::user())->save();
                 $request->session()->flash('edit', $commande->numero);
 
-                if($statut->name != "Livré"){
+                if($statut->name != "Livré" && $statut->name != "Reporté"){
                     $commande->relance = 0;
-
                     $commande_produits = DB::table('commande_produits')->where('commande_id',$commande->id)->get();
                     foreach($commande_produits as $commande_produit){
                     //dd($commande_produit);
@@ -895,7 +922,10 @@ class CommandeController extends Controller
             $request->session()->flash('nodelete', $commande->numero);
             return redirect()->route('commandes.show',['commande' => $commande->id]);
                 }
-        if($commande->statut === "envoyée") {
+            $etat = array("Injoignable", "Refusée", "Retour Complet");
+        
+            
+        if($commande->statut === "envoyée" || (!Gate::denies('manage-users') && in_array($commande->statut, $etat)) ) {
 
             $numero = $commande->numero;
             $statut = DB::table('statuts')->where('commande_id',$commande->id)->get()->first()  ;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
 use App\Notifications\newCommande;
+use App\User;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;

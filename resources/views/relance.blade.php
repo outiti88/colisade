@@ -204,16 +204,20 @@ Relances
                                                                 <form class="form-horizontal form-material" method="POST" action="{{route('relance.relancer',['id' => $commande->id])}}">
                                                                     @csrf
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-12">Statut :</label>
+                                                                        <label for="etat{{$index}}0" class="col-sm-12">Statut :</label>
                                                                         <div class="col-sm-12">
-                                                                            <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
-                                                                                <option>Livré</option>
+                                                                            <select id="etat{{$index}}0" onchange="reporter({{$index}},0)" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
+                                                                                <option>Relancée</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
-                                                                                <option>Retour Complet</option>
-                                                                                <option>Retour Partiel</option>
-                                                                                <option>Reporté</option>
+                                                              
                                                                             </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group" id="prevu{{$index}}0" style="display: block">
+                                                                        <label class="col-sm-12" for="datePrevu{{$index}}0">Date Prévue :</label>
+                                                                        <div class="col-sm-12">
+                                                                          <input class="form-control" name="prevu_at" type="date" id="datePrevu{{$index}}0">
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -313,16 +317,20 @@ Relances
                                                                 <form class="form-horizontal form-material" method="POST" action="{{route('relance.relancer',['id' => $commande->id])}}">
                                                                     @csrf
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-12">Statut :</label>
+                                                                        <label for="etat{{$index}}1" class="col-sm-12">Statut :</label>
                                                                         <div class="col-sm-12">
-                                                                            <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
-                                                                                <option>Livré</option>
+                                                                            <select id="etat{{$index}}1" onchange="reporter({{$index}},1)" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
+                                                                                <option>Relancée</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
-                                                                                <option>Retour Complet</option>
-                                                                                <option>Retour Partiel</option>
-                                                                                <option>Reporté</option>
+                                                              
                                                                             </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group" id="prevu{{$index}}1" style="display: block">
+                                                                        <label class="col-sm-12" for="datePrevu{{$index}}1">Date Prévue :</label>
+                                                                        <div class="col-sm-12">
+                                                                          <input class="form-control" name="prevu_at" type="date" id="datePrevu{{$index}}1">
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -422,16 +430,20 @@ Relances
                                                                 <form class="form-horizontal form-material" method="POST" action="{{route('relance.relancer',['id' => $commande->id])}}">
                                                                     @csrf
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-12">Statut :</label>
+                                                                        <label for="etat{{$index}}2" class="col-sm-12">Statut :</label>
                                                                         <div class="col-sm-12">
-                                                                            <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
-                                                                                <option>Livré</option>
+                                                                            <select id="etat{{$index}}2" onchange="reporter({{$index}},2)" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
+                                                                                <option>Relancée</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
-                                                                                <option>Retour Complet</option>
-                                                                                <option>Retour Partiel</option>
-                                                                                <option>Reporté</option>
+                                                              
                                                                             </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group" id="prevu{{$index}}2" style="display: block">
+                                                                        <label class="col-sm-12" for="datePrevu{{$index}}2">Date Prévue :</label>
+                                                                        <div class="col-sm-12">
+                                                                          <input class="form-control" name="prevu_at" type="date" id="datePrevu{{$index}}2">
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -530,16 +542,20 @@ Relances
                                                                 <form class="form-horizontal form-material" method="POST" action="{{route('relance.relancer',['id' => $commande->id])}}">
                                                                     @csrf
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-12">Statut :</label>
+                                                                        <label for="etat{{$index}}3" class="col-sm-12">Statut :</label>
                                                                         <div class="col-sm-12">
-                                                                            <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
-                                                                                <option>Livré</option>
+                                                                            <select id="etat{{$index}}3" onchange="reporter({{$index}},3)" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
+                                                                                <option>Relancée</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
-                                                                                <option>Retour Complet</option>
-                                                                                <option>Retour Partiel</option>
-                                                                                <option>Reporté</option>
+                                                              
                                                                             </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group" id="prevu{{$index}}3" style="display: block">
+                                                                        <label class="col-sm-12" for="datePrevu{{$index}}3">Date Prévue :</label>
+                                                                        <div class="col-sm-12">
+                                                                          <input class="form-control" name="prevu_at" type="date" id="datePrevu{{$index}}3">
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
@@ -591,4 +607,20 @@ Relances
     </div>
 </div>
 
+@endsection
+@section('javascript')
+<script>
+    function reporter(index,i) {
+    var xx = document.getElementById("prevu"+index+i);
+
+    var test = document.getElementById("etat"+index+i).value;
+    //alert(index+i);
+    if(test=='Relancée'){
+        xx.style.display = "block";
+    }
+    else{
+        xx.style.display = "none";
+    }
+    }
+</script>
 @endsection

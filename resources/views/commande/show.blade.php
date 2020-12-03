@@ -142,16 +142,13 @@ N: {{$commande->numero}}
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
                     @endcan
                     @can('ramassage-commande')
-                    @if ($commande->statut === "En cours" && $commande->traiter != 0)
+                    @if (($commande->statut === "En cours" || $commande->statut === "Modifiée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->traiter != 0)
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
-                 
                     @endif
                     @endcan
                     @can('delete-commande')
-                    @if ($commande->statut === "envoyée")
+                    @if ($commande->statut === "envoyée" || $modify === 1)
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
-                     
-                    
                     
                     <a class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormDelete"><i class="fas fa-trash-alt"></i></a>
 
@@ -280,6 +277,10 @@ N: {{$commande->numero}}
                                     @endcan
                                         @break
                                     @case("En cours")
+                                    @case("Modifiée")
+                                    @case("Relancée")
+                                    @case("Reporté")
+
                                     badge-info"
                                         @if ($commande->traiter > 0)
                                         title="Voir le bon de livraison" 
@@ -478,6 +479,9 @@ N: {{$commande->numero}}
                                     @endcan
                                         @break
                                     @case("En cours")
+                                    @case("Modifiée")
+                                    @case("Relancée")
+                                    @case("Reporté")
                                     badge-info"
                                         @if ($commande->traiter > 0)
                                         title="Voir le bon de livraison" 
@@ -594,7 +598,7 @@ N: {{$commande->numero}}
 </div>
    
 @can('delete-commande')
-@if ($commande->statut === "envoyée")
+@if ($commande->statut === "envoyée" || $modify === 1)
 <div class="container my-4">    
     <div class="modal fade" id="modalSubscriptionFormEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
@@ -865,16 +869,22 @@ N: {{$commande->numero}}
                                 @method('PATCH')
                                 
                                 <div class="form-group">
-                                    <label class="col-sm-12">Statut :</label>
+                                    <label for="etat" class="col-sm-12">Statut :</label>
                                     <div class="col-sm-12">
-                                        <select name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}">
+                                        <select id="etat" onchange="reporter()" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
                                             <option>Livré</option>
                                             <option>Injoignable</option>
                                             <option>Refusée</option>
                                             <option>Retour Complet</option>
                                             <option>Retour Partiel</option>
                                             <option>Reporté</option>
-                                        </select>
+                                        </select> 
+                                    </div>
+                                </div>
+                                <div class="form-group" style="display: none" id="prevu">
+                                    <label for="datePrevu" class="col-sm-12">Date Prévue :</label>
+                                    <div class="col-sm-12">
+                                      <input class="form-control" name="prevu_at" type="date" id="datePrevu">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -912,6 +922,21 @@ N: {{$commande->numero}}
 @endsection
 
 @section('javascript')
+<script>
+    var xx = document.getElementById("prevu");
+    function reporter() {
+        
+    var test = document.getElementById("etat").value;
+    //alert(test);
+    if(test=='Reporté'){
+        xx.style.display = "block";
+    }
+    else{
+        xx.style.display = "none";
+    }
+    }
+</script>
+
 <script>
     
     function myFunctionEdit1() {

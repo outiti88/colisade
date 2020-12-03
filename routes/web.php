@@ -89,4 +89,3 @@ Route::get('/inbox','NotificationController@index')->name('inbox.index')->middle
 Route::get('/{notifications}/show','NotificationController@show')->name('inbox.show')->middleware('can:valide');
 Route::get('/{notifications}/delete','NotificationController@destroy')->name('inbox.destroy')->middleware('can:valide');
 
-Route::get('/{notifications}/delete','NotificationController@destroy')->name('inbox.destroy')->middleware('can:nouveau');

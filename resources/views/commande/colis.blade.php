@@ -163,7 +163,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Gestion des comandes / colis</h4>
+                    <h4 class="card-title">Gestion des commandes / colis</h4>
                     <h6 class="card-subtitle">Nombre total des commandes : <code>{{$total}} Commandes</code> .</h6>
                     <input class="form-control" id="myInput" type="text" placeholder="Rechercher...">
                 </div>
@@ -256,6 +256,10 @@
                                     @endcan
                                         @break
                                     @case("En cours")
+                                    @case("Modifiée")
+                                    @case("Relancée")
+                                    @case("Reporté")
+
                                     badge-info"
                                         @if ($commande->traiter > 0)
                                         title="Voir le bon de livraison" 
@@ -306,7 +310,13 @@
                                      > 
                                      <span style="font-size: 1.25em">{{$commande->statut}}</span> 
                                 </a>
-                                <br> ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}}) 
+                                <br> 
+                                @if ($commande->statut == "Reporté" || $commande->statut == "Relancée")
+                                    Pour le: <br>{{$commande->postponed_at}}
+                                @else
+                                ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}}) 
+
+                                @endif
                             </td>
                            <td style="font-size: 1.5em"><a title="Voir le detail" style="color: #f7941e" href="/commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
                         </tr>

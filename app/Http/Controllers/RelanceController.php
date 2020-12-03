@@ -87,14 +87,21 @@ class RelanceController extends Controller
         
         if(!Gate::denies('ramassage-commande')) {
             $commande = Commande::findOrFail($id);
+
             if($commande->relance >=0 && $commande->relance < 4){
                 $statut = new Statut();
                 $statut->commande_id = $commande->id;
                 $statut->name = $request->statut;
                 if($commande->relance == 4 && $request->statut != "Livré") $commande->statut = "Annulée";
+
                 $statut->user()->associate(Auth::user())->save();
                 $commande->statut = $request->statut;
-                $commande->relance++;
+                if($commande->statut === 'Relancée'){
+                    $commande->relance = 4;
+                    if($request->filled('prevu_at')) $commande->postponed_at = $request->prevu_at;
+                    else $request->prevu_at = now() ;
+                }
+                else $commande->relance++;
                 
                 $commande->save();
                 $relance = new Relance();
