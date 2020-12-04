@@ -239,7 +239,7 @@ class ProduitController extends Controller
         }
         
         
-        dd("salut");
+       // dd("salut");
     }
 
     /**

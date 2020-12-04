@@ -96,13 +96,12 @@ class RelanceController extends Controller
 
                 $statut->user()->associate(Auth::user())->save();
                 $commande->statut = $request->statut;
-                if($commande->statut === 'Relancée'){
+                if($commande->statut === 'Relancée' || $commande->statut === 'Reporté'){
                     $commande->relance = 4;
-                    if($request->filled('prevu_at')) $commande->postponed_at = $request->prevu_at;
-                    else $request->prevu_at = now() ;
                 }
                 else $commande->relance++;
-                
+                if($request->filled('prevu_at')) $commande->postponed_at = $request->prevu_at;
+                    else $request->prevu_at = now() ;
                 $commande->save();
                 $relance = new Relance();
             $relance->commande_id = $commande->id;

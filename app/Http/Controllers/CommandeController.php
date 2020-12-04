@@ -70,8 +70,26 @@ class CommandeController extends Controller
         }
         elseif(!Gate::denies('livreur')) {
             //session administrateur donc on affiche tous les commandes
-            $total = DB::table('commandes')->where('deleted_at',NULL)->where('ville',Auth::user()->ville)->count();
-            $commandes= DB::table('commandes')->where('deleted_at',NULL)->where('ville',Auth::user()->ville)->orderBy('updated_at', 'DESC')->paginate(10);
+            //dd("test");
+            $total =DB::table('commandes')
+            ->join('users', 'users.id', '=', 'commandes.user_id')
+            ->select('commandes.*','users.image')
+            ->where('commandes.deleted_at',NULL)->whereIn('commandes.statut', ['envoyée', 'Ramassée', 'Reçue'])
+            ->where('users.ville',Auth::user()->ville)
+            ->orWhere(function($query) {
+                $query->where('commandes.ville',Auth::user()->ville)
+                      ->whereNotIn('commandes.statut', ['envoyée','Ramassée','Recue']);
+            })->count();
+
+            $commandes= DB::table('commandes')
+            ->join('users', 'users.id', '=', 'commandes.user_id')
+            ->select('commandes.*','users.image')
+            ->where('commandes.deleted_at',NULL)->whereIn('commandes.statut', ['envoyée', 'Ramassée', 'Reçue'])
+            ->where('users.ville',Auth::user()->ville)
+            ->orWhere(function($query) {
+                $query->where('commandes.ville',Auth::user()->ville)
+                      ->whereNotIn('commandes.statut', ['envoyée','Ramassée','Recue']);
+            })->orderBy('commandes.updated_at', 'DESC')->paginate(10);
 
             //dd($clients[0]->id);
         }
@@ -98,7 +116,7 @@ class CommandeController extends Controller
 
     public function filter(Request $request){
        
-        $commandes = DB::table('commandes')->where('deleted_at',NULL);
+        $commandes = DB::table('commandes')->where('commandes.deleted_at',NULL);
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
         $livreurs = User::whereHas('roles', function($q){$q->whereIn('name', ['livreur']);})->get();
         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
@@ -119,10 +137,25 @@ class CommandeController extends Controller
 
         if($request->filled('statut')){
             //dd("salut");
-            if($request->statut === 'en cours' )
-            $commandes->whereIn('statut', array('Reporté', 'Relancée', 'Modifiée'));
-            else
-            $commandes->where('statut','like','%'.$request->statut.'%');
+            if(!Gate::denies('livreur')){
+                $Ramassage = array("envoyée", "Ramassée", "Reçue");
+                if(in_array($request->statut,$Ramassage)){
+                    $commandes->join('users', 'users.id', '=', 'commandes.user_id')
+                    ->select('commandes.*','users.image')
+                    ->where('users.ville',Auth::user()->ville);
+                }
+                else{
+                    $commandes->where('commandes.ville',Auth::user()->ville);
+                }
+                $commandes->where('commandes.statut',$request->statut);
+            }
+            else{
+                if($request->statut === 'en cours' )
+                $commandes->whereIn('statut', array('Reporté', 'Relancée', 'Modifiée','en cours'));
+                else
+                $commandes->where('statut','like','%'.$request->statut.'%');
+            }
+            
            //dd($commandes->count());
         }
 
@@ -149,10 +182,12 @@ class CommandeController extends Controller
         }
         
         if($request->filled('dateMin')){
-            $commandes->whereDate('created_at','>=',$request->dateMin);
+            $commandes->whereDate('created_at','>=',$request->dateMin)
+                ->orWhereDate('postponed_at','>=',$request->dateMin);
         }
         if($request->filled('dateMax')){
-            $commandes->whereDate('created_at','<=',$request->dateMax);
+            $commandes->whereDate('created_at','<=',$request->dateMax)
+                ->orWhereDate('postponed_at','<=',$request->dateMax);
         }
         if($request->filled('prixMin') && $request->prixMin > 0){
             $commandes->where('montant','>=',$request->prixMin);
@@ -192,37 +227,37 @@ class CommandeController extends Controller
 
     public function search(Request $request ) {
         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+        if(Gate::denies('livreur')){
+            if(strcmp(substr($request->search,-strlen($request->search),4) , "FAC_") == 0){  
+                $clients = [];  
+                $users = []; 
+                if(!Gate::denies('manage-users')) {
+                    $factures = DB::table('factures')->where('numero','like','%'.$request->search.'%')->get();
+                    $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
+                }
+                else{
+                    $factures = DB::table('factures')->where('user_id',Auth::user()->id)->where('numero','like','%'.$request->search.'%')->get();
 
-        if(strcmp(substr($request->search,-strlen($request->search),4) , "FAC_") == 0){  
-            $clients = [];  
-            $users = []; 
-            if(!Gate::denies('manage-users')) {
-                $factures = DB::table('factures')->where('numero','like','%'.$request->search.'%')->get();
-                $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['client', 'ecom']);})->get();
-            }
-            else{
-                $factures = DB::table('factures')->where('user_id',Auth::user()->id)->where('numero','like','%'.$request->search.'%')->get();
+                }
+                $total = $factures->count();
 
-            }
-            $total = $factures->count();
-
-            foreach($factures as $facture){
-                if(!empty(User::find($facture->user_id)))
-                $users[] =  User::find($facture->user_id) ;
-            }
-            if($total > 0){
-                //dd($factures);
-                return view('facture',['factures'=>$factures ,'nouveau'=>$nouveau,
-                                        'total' => $total,
-                                         'users'=> $users,
-                                         'clients' => $clients]);
-            }
-            else{
-                $request->session()->flash('search', $request->search);
-                return redirect()->route('facture.index');
-            }
-       }
-
+                foreach($factures as $facture){
+                    if(!empty(User::find($facture->user_id)))
+                    $users[] =  User::find($facture->user_id) ;
+                }
+                if($total > 0){
+                    //dd($factures);
+                    return view('facture',['factures'=>$factures ,'nouveau'=>$nouveau,
+                                            'total' => $total,
+                                            'users'=> $users,
+                                            'clients' => $clients]);
+                }
+                else{
+                    $request->session()->flash('search', $request->search);
+                    return redirect()->route('facture.index');
+                }
+        }
+        
 
        if(strcmp(substr($request->search,-strlen($request->search),3) , "BL_") == 0){  
             $clients = [];  
@@ -259,15 +294,45 @@ class CommandeController extends Controller
                 return redirect()->route('bonlivraison.index');
             }
        }
+    }
 
 
         $users = [] ;
         $produits = [];
-        if(!Gate::denies('ramassage-commande')) {
+        if(!Gate::denies('manage-users')) {
             //session administrateur donc on affiche tous les commandes
             $total = DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->count();
             $commandes= DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->orderBy('created_at', 'DESC')->paginate(10);
             
+        }
+        elseif(!Gate::denies('livreur')){
+            $Ramassage = array("envoyée", "Ramassée", "Reçue");
+            $commande= DB::table('commandes')->where('numero',$request->search)->where('deleted_at',NULL)->first();
+           // dd($commande->statut);
+            if(in_array($commande->statut,$Ramassage)){
+                $commandes =DB::table('commandes')->where('commandes.deleted_at',NULL)
+                ->join('users', 'users.id', '=', 'commandes.user_id')
+                ->select('commandes.*','users.image')
+                ->where('users.ville',Auth::user()->ville)->where('numero',$request->search)
+                ->orderBy('commandes.created_at', 'DESC')->paginate(10);
+
+                $total = DB::table('commandes')->where('commandes.deleted_at',NULL)
+                ->join('users', 'users.id', '=', 'commandes.user_id')
+                ->select('commandes.*','users.image')
+                ->where('users.ville',Auth::user()->ville)->where('numero',$request->search)
+                ->count();
+            }
+            else{
+                $commandes =DB::table('commandes')->where('commandes.deleted_at',NULL)
+                ->where('commandes.ville',Auth::user()->ville)->where('numero',$request->search)
+                ->orderBy('commandes.created_at', 'DESC')->paginate(10);
+
+                $total =DB::table('commandes')->where('commandes.deleted_at',NULL)
+                ->where('commandes.ville',Auth::user()->ville)->where('numero',$request->search)
+                ->count();
+            }
+
+
         }
         else{
             $commandes= DB::table('commandes')->where('numero','like','%'.$request->search.'%')->where('deleted_at',NULL)->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
@@ -378,7 +443,7 @@ class CommandeController extends Controller
 
         if(!Gate::denies('ecom')){
             if(!isset($request->produit)){
-                dd("salut");
+                //dd("salut");
                 $request->session()->flash('produit_required');
                     return redirect('/commandes');
 
@@ -782,10 +847,14 @@ class CommandeController extends Controller
             }
         else{
                 if ($commande->statut === "Ramassée") {
+                    if(!Gate::denies('livreur')) return back();
                     $commande->statut= "Reçue"; 
                 }
     
                 elseif ($commande->statut === "Reçue") {
+                   // dd(!Gate::denies('livreur'));
+
+                    if(!Gate::denies('livreur')) return back();
                     $commande->statut= "Expidiée"; 
                 }
                 
