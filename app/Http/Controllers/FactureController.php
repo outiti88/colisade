@@ -140,6 +140,15 @@ class FactureController extends Controller
     public function content(Facture $facture, $n , $i){
         $user = $facture->user_id;
         $user = DB::table('users')->find($user);
+        $livraisonNonPaye = 0;
+
+        $commandes = DB::table('commandes')->where('user_id',$user->id)->where('statut','livré')->where('facturer',$facture->id)->get();
+        foreach ($commandes as $index => $commande) {
+                if($commande->montant == 0){
+                    $livraisonNonPaye += $commande->prix;
+                }
+            }
+            $net = $facture->montant-$livraisonNonPaye;
         
         //les information du fournisseur (en-tete)
         $info_client = '
@@ -162,10 +171,19 @@ class FactureController extends Controller
             <div class="total">
             <table id="customers">
                 
-            <tr>
-            <th>TOTAL NET : </th>
-            <td>'.$facture->montant.'  MAD</td>
+            <tr class="totalfacture">
+            <th>TOTAL BRUT : </th>
+            <td>'.$facture->montant.'  DH</td>
             </tr>
+            <tr class="totalfacture">
+            <th>Livraison : </th>
+            <td>'.$livraisonNonPaye.'  DH</td>
+            </tr>
+            <tr class="totalfacture">
+            <th>TOTAL BRUT : </th>
+            <td>'.$net.'  DH</td>
+            </tr>
+
             </table>
             </div>
             ';
@@ -259,6 +277,7 @@ class FactureController extends Controller
                     background-color: #e85f03;
                     color: white;
                     }
+                    
                 </style>
             
             </head>

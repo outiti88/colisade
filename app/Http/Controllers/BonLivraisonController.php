@@ -177,7 +177,7 @@ class BonLivraisonController extends Controller
                 
                 <tr>
                 <th>TOTAL NET : </th>
-                <td>'.$bonLivraison->montant.'  MAD</td>
+                <td>'.$bonLivraison->montant.'  DH</td>
                 </tr>
                 </table>
             </div>

@@ -122,8 +122,8 @@
                                 <td>{{$bonLivraison->commande}}</td>
                                 <td>{{$bonLivraison->colis}}</td>
                                 <td>{{ $bonLivraison->created_at}}</td>
-                                <td>{{ $bonLivraison->montant}} Mad</td>
-                                <td>{{ $bonLivraison->prix}} Mad</td>
+                                <td>{{ $bonLivraison->montant}} DH</td>
+                                <td>{{ $bonLivraison->prix}} DH</td>
                                 <td>
                                 <a target="_blank" class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" >
                                   <i class="fas fa-print"></i></a>
