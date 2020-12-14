@@ -186,7 +186,6 @@
 														<tr>
                                                             <td class="text center pb30" style="color:#666666; font-family:Arial, sans-serif; font-size:16px; line-height:30px; text-align:center; padding-bottom:30px;">
                                                                 Votre Email : <strong>{{$details['email']}}</strong><br>
-                                                                Votre Mot de passe : <strong>{{$details['password']}}</strong>    
 																<span style="display: block ; padding-top:7px">
 																	<br>Merci d’avoir rejoint Colisade! <br>
 																Cliquez sur le bouton ci-dessous pour modifier votre mot de passe, <br>

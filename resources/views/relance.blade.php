@@ -13,7 +13,6 @@ Relances
             margin-bottom: 3%;
             border-radius: 0.5rem;
             background: #fff;
-
         }
         .profile-img{
             text-align: center;
@@ -106,7 +105,6 @@ Relances
         a:hover {
             color: #f7941e;
         }
-
         .show .row{
             border-bottom-color: #cacaca;
             border-bottom-style: solid;
@@ -211,6 +209,7 @@ Relances
                                                                                 <option>Reporté</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
+                                                                                <option>Annulée</option>
                                                               
                                                                             </select>
                                                                         </div>
@@ -325,6 +324,7 @@ Relances
                                                                                 <option>Reporté</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
+                                                                                <option>Annulée</option>
                                                               
                                                                             </select>
                                                                         </div>
@@ -439,6 +439,7 @@ Relances
                                                                                 <option>Reporté</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
+                                                                                <option>Annulée</option>
                                                               
                                                                             </select>
                                                                         </div>
@@ -552,6 +553,7 @@ Relances
                                                                                 <option>Reporté</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
+                                                                                <option>Annulée</option>
                                                                             </select>
                                                                         </div>
                                                                     </div>
@@ -615,7 +617,6 @@ Relances
 <script>
     function reporter(index,i) {
     var xx = document.getElementById("prevu"+index+i);
-
     var test = document.getElementById("etat"+index+i).value;
     //alert(index+i);
     if(test=='Reporté'){

@@ -648,11 +648,11 @@ class CommandeController extends Controller
                     <table id="customers">
                     <tr>
                         <th>Livreur: </th>
-                        <td>Quickoo Delivery</td>
+                        <td>Colisade Delivery</td>
                     </tr>
                     <tr>
                         <th>Site web:  </th>
-                        <td>www.quickoo.ma</td>
+                        <td>www.colisade.ma</td>
                     </tr>
                     </table>
                 </div>
@@ -685,6 +685,10 @@ class CommandeController extends Controller
         $commande = Commande::findOrFail($id);
         $pdf = \App::make('dompdf.wrapper');
         $style = '
+        <head> <meta charset="UTF-8">
+            <title>Ticket de la commande: '.$commande->numero.'</title>
+
+        </head>
             <style>
                     *{
                         
@@ -698,40 +702,33 @@ class CommandeController extends Controller
                         font-size: 1.5em;
                         border: 1px solid #f7941e;
                     }
-
                 .container{
                     box-sizing: border-box;
                     width:100%
                     height:auto;
                     padding-top: 10px !important;
                 }
-
                     .tableau{
                     padding-top:20px;
                    
                     width:100%;
                 }
                 
-
                     #customers {
                     text-align:center;
                     border-collapse: collapse;
                     width: 100%;
                     }
-
                     h1{
                         text-align : center;
                         font-size: 2em;
                     }
-
                     #customers td, #customers th {
                     border: 1px solid #f7941e;
                     }
-
                     #customers tr:nth-child(even){
                         background-color: #f2f2f2;
                     }
-
                     #customers th {
                     padding-top: 12px;
                     padding-bottom: 10px;
@@ -743,10 +740,8 @@ class CommandeController extends Controller
         $content = $this->content($commande);
             
 
-        for ($i=1; $i <=$commande->colis ; $i++) { 
-            # code...
-        }
-        $pdf -> loadHTML($style.$content)->setPaper('A6');
+       
+        $pdf -> loadHTML($style.$content)->setPaper('A7');
 
 
         return $pdf->stream();

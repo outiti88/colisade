@@ -284,6 +284,13 @@ class FactureController extends Controller
 
  
     public function search($id){
+
+        $facture = Facture::findOrFail($id);
+        $user = $facture->user_id;
+
+        if($user !== Auth::user()->id && Gate::denies('ramassage-commande')){
+            return redirect()->route('facture.index');
+        }
         //dd(Auth::user()->id );
         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
@@ -334,6 +341,12 @@ class FactureController extends Controller
    }
 
    public function infos($id){
+    $facture = Facture::findOrFail($id);
+    $user = $facture->user_id;
+
+    if($user !== Auth::user()->id && Gate::denies('ramassage-commande')){
+        return redirect()->route('facture.index');
+    }
     $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
         $clients = [];  

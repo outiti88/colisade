@@ -656,7 +656,7 @@ N: {{$commande->numero}}
                                       <div class="form-group col-md-12" id="montant2"  style="display: block">
                                         <label for="example-email" class="col-md-12">Montant (MAD) :</label>
                                         <div class="col-md-12">
-                                            <input  value="{{ old('montant',$commande->montant) }}" type="number" class="form-control form-control-line" name="montant" id="example-email">
+                                            <input  value="{{ old('montant',$commande->montant) }}" type="text" class="form-control form-control-line" name="montant" id="example-email">
                                         </div>
                                     </div>
                                     @endcan
@@ -878,6 +878,7 @@ N: {{$commande->numero}}
                                             <option>Retour Complet</option>
                                             <option>Retour Partiel</option>
                                             <option>Reporté</option>
+                                            <option>Annulée</option>
                                         </select> 
                                     </div>
                                 </div>

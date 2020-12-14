@@ -575,7 +575,7 @@
                                       <div class="form-group col-md-12" id="montant" style="display: block">
                                         <label for="example-email" class="col-md-12">Montant (MAD) :</label>
                                         <div class="col-md-12">
-                                            <input  value="{{ old('montant') }}" type="number" class="form-control form-control-line" name="montant" id="example-email">
+                                            <input  value="{{ old('montant') }}" type="text" class="form-control form-control-line" name="montant" id="example-email">
                                         </div>
                                     </div>
                                     
