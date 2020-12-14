@@ -182,6 +182,12 @@
                             </div>
 
                     </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label text-md-right">Prix de livraison</label>
+                        <div class="col-md-10">
+                            <input name="prix" type="number" value="{{$user->prix}}"class="form-control form-control-line">
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary">Modifier</button>
                 </form>
                   

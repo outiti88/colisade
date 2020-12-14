@@ -78,6 +78,7 @@ class UsersController extends Controller
         }
        // dd($request->roles);
        $user->roles()->sync($request->roles);
+       $user->prix=$request->prix;
        $user->image=$request->image;
        $user->name=$request->name;
        $user->email=$request->email;
