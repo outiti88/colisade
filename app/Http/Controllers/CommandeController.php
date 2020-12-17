@@ -971,7 +971,7 @@ class CommandeController extends Controller
             return redirect()->route('commandes.index');
         }
         $etat = array("Injoignable", "Refusée", "Retour Complet");
-
+        $ancienne = $commande->statut;
         if((Gate::denies('client-admin') || $commande->statut !== "envoyée") && (Gate::denies('manage-users') || !in_array($commande->statut, $etat)) ){
             //dd( $commande->staut );
             $request->session()->flash('noupdate', $commande->numero);
@@ -989,7 +989,6 @@ class CommandeController extends Controller
 
 
                 if($commande->user()->first()->prix === 0){
-                    
                     $ville= array(
                         "Martil" => "45,00 DH" ,
                             "M'diq" => "45,00 DH" ,
@@ -1196,14 +1195,8 @@ class CommandeController extends Controller
                     else{
                         return back();
                     }
-    
-
                 }
-               
-                
-               
 
-              
                 
                 $commande->telephone = $request->telephone;
                 $commande->ville = $request->ville;
@@ -1215,7 +1208,7 @@ class CommandeController extends Controller
                 $commande->colis = $request->colis;
                 $commande->nom = $request->nom;
                 
-                if(!Gate::denies('manage-users') || in_array($commande->statut, $etat)){
+                if(!Gate::denies('manage-users') && in_array($ancienne, $etat)){
                     $commande->statut = "Modifiée";
                     $commande->relance =null;
                     $commande->save();
@@ -1312,6 +1305,31 @@ class CommandeController extends Controller
         return back();
     }
 
+    public function retourStock($id){
+        $commande = Commande::findOrFail($id);
+
+        if($commande->statut === "Retour Complet" || $commande->statut === "Annulée" || $commande->statut === "Refusée"){
+            $commande->statut = "Retour en stock";
+            $statut = new Statut();
+            $statut->commande_id = $commande->id;
+            $statut->name = $commande->statut;
+            //dd($user);
+            $commande->relance = 0;
+            $commande_produits = DB::table('commande_produits')->where('commande_id',$commande->id)->get();
+            $statut->user()->associate(Auth::user())->save();
+            $commande->save();
+            foreach($commande_produits as $commande_produit){
+            //dd($commande_produit);
+            $stock = Stock::where('produit_id',$commande_produit->produit_id)->first();
+            $stock->qte += $commande_produit->qte;
+            $stock->save();
+        }
+        }
+
+        return back();
+
+    }
+
     public function statutAdmin(Request $request, $id)
     {
         
@@ -1338,17 +1356,7 @@ class CommandeController extends Controller
                 $statut->user()->associate(Auth::user())->save();
                 $request->session()->flash('edit', $commande->numero);
 
-                if($statut->name != "Livré" && $statut->name != "Reporté"){
-                    $commande->relance = 0;
-                    $commande_produits = DB::table('commande_produits')->where('commande_id',$commande->id)->get();
-                    foreach($commande_produits as $commande_produit){
-                    //dd($commande_produit);
-                    $stock = Stock::where('produit_id',$commande_produit->produit_id)->first();
-                    $stock->qte += $commande_produit->qte;
-
-                    $stock->save();
-                }
-                }
+               
                 $commande->save();
             }
             else{

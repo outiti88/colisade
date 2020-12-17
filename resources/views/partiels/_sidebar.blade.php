@@ -42,8 +42,13 @@
                     <!-- End User Profile-->
                 </li>
                 
-                @can('fournisseur')
+                @can('client')
                 <li class="p-15 m-t-10"><a href="javascript:void(0)" class="btn btn-block create-btn text-white no-block d-flex align-items-center" data-toggle="modal" data-target="#modalSubscriptionForm">
+                    <i class="fa fa-plus-square"></i> 
+                    <span class="hide-menu m-l-5">Nouvelle Commande</span> </a></li>
+                @endcan
+                @can('ecom')
+                <li class="p-15 m-t-10"><a href="{{route('commandes.index')}}" class="btn btn-block create-btn text-white no-block d-flex align-items-center">
                     <i class="fa fa-plus-square"></i> 
                     <span class="hide-menu m-l-5">Nouvelle Commande</span> </a></li>
                 @endcan

@@ -303,15 +303,42 @@ N: {{$commande->numero}}
                                         href="{{route('facture.index')}}"
                                         @endif
                                         @break
+                                    @case("Retour Complet")
+                                        badge-danger"
+                                        title="Retour enregistré en stock" 
+                                        @break
                                     @default
-                                    badge-danger"
-                                @endswitch
+                                        badge-danger"
+                                        title="Valider dans le stock" 
+                                       style="cursor:pointer"
+                                        data-toggle="modal" data-target="#validRetour"
+                                        @break
                                     
+                                @endswitch
                                      > 
                                      <span style="font-size: 1.25em">{{$commande->statut}}</span> 
                                 </a>
                             </h5>
-                           
+                            <div class="modal fade" id="validRetour" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Validation en stock</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      Cliquez sur valider pour ajouter les produits de cette commande en stock
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      
+                                      <a  href="{{route('commande.valideRetour',$commande->id)}}" class="btn btn-primary">Valider le retour</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                           
                             <p class="proile-rating">Date d'ajout : {{date_format($commande->created_at,"Y/m/d")}}<span> {{date_format($commande->created_at,"H:i:s")}}</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">

@@ -12,6 +12,9 @@ Route::get('/commandes/{id}/statut', 'CommandeController@changeStatut')->name('c
 
 Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('statut.admin')->middleware('can:valide');
 
+Route::get('/commandes/{id}/valide', 'CommandeController@retourStock')->name('commande.valideRetour')->middleware('can:edit-users');
+
+
 Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen')->middleware('can:valide');
 
 Route::get('/search', 'CommandeController@search')->name('commande.search')->middleware('can:valide');

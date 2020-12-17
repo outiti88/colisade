@@ -180,7 +180,7 @@ class FactureController extends Controller
             <td>'.$livraisonNonPaye.'  DH</td>
             </tr>
             <tr class="totalfacture">
-            <th>TOTAL BRUT : </th>
+            <th>TOTAL NET : </th>
             <td>'.$net.'  DH</td>
             </tr>
 

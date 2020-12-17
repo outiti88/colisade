@@ -188,8 +188,7 @@
                            
                                     </span></p>
                                 </span>
-                                <span class="label label-rounded create-btn" style="background-color: #f7941e"><a style="color:white" href="{{route('reception.showFromNotify',['reception' => $notification->data['reception']['id'] ,
-                                    'notification' => $notification->id])}}">
+                                <span class="label label-rounded create-btn" style="background-color: #f7941e"><a style="color:white" href="{{route('reception.index')}}">
                                     Voir le detail
                                 </a>
                                 </span>
