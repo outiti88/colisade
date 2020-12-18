@@ -319,6 +319,7 @@ N: {{$commande->numero}}
                                      <span style="font-size: 1.25em">{{$commande->statut}}</span> 
                                 </a>
                             </h5>
+                            @can('edit-users')
                             <div class="modal fade" id="validRetour" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                   <div class="modal-content">
@@ -339,6 +340,7 @@ N: {{$commande->numero}}
                                   </div>
                                 </div>
                               </div>
+                            @endcan
                           
                             <p class="proile-rating">Date d'ajout : {{date_format($commande->created_at,"Y/m/d")}}<span> {{date_format($commande->created_at,"H:i:s")}}</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -1082,7 +1084,7 @@ N: {{$commande->numero}}
         "Chichaoua" : "45,00 DH" ,
         "Tamnsourt" : "45,00 DH" ,
         "Oudaya (Marrakech)" : "45,00 DH" ,
-        "Douar Lahna" : "" ,
+        "Douar Lahna" : "50,00 DH" ,
         "Douar  Sidi Moussa" : "45,00 DH" ,
         "Belaaguid" : "45,00 DH" ,
         "Dar Tounssi" : "45,00 DH" ,
