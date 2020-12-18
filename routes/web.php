@@ -15,7 +15,10 @@ Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('
 Route::get('/commandes/{id}/valide', 'CommandeController@retourStock')->name('commande.valideRetour')->middleware('can:edit-users');
 
 
-Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen')->middleware('can:valide');
+Route::get('pdf/{id}/A6','CommandeController@gen')->name('pdf.gen')->middleware('can:valide');
+
+Route::get('pdf/{id}/A8','CommandeController@genA8')->name('pdf.genA8')->middleware('can:valide');
+
 
 Route::get('/search', 'CommandeController@search')->name('commande.search')->middleware('can:valide');
 

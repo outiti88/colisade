@@ -367,9 +367,27 @@ N: {{$commande->numero}}
                 </div>
             </div>
             <div class="col-md-2">
-                <a target="_blank" class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}""><i class="fas fa-print"></i> imprimer</a>
+                <button type="button" class="btn btn-info text-white m-r-5" data-toggle="modal" data-target="#ticketPrint"><i class="fas fa-print"></i> Imprimer</button>
             </div>
         </div>
+
+        <div class="modal fade" id="ticketPrint"" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Choisissez le type de format</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+               
+                <div class="modal-footer">
+                    <a target="_blank" class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}"">Format A6</a>
+                    <a target="_blank" class="btn btn-primary text-white m-r-5" href="{{ route('pdf.genA8',['id'=> $commande->id]) }}"">Format A8</a>
+                </div>
+              </div>
+            </div>
+          </div>
         <div class="row">
           
             <div class="col-md-12">

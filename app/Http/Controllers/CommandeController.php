@@ -949,7 +949,172 @@ class CommandeController extends Controller
             
 
        
-        $pdf -> loadHTML($style.$content)->setPaper('A7');
+        $pdf -> loadHTML($style.$content)->setPaper('A6');
+
+
+        return $pdf->stream();
+        //dd($commande) ;
+    }
+
+
+    public function contentA8(Commande $commande){
+        $content = '';
+        $user = DB::table('users')->find($commande->user_id);
+        
+        if($commande->montant == 0) $montant = "Payé par Carte bancaire";
+        else $montant = ($commande->montant+$commande->prix) .' DH';
+
+        for ($i=1; $i <= $commande->colis ; $i++) { 
+            $content .= '
+            <div class="container">
+                        
+                <h1 style="color:#f7941e">
+                    Ticket de Commande
+                </h1>
+                <div class="tableau">
+                                        
+                    <table id="customers">
+                    <tr>
+                        <th>Commande Numero: </th>
+                        <td>' .$commande->numero.'</td>
+                    </tr>
+                    <tr>
+                        <th>Entreprise:  </th>
+                        <td>'.$user->name.'</td>
+                    </tr>
+                    </table>
+                </div>
+                <h2>Montant Total :'. $montant .' </h2>
+                <div class="tableau">
+                    <table id="customers">
+                        <tr>
+                            <th>
+                                Nom & Prénom:
+                            </th>
+                            <td>
+                                '.$commande->nom.'
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Ville:
+                            </th>
+                            <td>
+                                '.$commande->ville.'
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Adresse:
+                            </th>
+                            <td>
+                                '.$commande->adresse.'
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Téléphone:
+                            </th>
+                            <td>
+                                '.$commande->telephone.'
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                    <div class="tableau">
+                                        
+                    <table id="customers">
+                    <tr>
+                        <th>Livreur: </th>
+                        <td>Colisade Delivery</td>
+                    </tr>
+                    <tr>
+                        <th>Site web:  </th>
+                        <td>www.colisade.ma</td>
+                    </tr>
+                    </table>
+                </div>
+                <h2>colis: '.$i.'/'.$commande->colis.' </h2>
+                <div style="display:flex ; justify-content: space-around; padding-top:2px">
+                    <div class="logo-text"  >
+        
+                    <img src="https://i.ibb.co/NWQgqxd/logo-light-text.png" style="
+                        WIDTH: 50PX;
+                    "class="light-logo" alt="homepage" />
+                    </div>
+                   
+                </div>
+            </div>
+            
+            ' ; }
+            
+            
+        return $content;
+
+    }
+
+    public function genA8($id){
+
+        $commande = Commande::findOrFail($id);
+        $pdf = \App::make('dompdf.wrapper');
+        $style = '
+        <head> <meta charset="UTF-8">
+            <title>Ticket de la commande: '.$commande->numero.'</title>
+
+        </head>
+            <style>
+                    *{
+                        
+                        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+                        font-size : 5px;
+                        padding:2px;
+                        margin:0;
+                    }
+                    h2{
+                        text-align : center;
+                        font-size: 1.5em;
+                        border: 1px solid #f7941e;
+                    }
+                .container{
+                    box-sizing: border-box;
+                    width:100%
+                    height:auto;
+                    padding-top: 5px !important;
+                }
+                    .tableau{
+                    padding-top:6px;
+                   
+                    width:100%;
+                }
+                
+                    #customers {
+                    text-align:center;
+                    border-collapse: collapse;
+                    width: 100%;
+                    }
+                    h1{
+                        text-align : center;
+                        font-size: 2em;
+                    }
+                    #customers td, #customers th {
+                    border: 1px solid #f7941e;
+                    }
+                    #customers tr:nth-child(even){
+                        background-color: #f2f2f2;
+                    }
+                    #customers th {
+                    padding-top: 6px;
+                    padding-bottom: 5px;
+                    
+                    color: black;
+                    }
+                </style>';
+
+        $content = $this->contentA8($commande);
+            
+
+       
+        $pdf -> loadHTML($style.$content)->setPaper('A8');
 
 
         return $pdf->stream();
@@ -1314,7 +1479,6 @@ class CommandeController extends Controller
             $statut->commande_id = $commande->id;
             $statut->name = $commande->statut;
             //dd($user);
-            $commande->relance = 0;
             $commande_produits = DB::table('commande_produits')->where('commande_id',$commande->id)->get();
             $statut->user()->associate(Auth::user())->save();
             $commande->save();
@@ -1349,6 +1513,9 @@ class CommandeController extends Controller
                 if($commande->statut === 'Reporté'){
                     if($request->filled('prevu_at')) $commande->postponed_at = $request->prevu_at;
                     else $request->prevu_at = now() ;
+                }
+                if($commande->statut !== 'Livré' && $user->statut === 1){
+                    $commande->relance = 0;
                 }
                 $statut = new Statut();
                 $statut->commande_id = $commande->id;

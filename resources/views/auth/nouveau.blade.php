@@ -350,7 +350,9 @@
         "Meknès" : "40,00  DH ",
         "Sidi Hrazem" : "50,00 DH ",
         "Nador" : "40,00  DH ",
-            "Khouribga" : "40,00 DH"
+            "Khouribga" : "40,00 DH",
+            "El Youssoufia" : "50,00 DH"
+
         };
             
   
