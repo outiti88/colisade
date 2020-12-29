@@ -12,7 +12,13 @@ Route::get('/commandes/{id}/statut', 'CommandeController@changeStatut')->name('c
 
 Route::patch('/commandes/{id}/statut', 'CommandeController@statutAdmin')->name('statut.admin')->middleware('can:valide');
 
-Route::get('pdf/{id}','CommandeController@gen')->name('pdf.gen')->middleware('can:valide');
+Route::get('/commandes/{id}/valide', 'CommandeController@retourStock')->name('commande.valideRetour')->middleware('can:edit-users');
+
+
+Route::get('pdf/{id}/A6','CommandeController@gen')->name('pdf.gen')->middleware('can:valide');
+
+Route::get('pdf/{id}/A8','CommandeController@genA8')->name('pdf.genA8')->middleware('can:valide');
+
 
 Route::get('/search', 'CommandeController@search')->name('commande.search')->middleware('can:valide');
 
@@ -31,6 +37,8 @@ Route::get('/user/new', 'Auth\RegisterController@nouveau')->name('user.nouveau')
 Route::resource('/commandes','CommandeController')->except([
     'create', 'edit'
 ])->middleware('can:valide');
+
+Route::resource('/ville','VilleController')->middleware('can:manage-users');
 
 Route::resource('/produit','ProduitController')->except([
     'create', 'edit'
@@ -57,27 +65,27 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('/bonlivraison','BonLivraisonController')->only([
     'index', 'store'
-])->middleware('can:valide');
+])->middleware('can:client-admin');
 
 Route::resource('/Relance','RelanceController')->only([
     'index', 'edit'
 ])->middleware('can:manage-users');
 
-Route::get('/bonlivraison/{id}/infos','BonLivraisonController@infos')->name('bon.infos')->middleware('can:valide');
+Route::get('/bonlivraison/{id}/infos','BonLivraisonController@infos')->name('bon.infos')->middleware('can:client-admin');
 
-Route::get('/bonlivraison/{id}/pdf','BonLivraisonController@gen')->name('bon.gen')->middleware('can:valide');
+Route::get('/bonlivraison/{id}/pdf','BonLivraisonController@gen')->name('bon.gen')->middleware('can:client-admin');
 
-Route::get('/bonlivraison/{id}/details','BonLivraisonController@search')->name('bon.search')->middleware('can:valide');
+Route::get('/bonlivraison/{id}/details','BonLivraisonController@search')->name('bon.search')->middleware('can:client-admin');
 
 Route::resource('/facture','FactureController')->only([
     'index', 'store'
 ])->middleware('can:delete-commande');
 
-Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen')->middleware('can:manage-users');
+Route::get('/facture/{id}/pdf','FactureController@gen')->name('facture.gen')->middleware('can:delete-commande');
 
-Route::get('/facture/{id}/details','FactureController@search')->name('facture.search')->middleware('can:manage-users');
+Route::get('/facture/{id}/details','FactureController@search')->name('facture.search')->middleware('can:delete-commande');
 
-Route::get('/facture/{id}/infos','FactureController@infos')->name('facture.infos')->middleware('can:manage-users');
+Route::get('/facture/{id}/infos','FactureController@infos')->name('facture.infos')->middleware('can:delete-commande');
 
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:manage-users')->group(function(){
     Route::resource('/users','UsersController',['except' => ['show','create','store']])->middleware('can:valide');

@@ -66,7 +66,7 @@
 <div class="page-breadcrumb">
     <div class="row align-items-center">
         <div class="col-5">
-            <h4 class="page-title">Gestion des Colis</h4>
+            <h4 class="page-title">Gestion des Commandes</h4>
             <div class="d-flex align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -171,7 +171,7 @@
                     <table class="table table-hover table-bordered" style="font-size: 0.72em;">
                         <thead>
                             <tr>
-                                @can('ramassage-commande')
+                                @can('edit-users')
                                 <th scope="col">Client</th>
                                 @endcan
                                 <th scope="col">Numero Commande</th>
@@ -180,7 +180,9 @@
                                 <th scope="col">Ville</th>
                                 <th scope="col">Adresse</th>
                                 <th scope="col">Montant</th>
+                                @cannot('livreur')
                                 <th scope="col">Prix de Livraison</th>
+                                @endcannot
                                 <th scope="col">Date</th>
                                 <th scope="col">Statut</th>
                                 <th scope="col">Ticket</th>
@@ -190,7 +192,7 @@
                         <tbody id="myTable">
                            @forelse ($commandes as $index => $commande)
                            <tr>
-                            @can('ramassage-commande')
+                            @can('edit-users')
                             <th scope="row">
                                 <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic 
                                     @if($users[$index]->statut)
@@ -235,13 +237,14 @@
                             <td>{{$commande->ville}}</td>
                             <td>{{$commande->adresse}}</td>
                             @if ($commande->montant > 0)
-                            <td>{{$commande->montant}} MAD</td>
+                            <td>{{$commande->montant}} DH</td>
                             @else
                             <td> <i class="far fa-credit-card"></i> CARD PAYMENT
                             </td>
                             @endif
-                           
-                            <td>{{$commande->prix}} MAD</td>
+                            @cannot('livreur')
+                            <td>{{$commande->prix}} DH</td>
+                            @endcannot
                             <td>{{$commande->created_at}}</td>
                             <td>
                                 
@@ -357,7 +360,7 @@
                         <div class="modal-body mx-3">
                             <form class="form-horizontal form-material" method="GET" action="{{route('commande.filter')}}">
                                 @csrf
-                                @can('ramassage-commande')
+                                @can('manage-users')
                                 <div class="form-group row">
                                     <label for="client" class="col-sm-4">Fournisseur :</label>
                                     <div class="col-sm-8">
@@ -374,9 +377,7 @@
                                     </div>
                                 </div>
                                
-                                @endcan
 
-                                @can('manage-users')
                                 <div class="form-group row">
                                     <label for="livreur" class="col-sm-4">Livreur :</label>
                                     <div class="col-sm-8">
@@ -439,30 +440,11 @@
                                     <div class="col-sm-8">
                                         <select name="ville" class="form-control form-control-line">
                                             <option selected disabled>Choisissez la ville</option>
-                                                <option value="Agadir"> Agadir</option>
-                                                <option value="Al Hoceima"> Al Hoceima</option>
-                                                <option value="Béni Mellal"> Béni Mellal</option>
-                                                <option value="Casablanca">Casablanca</option>
-                                                <option value="El Jadida"> El Jadida</option>
-                                                <option value="Errachidia"> Errachidia</option>
-                                                <option value="Fès"> Fès</option>
-                                                <option value="Khénifra"> Khénifra</option>
-                                                <option value="Khouribga"> Khouribga</option>
-                                                <option value="Kénitra">Kénitra</option>
-                                                <option value="Larache"> Larache</option>
-                                                <option value="Marrakech">Marrakech</option>
-                                                <option value="Meknès"> Meknès</option>
-                                                <option value="Nador"> Nador</option>
-                                                <option value="Ouarzazate"> Ouarzazate</option>
-                                                <option value="Oujda"> Oujda</option>
-                                                <option value="Rabat"> Rabat</option>
-                                                <option value="Safi"> Safi</option>
-                                                <option value="Settat"> Settat</option>
-                                                <option value="Salé"> Salé</option>
-                                                <option value="Tanger"> Tanger</option>
-                                                <option value="Taza"> Taza</option>
-                                                <option value="Tétouan"> Tétouan</option>
-                                               
+                                            @foreach ($villes as $ville)
+                                            <option value="{{$ville->name}}" class="rounded-circle">
+                                                {{$ville->name}}
+                                            </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -573,9 +555,9 @@
                                       </fieldset>
     
                                       <div class="form-group col-md-12" id="montant" style="display: block">
-                                        <label for="example-email" class="col-md-12">Montant (MAD) :</label>
+                                        <label for="example-email" class="col-md-12">Montant (DH) :</label>
                                         <div class="col-md-12">
-                                            <input  value="{{ old('montant') }}" type="number" class="form-control form-control-line" name="montant" id="example-email">
+                                            <input  value="{{ old('montant') }}" type="text" class="form-control form-control-line" name="montant" id="example-email">
                                         </div>
                                     </div>
                                     
@@ -596,31 +578,14 @@
                                 <div class="form-group">
                                     <label class="col-sm-12">Ville :</label>
                                     <div class="col-sm-12">
-                                        <select name="ville" class="form-control form-control-line" id="ville" onchange="myFunction()" required>
+                                        <select name="ville" class="form-control form-control-line"  onchange="myFunction()" required>
                                             <option checked>Choisissez la ville</option>
-                                            <option value="Agadir"> Agadir</option>
-                                                <option value="Al Hoceima"> Al Hoceima</option>
-                                                <option value="Béni Mellal"> Béni Mellal</option>
-                                                <option value="Casablanca">Casablanca</option>
-                                                <option value="El Jadida"> El Jadida</option>
-                                                <option value="Errachidia"> Errachidia</option>
-                                                <option value="Fès"> Fès</option>
-                                                <option value="Khénifra"> Khénifra</option>
-                                                <option value="Khouribga"> Khouribga</option>
-                                                <option value="Kénitra">Kénitra</option>
-                                                <option value="Larache"> Larache</option>
-                                                <option value="Marrakech">Marrakech</option>
-                                                <option value="Meknès"> Meknès</option>
-                                                <option value="Nador"> Nador</option>
-                                                <option value="Ouarzazate"> Ouarzazate</option>
-                                                <option value="Oujda"> Oujda</option>
-                                                <option value="Rabat"> Rabat</option>
-                                                <option value="Safi"> Safi</option>
-                                                <option value="Settat"> Settat</option>
-                                                <option value="Salé"> Salé</option>
-                                                <option value="Tanger"> Tanger</option>
-                                                <option value="Taza"> Taza</option>
-                                                <option value="Tétouan"> Tétouan</option>
+                                            @foreach ($villes as $ville)
+                                            <option value="{{$ville->name}}" class="rounded-circle">
+                                                {{$ville->name}}
+                                            </option>
+                                            @endforeach
+                                          
                                         </select>
                                     </div>
                                 </div>
@@ -880,31 +845,14 @@
                               <div class="form-group">
                                   <label class="col-sm-12">Ville :</label>
                                   <div class="col-sm-12">
-                                      <select value="{{ old('ville') }}" name="ville" class="form-control form-control-line" id="ville" onchange="myFunction()" required>
+                                      <select value="{{ old('ville') }}" name="ville" class="form-control form-control-line" onchange="myFunction()" required>
                                           <option checked>Choisissez la ville</option>
-                                          <option value="Agadir"> Agadir</option>
-                                                <option value="Al Hoceima"> Al Hoceima</option>
-                                                <option value="Béni Mellal"> Béni Mellal</option>
-                                                <option value="Casablanca">Casablanca</option>
-                                                <option value="El Jadida"> El Jadida</option>
-                                                <option value="Errachidia"> Errachidia</option>
-                                                <option value="Fès"> Fès</option>
-                                                <option value="Khénifra"> Khénifra</option>
-                                                <option value="Khouribga"> Khouribga</option>
-                                                <option value="Kénitra">Kénitra</option>
-                                                <option value="Larache"> Larache</option>
-                                                <option value="Marrakech">Marrakech</option>
-                                                <option value="Meknès"> Meknès</option>
-                                                <option value="Nador"> Nador</option>
-                                                <option value="Ouarzazate"> Ouarzazate</option>
-                                                <option value="Oujda"> Oujda</option>
-                                                <option value="Rabat"> Rabat</option>
-                                                <option value="Safi"> Safi</option>
-                                                <option value="Settat"> Settat</option>
-                                                <option value="Salé"> Salé</option>
-                                                <option value="Tanger"> Tanger</option>
-                                                <option value="Taza"> Taza</option>
-                                                <option value="Tétouan"> Tétouan</option>
+                                          @foreach ($villes as $ville)
+                                            <option value="{{$ville->name}}" class="rounded-circle">
+                                                {{$ville->name}}
+                                            </option>
+                                            @endforeach
+                                               
                                       </select>
                                   </div>
                               </div>
@@ -1100,4 +1048,6 @@
     }
 
 </script>
+
+
 @endsection

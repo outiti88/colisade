@@ -130,8 +130,8 @@
                                     </a>
                                 </th>
                                 <td>{{ $facture->livre}}</td>
-                                <td>{{ $facture->montant}} Mad</td>
-                                <td>{{ $facture->prix}} Mad</td>
+                                <td>{{ $facture->montant}} DH</td>
+                                <td>{{ $facture->prix}} DH</td>
                                 <td>{{$facture->commande}}</td>
                                 <td>{{$facture->colis}}</td>
                                 <td>{{ $facture->created_at}}</td>

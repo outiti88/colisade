@@ -13,7 +13,6 @@ Relances
             margin-bottom: 3%;
             border-radius: 0.5rem;
             background: #fff;
-
         }
         .profile-img{
             text-align: center;
@@ -106,7 +105,6 @@ Relances
         a:hover {
             color: #f7941e;
         }
-
         .show .row{
             border-bottom-color: #cacaca;
             border-bottom-style: solid;
@@ -208,13 +206,16 @@ Relances
                                                                         <div class="col-sm-12">
                                                                             <select id="etat{{$index}}0" onchange="reporter({{$index}},0)" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
                                                                                 <option>Relancée</option>
+                                                                                <option>Reporté</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
+                                                                                <option>Annulée</option>
+
                                                               
                                                                             </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="form-group" id="prevu{{$index}}0" style="display: block">
+                                                                    <div class="form-group" id="prevu{{$index}}0" style="display: none">
                                                                         <label class="col-sm-12" for="datePrevu{{$index}}0">Date Prévue :</label>
                                                                         <div class="col-sm-12">
                                                                           <input class="form-control" name="prevu_at" type="date" id="datePrevu{{$index}}0">
@@ -321,13 +322,15 @@ Relances
                                                                         <div class="col-sm-12">
                                                                             <select id="etat{{$index}}1" onchange="reporter({{$index}},1)" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
                                                                                 <option>Relancée</option>
+                                                                                <option>Reporté</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
+                                                                                <option>Annulée</option>
                                                               
                                                                             </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="form-group" id="prevu{{$index}}1" style="display: block">
+                                                                    <div class="form-group" id="prevu{{$index}}1" style="display: none">
                                                                         <label class="col-sm-12" for="datePrevu{{$index}}1">Date Prévue :</label>
                                                                         <div class="col-sm-12">
                                                                           <input class="form-control" name="prevu_at" type="date" id="datePrevu{{$index}}1">
@@ -434,13 +437,15 @@ Relances
                                                                         <div class="col-sm-12">
                                                                             <select id="etat{{$index}}2" onchange="reporter({{$index}},2)" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
                                                                                 <option>Relancée</option>
+                                                                                <option>Reporté</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
+                                                                                <option>Annulée</option>
                                                               
                                                                             </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="form-group" id="prevu{{$index}}2" style="display: block">
+                                                                    <div class="form-group" id="prevu{{$index}}2" style="display: none">
                                                                         <label class="col-sm-12" for="datePrevu{{$index}}2">Date Prévue :</label>
                                                                         <div class="col-sm-12">
                                                                           <input class="form-control" name="prevu_at" type="date" id="datePrevu{{$index}}2">
@@ -546,13 +551,14 @@ Relances
                                                                         <div class="col-sm-12">
                                                                             <select id="etat{{$index}}3" onchange="reporter({{$index}},3)" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
                                                                                 <option>Relancée</option>
+                                                                                <option>Reporté</option>
                                                                                 <option>Injoignable</option>
                                                                                 <option>Refusée</option>
-                                                              
+                                                                                <option>Annulée</option>
                                                                             </select>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="form-group" id="prevu{{$index}}3" style="display: block">
+                                                                    <div class="form-group" id="prevu{{$index}}3" style="display: none">
                                                                         <label class="col-sm-12" for="datePrevu{{$index}}3">Date Prévue :</label>
                                                                         <div class="col-sm-12">
                                                                           <input class="form-control" name="prevu_at" type="date" id="datePrevu{{$index}}3">
@@ -612,10 +618,9 @@ Relances
 <script>
     function reporter(index,i) {
     var xx = document.getElementById("prevu"+index+i);
-
     var test = document.getElementById("etat"+index+i).value;
     //alert(index+i);
-    if(test=='Relancée'){
+    if(test=='Reporté'){
         xx.style.display = "block";
     }
     else{

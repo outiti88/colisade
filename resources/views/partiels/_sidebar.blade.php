@@ -42,8 +42,13 @@
                     <!-- End User Profile-->
                 </li>
                 
-                @can('fournisseur')
+                @can('client')
                 <li class="p-15 m-t-10"><a href="javascript:void(0)" class="btn btn-block create-btn text-white no-block d-flex align-items-center" data-toggle="modal" data-target="#modalSubscriptionForm">
+                    <i class="fa fa-plus-square"></i> 
+                    <span class="hide-menu m-l-5">Nouvelle Commande</span> </a></li>
+                @endcan
+                @can('ecom')
+                <li class="p-15 m-t-10"><a href="{{route('commandes.index')}}" class="btn btn-block create-btn text-white no-block d-flex align-items-center">
                     <i class="fa fa-plus-square"></i> 
                     <span class="hide-menu m-l-5">Nouvelle Commande</span> </a></li>
                 @endcan
@@ -59,8 +64,9 @@
                 @endcan
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/profil" aria-expanded="false"><i class="mdi mdi-account-network"></i><span class="hide-menu">Profile</span></a></li>
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/commandes" aria-expanded="false"><i class="mdi mdi-package-variant"></i><span class="hide-menu">Gestion des commandes</span></a></li>
-                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('bonlivraison.index')}}" aria-expanded="false"><i class="mdi mdi-note-text"></i><span class="hide-menu">Bon de livraison</span></a></li>
                 @cannot('livreur')
+                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('bonlivraison.index')}}" aria-expanded="false"><i class="mdi mdi-note-text"></i><span class="hide-menu">Bon de livraison</span></a></li>
+                
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('facture.index')}}" aria-expanded="false"><i class="mdi mdi-newspaper"></i><span class="hide-menu">Facture</span></a></li>
 
                 @endcannot
@@ -77,6 +83,8 @@
                 @endif    
                 
                 </span></a></li>
+                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('ville.index')}}" aria-expanded="false"><i class="mdi mdi-account-switch"></i><span class="hide-menu">Gestion villes 
+
                 @endcan
             </ul>
             
@@ -142,7 +150,7 @@
                                       <div class="form-group col-md-12" id="montant"  style="display: block">
                                         <label for="example-email" class="col-md-12">Montant (MAD) :</label>
                                         <div class="col-md-12">
-                                            <input  value="{{ old('montant') }}" type="number" class="form-control form-control-line" name="montant" id="example-email">
+                                            <input  value="{{ old('montant') }}" type="text" class="form-control form-control-line" name="montant" id="example-email">
                                         </div>
                                     </div>
                                     
@@ -163,31 +171,8 @@
                                 <div class="form-group">
                                     <label class="col-sm-12">Ville :</label>
                                     <div class="col-sm-12">
-                                        <select value="{{ old('ville') }}" name="ville" class="form-control form-control-line" id="ville" onchange="myFunction()" required>
+                                        <select value="{{ old('ville') }}" name="ville" class="form-control form-control-line" id="ville3" onchange="myFunction()" required>
                                             <option checked>Choisissez la ville</option>
-                                            <option value="Agadir"> Agadir</option>
-                                                  <option value="Al Hoceima"> Al Hoceima</option>
-                                                  <option value="Béni Mellal"> Béni Mellal</option>
-                                                  <option value="Casablanca">Casablanca</option>
-                                                  <option value="El Jadida"> El Jadida</option>
-                                                  <option value="Errachidia"> Errachidia</option>
-                                                  <option value="Fès"> Fès</option>
-                                                  <option value="Khénifra"> Khénifra</option>
-                                                  <option value="Khouribga"> Khouribga</option>
-                                                  <option value="Kénitra">Kénitra</option>
-                                                  <option value="Larache"> Larache</option>
-                                                  <option value="Marrakech">Marrakech</option>
-                                                  <option value="Meknès"> Meknès</option>
-                                                  <option value="Nador"> Nador</option>
-                                                  <option value="Ouarzazate"> Ouarzazate</option>
-                                                  <option value="Oujda"> Oujda</option>
-                                                  <option value="Rabat"> Rabat</option>
-                                                  <option value="Safi"> Safi</option>
-                                                  <option value="Settat"> Settat</option>
-                                                  <option value="Salé"> Salé</option>
-                                                  <option value="Tanger"> Tanger</option>
-                                                  <option value="Taza"> Taza</option>
-                                                  <option value="Tétouan"> Tétouan</option>
                                         </select>
                                     </div>
                                 </div>
@@ -337,4 +322,6 @@
     </div>
     @endcan
 </div>
+
+    
 

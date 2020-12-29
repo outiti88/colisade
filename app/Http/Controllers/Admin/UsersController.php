@@ -7,6 +7,7 @@ use App\User;
 use App\Role;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -32,8 +33,11 @@ class UsersController extends Controller
         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
         $users = User::all();
+        $total = User::count();
         //dd($users);
-        return view('admin.users.index')->with(['users'=>$users,'nouveau'=>$nouveau]);
+        return view('admin.users.index')->with(['users'=>$users,
+                                'total' => $total,
+                                'nouveau'=>$nouveau]);
     }
 
   
@@ -47,6 +51,8 @@ class UsersController extends Controller
     public function edit(User $user)
     {
         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
+        $villes= DB::table('villes')->orderBy('name')->get();
+
 
         if(Gate::denies('edit-users')){
             return redirect(route('admin.users.index'));
@@ -57,7 +63,8 @@ class UsersController extends Controller
         return view('admin.users.edit')->with([
             'nouveau'=>$nouveau,
             'user'=>$user,
-            'roles'=>$roles
+            'roles'=>$roles,
+            'villes'=>$villes
         ]);
     }
 
@@ -78,6 +85,7 @@ class UsersController extends Controller
         }
        // dd($request->roles);
        $user->roles()->sync($request->roles);
+       $user->prix=$request->prix;
        $user->image=$request->image;
        $user->name=$request->name;
        $user->email=$request->email;

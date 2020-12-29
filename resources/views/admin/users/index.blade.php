@@ -55,7 +55,8 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">{{ __('Utilisateurs Colisade') }}</div>
-                
+                <div class="card-header">Total des Utilisateurs: {{ $total }} Utilisateur</div>
+                <input class="form-control" id="myInput" type="text" placeholder="Rechercher...">
                 <div class="card-body" >
                     <div class="table-responsive">
                         <table class="table">
@@ -73,7 +74,7 @@
                               </tr>
                             </thead>
                            
-                            <tbody>
+                            <tbody id="myTable">
                                 @foreach ($users as $user)
                               <tr>
                                 <th scope="row"><a><img src="{{$user->image}}" alt="user" class="rounded-circle
@@ -130,10 +131,6 @@
                                   </div>
 
 
-                                   <a href="{{route('admin.users.destroy',$user->id)}}">
-                                       
-                                       
-                                   </a>
                                </td>
                                 @endcan
                                 
@@ -164,4 +161,15 @@
             });
         </script>
     @endif
+
+    <script>
+        $(document).ready(function(){
+          $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
+        </script>
 @endsection

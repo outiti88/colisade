@@ -149,7 +149,7 @@
                             <td>{{$produit->reference}}</td>
                             <td>{{$produit->libelle}}</td>
                             <td>{{$produit->categorie}}</td>
-                            <td>{{$produit->prix}} MAD</td>
+                            <td>{{$produit->prix}} DH</td>
                             <td>
                                 @if ($stock[$index]->qte > 0)
                                     
@@ -243,7 +243,7 @@
                                 </div>
                                
                                 <div class="form-group col-md-12">
-                                    <label for="example-email" class="col-md-12">Prix (MAD) :</label>
+                                    <label for="example-email" class="col-md-12">Prix (DH) :</label>
                                     <div class="col-md-12">
                                         <input  value="{{ old('prix') }}" type="number" class="form-control form-control-line" name="prix" >
                                     </div>

@@ -142,7 +142,7 @@ N: {{$commande->numero}}
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
                     @endcan
                     @can('ramassage-commande')
-                    @if (($commande->statut === "En cours" || $commande->statut === "Modifiée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->traiter != 0)
+                    @if (($commande->statut === "Livré" || $commande->statut === "Modifiée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->traiter != 0)
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
                     @endif
                     @endcan
@@ -303,15 +303,44 @@ N: {{$commande->numero}}
                                         href="{{route('facture.index')}}"
                                         @endif
                                         @break
+                                    @case("Retour Complet")
+                                        badge-danger"
+                                        title="Retour enregistré en stock" 
+                                        @break
                                     @default
-                                    badge-danger"
-                                @endswitch
+                                        badge-danger"
+                                        title="Valider dans le stock" 
+                                       style="cursor:pointer"
+                                        data-toggle="modal" data-target="#validRetour"
+                                        @break
                                     
+                                @endswitch
                                      > 
                                      <span style="font-size: 1.25em">{{$commande->statut}}</span> 
                                 </a>
                             </h5>
-                           
+                            @can('edit-users')
+                            <div class="modal fade" id="validRetour" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Validation en stock</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      Cliquez sur valider pour ajouter les produits de cette commande en stock
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      
+                                      <a  href="{{route('commande.valideRetour',$commande->id)}}" class="btn btn-primary">Valider le retour</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            @endcan
                           
                             <p class="proile-rating">Date d'ajout : {{date_format($commande->created_at,"Y/m/d")}}<span> {{date_format($commande->created_at,"H:i:s")}}</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -338,9 +367,27 @@ N: {{$commande->numero}}
                 </div>
             </div>
             <div class="col-md-2">
-                <a target="_blank" class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}""><i class="fas fa-print"></i> imprimer</a>
+                <button type="button" class="btn btn-info text-white m-r-5" data-toggle="modal" data-target="#ticketPrint"><i class="fas fa-print"></i> Imprimer</button>
             </div>
         </div>
+
+        <div class="modal fade" id="ticketPrint"" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Choisissez le type de format</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+               
+                <div class="modal-footer">
+                    <a target="_blank" class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}"">Format A6</a>
+                    <a target="_blank" class="btn btn-primary text-white m-r-5" href="{{ route('pdf.genA8',['id'=> $commande->id]) }}"">Format A8</a>
+                </div>
+              </div>
+            </div>
+          </div>
         <div class="row">
           
             <div class="col-md-12">
@@ -393,21 +440,24 @@ N: {{$commande->numero}}
                                     </div>
                                     <div class="col-md-6">
                                         @if ($commande->montant > 0)
-                                        <p>{{$commande->montant}} MAD</p>
+                                        <p>{{$commande->montant}} DH</p>
                                         @else
                                         <p> <i class="far fa-credit-card"></i> CARD PAYMENT
                                         </p>
                                         @endif
                                     </div>
                                 </div>
+                                @cannot('livreur')
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Prix de livraison :</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <p>{{$commande->prix}} MAD</p>
+                                        <p>{{$commande->prix}} DH</p>
                                     </div>
-                                </div>
+                                </div> 
+                                @endcannot
+                               
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Nombre de colis :</label>
@@ -654,9 +704,9 @@ N: {{$commande->numero}}
                                      
 
                                       <div class="form-group col-md-12" id="montant2"  style="display: block">
-                                        <label for="example-email" class="col-md-12">Montant (MAD) :</label>
+                                        <label for="example-email" class="col-md-12">Montant (DH) :</label>
                                         <div class="col-md-12">
-                                            <input  value="{{ old('montant',$commande->montant) }}" type="number" class="form-control form-control-line" name="montant" id="example-email">
+                                            <input  value="{{ old('montant',$commande->montant) }}" type="text" class="form-control form-control-line" name="montant" id="example-email">
                                         </div>
                                     </div>
                                     @endcan
@@ -677,35 +727,17 @@ N: {{$commande->numero}}
                                 <div class="form-group">
                                     <label class="col-sm-12">Ville :</label>
                                     <div class="col-sm-12">
-                                        <select name="ville" class="form-control form-control-line" value="{{ old('ville',$commande->ville) }}" id="ville2" onchange="myFunctionEdit1()" required>
+                                        <select name="ville" class="form-control form-control-line" value="{{ old('ville',$commande->ville) }}" onchange="myFunctionEdit1()" required>
                                         <option value="{{$commande->ville}}" checked>{{$commande->ville}}</option>
-                                        <option value="Agadir"> Agadir</option>
-                                        <option value="Al Hoceima"> Al Hoceima</option>
-                                        <option value="Béni Mellal"> Béni Mellal</option>
-                                        <option value="Casablanca">Casablanca</option>
-                                        <option value="El Jadida"> El Jadida</option>
-                                        <option value="Errachidia"> Errachidia</option>
-                                        <option value="Fès"> Fès</option>
-                                        <option value="Khénifra"> Khénifra</option>
-                                        <option value="Khouribga"> Khouribga</option>
-                                        <option value="Kénitra">Kénitra</option>
-                                        <option value="Larache"> Larache</option>
-                                        <option value="Marrakech">Marrakech</option>
-                                        <option value="Meknès"> Meknès</option>
-                                        <option value="Nador"> Nador</option>
-                                        <option value="Ouarzazate"> Ouarzazate</option>
-                                        <option value="Oujda"> Oujda</option>
-                                        <option value="Rabat"> Rabat</option>
-                                        <option value="Safi"> Safi</option>
-                                        <option value="Settat"> Settat</option>
-                                        <option value="Salé"> Salé</option>
-                                        <option value="Tanger"> Tanger</option>
-                                        <option value="Taza"> Taza</option>
-                                        <option value="Tétouan"> Tétouan</option>
+                                        @foreach ($villes as $ville)
+                                        <option value="{{$ville->name}}" class="rounded-circle">
+                                            {{$ville->name}}
+                                        </option>
+                                        @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div   class="form-group" id="secteur2">
+                                <div   class="form-group" id="secteur2" style="display: none">
                                     <label class="col-sm-12">Secteur :</label>
                                     <div class="col-sm-12">
                                         <select  value="{{ old('secteur',$commande->secteur) }}" name="secteur" class="form-control form-control-line">
@@ -878,6 +910,7 @@ N: {{$commande->numero}}
                                             <option>Retour Complet</option>
                                             <option>Retour Partiel</option>
                                             <option>Reporté</option>
+                                            <option>Annulée</option>
                                         </select> 
                                     </div>
                                 </div>

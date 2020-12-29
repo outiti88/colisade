@@ -159,7 +159,8 @@ class ProduitController extends Controller
                     $produit->photo = $filename ;
                 }
                 else{
-                    $produit->photo =  $produit->categorie . '.png';
+                    //$produit->photo =  $produit->categorie . '.png';
+                   $produit->photo = "product.jpg";
                 }
 
                 $produit->user()->associate(Auth::user())->save();
@@ -239,7 +240,7 @@ class ProduitController extends Controller
         }
         
         
-        dd("salut");
+       // dd("salut");
     }
 
     /**

@@ -122,8 +122,8 @@
                                 <td>{{$bonLivraison->commande}}</td>
                                 <td>{{$bonLivraison->colis}}</td>
                                 <td>{{ $bonLivraison->created_at}}</td>
-                                <td>{{ $bonLivraison->montant}} Mad</td>
-                                <td>{{ $bonLivraison->prix}} Mad</td>
+                                <td>{{ $bonLivraison->montant}} DH</td>
+                                <td>{{ $bonLivraison->prix}} DH</td>
                                 <td>
                                 <a target="_blank" class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" >
                                   <i class="fas fa-print"></i></a>
@@ -175,7 +175,7 @@
                                         
                                     </div>
 
-                                    <label for="ville" class="col-sm-12">Ville :</label>
+                                 <!--  <label for="ville" class="col-sm-12">Ville :</label>
                                   <div class="col-sm-12">
                                       <select value="{{ old('ville') }}" name="ville" class="form-control form-control-line" id="ville" required>
                                           <option checked>Choisissez la ville</option>
@@ -203,7 +203,7 @@
                                           <option value="Taza"> Taza</option>
                                           <option value="Tétouan"> Tétouan</option>
                                       </select>
-                                  </div>
+                                  </div> -->
                                 </div>
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">

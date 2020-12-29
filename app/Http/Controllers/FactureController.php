@@ -76,13 +76,13 @@ class FactureController extends Controller
         else{
             $facture = new Facture();
             $facture->numero = 'FAC_'.date("mdis");
-            $facture->colis = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Reporté', 'Retour Complet', 'Retour Partiel'])->where('facturer','0')->sum('colis');
+            $facture->colis = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Annulée', 'Retour Complet', 'Retour Partiel'])->where('facturer','0')->sum('colis');
             $facture->livre = $nbrCmdLivre;
             $facture->prix = DB::table('commandes')->where('user_id',$user)->where('statut','Livré')->where('facturer','0')->sum('prix');
             $facture->montant = DB::table('commandes')->where('user_id',$user)->where('statut','Livré')->where('facturer','0')->sum('montant');
-            $facture->commande = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Reporté', 'Retour Complet', 'Retour Partiel'])->where('facturer','0')->count(); //nbr de commanddes non livrée
+            $facture->commande = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Annulée', 'Retour Complet', 'Retour Partiel'])->where('facturer','0')->count(); //nbr de commanddes non livrée
             $facture->user()->associate($user)->save();
-            $affected = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Livré','Reporté', 'Retour Complet', 'Retour Partiel'])->where('facturer', '=', '0')->update(array('facturer' => $facture->id));
+            $affected = DB::table('commandes')->where('user_id',$user)->whereIn('statut', ['Livré','Annulée','Retour en stock'])->where('facturer', '=', '0')->update(array('facturer' => $facture->id));
 
             $request->session()->flash('ajoute');
         }
@@ -140,6 +140,15 @@ class FactureController extends Controller
     public function content(Facture $facture, $n , $i){
         $user = $facture->user_id;
         $user = DB::table('users')->find($user);
+        $livraisonNonPaye = 0;
+
+        $commandes = DB::table('commandes')->where('user_id',$user->id)->where('statut','livré')->where('facturer',$facture->id)->get();
+        foreach ($commandes as $index => $commande) {
+                
+                    $livraisonNonPaye += $commande->prix;
+                
+            }
+            $net = $facture->montant-$livraisonNonPaye;
         
         //les information du fournisseur (en-tete)
         $info_client = '
@@ -162,10 +171,19 @@ class FactureController extends Controller
             <div class="total">
             <table id="customers">
                 
-            <tr>
-            <th>TOTAL NET : </th>
-            <td>'.$facture->montant.'  MAD</td>
+            <tr class="totalfacture">
+            <th>TOTAL BRUT : </th>
+            <td>'.$facture->montant.'  DH</td>
             </tr>
+            <tr class="totalfacture">
+            <th>Livraison : </th>
+            <td>'.$livraisonNonPaye.'  DH</td>
+            </tr>
+            <tr class="totalfacture">
+            <th>TOTAL NET : </th>
+            <td>'.$net.'  DH</td>
+            </tr>
+
             </table>
             </div>
             ';
@@ -259,6 +277,7 @@ class FactureController extends Controller
                     background-color: #e85f03;
                     color: white;
                     }
+                    
                 </style>
             
             </head>
@@ -284,6 +303,13 @@ class FactureController extends Controller
 
  
     public function search($id){
+
+        $facture = Facture::findOrFail($id);
+        $user = $facture->user_id;
+
+        if($user !== Auth::user()->id && Gate::denies('ramassage-commande')){
+            return redirect()->route('facture.index');
+        }
         //dd(Auth::user()->id );
         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
@@ -334,6 +360,12 @@ class FactureController extends Controller
    }
 
    public function infos($id){
+    $facture = Facture::findOrFail($id);
+    $user = $facture->user_id;
+
+    if($user !== Auth::user()->id && Gate::denies('ramassage-commande')){
+        return redirect()->route('facture.index');
+    }
     $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
         $clients = [];  
