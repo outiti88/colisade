@@ -5,64 +5,7 @@
 @endsection
 
 @section('content')
-<div class="container my-4">    
-    <div class="modal fade" id="modalReceptionSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header text-center">
-                          <h4 class="modal-title w-100 font-weight-bold">Rechercher sur les receptions</h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body mx-3">
-                            <form class="form-horizontal form-material" method="GET" action="{{route('reception.filter')}}">
-                                @csrf
-                                @can('ramassage-commande')
-                                <div class="form-group row">
-                                    <label for="client" class="col-sm-4">Fournisseur :</label>
-                                    <div class="col-sm-8">
-                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
-                                            <option value="" disabled selected>Choisissez le fournisseur</option>
-                                            @foreach ($clients as $client)
-                                        <option value="{{$client->id}}" class="rounded-circle">
-                                            {{$client->name}}
-                                        </option>
-                                            @endforeach
-                                           
-                                        </select>
-                                        
-                                    </div>
-                                </div>
-                               
-                                @endcan
 
-
-                                  <div class="from-group row">
-                                      <label for="envoyer" class="col-sm-3">Envoyée</label>
-                                      <div class="col-3">
-                                        <input class="form-control" name="envoyer" type="checkbox" value="1" id="envoyer">
-                                      </div>
-                                      <label for="valide" class="col-sm-3">Validée</label>
-                                      <div class="col-3">
-                                        <input class="form-control" name="valide" type="checkbox" value="1" id="valide">
-                                      </div>
-                                  </div>
-                                
-                                <div class="form-group">
-                                    <div class="modal-footer d-flex justify-content-center">
-                                        <button type="submit" class="btn btn-warning"><i class="fa fa-search"></i> Rechercher</button>
-                                        
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-            
-                      </div>
-                    </div>
-    </div>
-</div>
 <div class="page-breadcrumb">
     <div class="row align-items-center">
         <div class="col-5">
@@ -78,16 +21,74 @@
         </div>
         <div class="col-7">
         <div class="row float-right d-flex ">
-            <div class=m-r-5" style="margin-right: 10px;">
+            <div class="m-r-5" style="margin-right: 10px;">
                 <a  class="btn btn-warning text-white"  data-toggle="modal" data-target="#modalReceptionSearch"><i class="fa fa-search"></i></a>
             </div>
-          
-            
             @can('ecom')
             <div class="m-r-5">
                 <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalReception"><i class="fa fa-plus-square"></i> Envoyer</a>
             </div>
             @endcan
+            <div class="container my-4">
+                <div class="modal fade" id="modalReceptionSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header text-center">
+                                      <h4 class="modal-title w-100 font-weight-bold">Rechercher sur les receptions</h4>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body mx-3">
+                                        <form class="form-horizontal form-material" method="GET" action="{{route('reception.filter')}}">
+                                            @csrf
+                                            @can('ramassage-commande')
+                                            <div class="form-group row">
+                                                <label for="client" class="col-sm-4">Fournisseur :</label>
+                                                <div class="col-sm-8">
+                                                    <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
+                                                        <option value="" disabled selected>Choisissez le fournisseur</option>
+                                                        @foreach ($clients as $client)
+                                                    <option value="{{$client->id}}" class="rounded-circle">
+                                                        {{$client->name}}
+                                                    </option>
+                                                        @endforeach
+
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+                                            @endcan
+
+
+                                              <div class="from-group row">
+                                                  <label for="envoyer" class="col-sm-3">Envoyée</label>
+                                                  <div class="col-3">
+                                                    <input class="form-control" name="envoyer" type="checkbox" value="1" id="envoyer">
+                                                  </div>
+                                                  <label for="valide" class="col-sm-3">Validée</label>
+                                                  <div class="col-3">
+                                                    <input class="form-control" name="valide" type="checkbox" value="1" id="valide">
+                                                  </div>
+                                              </div>
+
+                                            <div class="form-group">
+                                                <div class="modal-footer d-flex justify-content-center">
+                                                    <button type="submit" class="btn btn-warning"><i class="fa fa-search"></i> Rechercher</button>
+
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                  </div>
+                                </div>
+                </div>
+            </div>
+
+
         </div>
         </div>
     </div>
@@ -95,7 +96,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        
+
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -123,13 +124,13 @@
                            <tr>
                             @can('ramassage-commande')
                             <th scope="row">
-                                <a  title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
-                                       
+                                <a  title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic"
+
                                             @can('edit-users')
                                                 href="{{route('admin.users.edit',$users[$index]->id)}}"
                                             @endcan
 
-                                        
+
                                     >
                                     <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
                                 </a>
@@ -154,8 +155,8 @@
                                                 <span class="badge badge-primary badge-pill">{{$detail['qte']}}</span>
                                               </li>
                                             @endforeach
-                                            
-                                           
+
+
                                           </ul>
                                     </div>
                                     <div class="modal-footer">
@@ -164,7 +165,7 @@
                                       @if ($reception->etat == 'Envoyé')
 
                                       <a style="color: white"
-                                            title="Valider la reception" 
+                                            title="Valider la reception"
                                             href="{{ route('reception.valide',$reception->id) }}"
                                             class="btn btn-primary">Valider</a>
                                         @endif
@@ -174,8 +175,8 @@
                                 </div>
                               </div>
                             <td>
-                                <a href="" style="color: white; background-color: #f7941e" class="badge badge-pill" data-toggle="modal" data-target="#detail_reception{{$reception->id}}" > 
-                                    <span style="font-size: 1.25em">{{$reception->reference}}</span> 
+                                <a href="" style="color: white; background-color: #f7941e" class="badge badge-pill" data-toggle="modal" data-target="#detail_reception{{$reception->id}}" >
+                                    <span style="font-size: 1.25em">{{$reception->reference}}</span>
                                 </a>
                             </td>
                             <td>{{$reception->colis}}</td>
@@ -184,31 +185,31 @@
                             <td>{{$reception->company}}</td>
                             <td>{{$reception->prevu_at}}</td>
                             <td>
-                                <a  style="color: white" 
-                                    class="badge badge-pill 
+                                <a  style="color: white"
+                                    class="badge badge-pill
                                     @switch($reception->etat)
                                     @case("Envoyé")
                                     badge-warning"
                                     @can('edit-users')
-                                    title="Valider la reception" 
+                                    title="Valider la reception"
                                      href="{{ route('reception.valide',$reception->id) }}"
                                     @endcan
                                         @break
                                     @case("Validé")
                                     badge-success"
-                                        title="Voir le details" 
+                                        title="Voir le details"
                                         href="{{route('reception.index')}}"
                                         @break
                                     @default
                                     badge-danger"
                                 @endswitch
-                                     > 
-                                     <span style="font-size: 1.25em">{{$reception->etat}}</span> 
-                                      
+                                     >
+                                     <span style="font-size: 1.25em">{{$reception->etat}}</span>
+
                                 </a>
                                 <br> ({{\Carbon\Carbon::parse($reception->updated_at)->diffForHumans()}})
-                            
-                            
+
+
 
                             </td>
 
@@ -217,11 +218,11 @@
                         <tr>
                             <td colspan="10" style="text-align: center">Aucun produit enregistré!</td>
                         </tr>
-                        
+
                            @endforelse
-                         
+
                         </tbody>
-                        
+
                     </table>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
@@ -239,11 +240,11 @@
 
 
 
-<div class="container my-4">    
+<div class="container my-4">
     @can('ecom')
-    
-<div class="container my-4">    
-  
+
+<div class="container my-4">
+
     <div class="modal fade" id="modalReception" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -257,12 +258,12 @@
                         <div class="modal-body mx-3">
                             <form class="form-horizontal form-material" method="POST" action="{{route('reception.store')}}">
                                 @csrf
-  
+
                                 <div id="education_fields">
-            
+
                                 </div>
                                   <div class="row" id="test">
-                                    
+
                                       <div class="form-group col-md-6">
                                         <label for="produit" class="col-sm-12">Produit :</label>
                                         <div class="col-md-12">
@@ -273,19 +274,19 @@
                                                 {{$produit->reference .' '.$produit->libelle}}
                                             </option>
                                                 @endforeach
-                                               
+
                                             </select>
-                                          </div> 
+                                          </div>
                                         </div>
-                                        
+
                                         <div class="form-group col-md-4 input-group">
                                           <label for="qte" class="col-md-12">Quantité:</label>
                                           <div class="col-md-12">
                                               <input  value="{{ old('qte') }}" type="number" class="form-control form-control-line" name="qte[]" id="qte" required>
                                           </div>
-                                          
+
                                       </div>
-                                    
+
                                   </div>
                                   <div class="input-group-btn col-md-2" style="position: relative; left:350px; top:-55px">
                                     <button class="btn btn-success " type="button"  onclick="education_fields();"> <span class="mdi mdi-library-plus" aria-hidden="true"></span> </button>
@@ -302,11 +303,11 @@
                                       <input class="form-control" name="prevu_at" type="date" value="{{now()}}" id="example-date-input" required>
                                     </div>
                                   </div>
-                               
+
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
                                         <button class="btn btn-danger">Envoyer</button>
-                                        
+
                                     </div>
                                 </div>
                             </form>
@@ -323,11 +324,11 @@
                               </div>
                               @endif
                         </div>
-            
+
                       </div>
                     </div>
     </div>
-   
+
   </div>
     @endcan
 </div>
@@ -357,7 +358,7 @@
 <script>
     var room = 1;
     function education_fields() {
-    
+
         room++;
         var objTo = document.getElementById('education_fields')
         var divtest = document.createElement("div");
@@ -365,7 +366,7 @@
         var rdiv = 'removeclass'+room;
 
         divtest.innerHTML  = $("#test").html() + '<div class="input-group-btn"> <button class="btn btn-danger m-t-25" type="button" onclick="remove_education_fields('+ room +');"> <span class="mdi mdi-close-box" aria-hidden="true"></span> </button></div></div></div></div><div class="clear"></div>';
-        
+
         objTo.appendChild(divtest)
     }
     function remove_education_fields(rid) {

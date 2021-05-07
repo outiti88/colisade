@@ -33,3 +33,7 @@ a.notify,
     border-width: 5px;
     border-radius: 50%;
 }
+
+a.sidebar-link{
+    width: 200px;
+}

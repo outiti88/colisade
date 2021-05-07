@@ -141,16 +141,81 @@ N: {{$commande->numero}}
                     @can('client')
                     <a  class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
                     @endcan
-                    @can('ramassage-commande')
-                    @if (($commande->statut === "Livré" || $commande->statut === "Modifiée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->traiter != 0)
+                    @can('livreur')
+                    @if (( $commande->statut === "Pas de Réponse" || $commande->statut === "En cours" || $commande->statut === "Modifiée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->traiter != 0)
                     <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
                     @endif
                     @endcan
+                    @can('manage-users')
+                        @if (( $commande->statut !== "Retour en stock") && $commande->traiter != 0 )
+                        <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
+                        @endif
+                        <a  class="btn btn-dark text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormLivreur"><i class="fas fa-user"></i> Affecter</a>
+
+                        <div class="modal fade" id="modalSubscriptionFormLivreur" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <form  method="POST" action="{{route('commande.livreur',['id' => $commande->id])}}">
+                                    @csrf
+                                    @method('PATCH')
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Choisissez le livreur au quel vous voulez affecter cette commande ?</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h5>
+                                        Commande numero: {{$commande->numero}}
+                                    </h5>
+                                    <h5>
+                                        Nom de livreur: {{$livreur->name}}
+                                    </h5>
+                                    <div class="form-group row">
+                                        <label for="livreur" class="col-sm-4">Livreur :</label>
+                                        <div class="col-sm-8">
+                                            <select name="livreur" id="livreur" class="form-control form-control-line" value="{{ old('livreur') }}">
+                                                <option value=""  selected >Choisissez le livreur</option>
+                                                <option selected value="{{$livreur->id}}" class="rounded-circle">
+                                                    {{$livreur->name}}
+                                                </option>
+                                                @foreach ($livreurs as $livreur)
+                                                    <option value="{{$livreur->id}}" class="rounded-circle">
+                                                        {{$livreur->name}}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-body">
+
+                                  </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                    <button type="submit" class="btn btn-primary text-white m-r-5">Affecter</button>
+                                </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                    @endcan
+
+
+                    @can('manage-users')
+                    @if ($commande->statut === "Refusée"  )
+                    <a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
+                    @endif
+                    @endcan
+
+
+
                     @can('delete-commande')
-                    @if ($commande->statut === "envoyée" || $modify === 1)
-                    <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
-                    
-                    <a class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormDelete"><i class="fas fa-trash-alt"></i></a>
+                    @if ($commande->statut === "envoyée" || $modify === 1  )
+                    <a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
+
+                    <a class="btn btn-secondary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormDelete"><i class="fas fa-trash-alt"></i></a>
 
                                 <div class="modal fade" id="modalSubscriptionFormDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -181,35 +246,43 @@ N: {{$commande->numero}}
                                           <form method="POST" action="{{ route('commandes.destroy',['commande'=> $commande->id]) }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-primary text-white m-r-5">Ok</button>                                        </form>
+                                            <button type="submit" class="btn btn-primary text-white m-r-5">Ok</button>
+                                        </form>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
-                    
+
                     @endif
-                    
+
                     @endcan
 
 
 
             </div>
         </div>
-        
+
     </div>
 </div>
 <div class="container-fluid">
     <div class="container emp-profile">
-       
+
         <div class="row">
-           
+            @if (session()->has('cmdRefuser'))
+            <div class="alert alert-dismissible alert-danger col-12">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Succés !</strong> Le statut de la commande numero {{session()->get('edit')}} est Refusée et elle n'est pas encore facturée !
+            <br>
+                vous ne pouvez pas changer le statut en  <b>"Retour en stock"</b>
+              </div>
+              @endif
             @if (session()->has('statut'))
             <div class="alert alert-dismissible alert-success col-12">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Succés !</strong> La commande à été bien Modifiée </a>.
               </div>
             @endif
-            
+
             @if (session()->has('edit'))
         <div class="alert alert-dismissible alert-info col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -252,27 +325,27 @@ N: {{$commande->numero}}
                 <div class="profile-head">
                             <h5>
                                 Commande numero: <span style="color: #f7941e">{{$commande->numero}}</span>
-                                <a  style="color: white" 
-                                    class="badge badge-pill 
+                                <a  style="color: white"
+                                    class="badge badge-pill
                                     @switch($commande->statut)
                                     @case("envoyée")
                                     badge-warning"
                                     @can('ramassage-commande')
-                                    title="Rammaser la commande" 
+                                    title="Rammaser la commande"
                                      href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
                                     @endcan
                                         @break
                                         @case("Ramassée")
                                     badge-secondary"
                                     @can('ramassage-commande')
-                                    title="Envoyer la commande" 
+                                    title="Envoyer la commande"
                                      href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
                                     @endcan
                                         @break
                                         @case("Expidiée")
                                     badge-primary"
                                     @can('ramassage-commande')
-                                    title="Rammaser la commande" 
+                                    title="Rammaser la commande"
                                      href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
                                     @endcan
                                         @break
@@ -281,45 +354,48 @@ N: {{$commande->numero}}
                                     @case("Relancée")
                                     @case("Reporté")
 
+
+
                                     badge-info"
                                         @if ($commande->traiter > 0)
-                                        title="Voir le bon de livraison" 
+                                        title="Voir le bon de livraison"
                                         href="{{route('bon.gen',$commande->traiter)}}"
                                         target="_blank"
                                         @else
-                                        title="Générer le bon de livraison" 
+                                        title="Générer le bon de livraison"
                                         href="{{route('bonlivraison.index')}}"
                                         @endif
-                                        
+
                                         @break
                                     @case("Livré")
                                     badge-success"
                                     @if ($commande->facturer > 0)
-                                        title="Voir la facture" 
+                                        title="Voir la facture"
                                         href="{{route('facture.gen',$commande->facturer)}}"
                                         target="_blank"
                                         @else
-                                        title="Générer la facture" 
+                                        title="Générer la facture"
                                         href="{{route('facture.index')}}"
                                         @endif
                                         @break
-                                    @case("Retour Complet")
+                                    @case("Retour en stock")
                                         badge-danger"
-                                        title="Retour enregistré en stock" 
+                                        title="Retour enregistré en stock"
                                         @break
                                     @default
                                         badge-danger"
-                                        title="Valider dans le stock" 
+                                        title="Valider dans le stock"
                                        style="cursor:pointer"
                                         data-toggle="modal" data-target="#validRetour"
                                         @break
-                                    
+
                                 @endswitch
-                                     > 
-                                     <span style="font-size: 1.25em">{{$commande->statut}}</span> 
+                                     >
+                                     <span style="font-size: 1.25em">{{$commande->statut}}</span>
                                 </a>
                             </h5>
-                            @can('edit-users')
+                            @can('manage-users')
+                            @if ($client == true)
                             <div class="modal fade" id="validRetour" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                   <div class="modal-content">
@@ -334,14 +410,16 @@ N: {{$commande->numero}}
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                      
+
                                       <a  href="{{route('commande.valideRetour',$commande->id)}}" class="btn btn-primary">Valider le retour</a>
                                     </div>
                                   </div>
                                 </div>
                               </div>
+                            @endif
+
                             @endcan
-                          
+
                             <p class="proile-rating">Date d'ajout : {{date_format($commande->created_at,"Y/m/d")}}<span> {{date_format($commande->created_at,"H:i:s")}}</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -356,13 +434,13 @@ N: {{$commande->numero}}
                         </li>
                         @endcan
                         @can('ramassage-commande')
-                        
+
                         <li class="nav-item">
                             <a class="nav-link" id="relances-tab" data-toggle="tab" href="#relances" role="tab" aria-controls="relances" aria-selected="false">Relances</a>
                         </li>
-                       
+
                         @endcan
-                        
+
                     </ul>
                 </div>
             </div>
@@ -371,7 +449,7 @@ N: {{$commande->numero}}
             </div>
         </div>
 
-        <div class="modal fade" id="ticketPrint"" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="ticketPrint" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -380,7 +458,7 @@ N: {{$commande->numero}}
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-               
+
                 <div class="modal-footer">
                     <a target="_blank" class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}"">Format A6</a>
                     <a target="_blank" class="btn btn-primary text-white m-r-5" href="{{ route('pdf.genA8',['id'=> $commande->id]) }}"">Format A8</a>
@@ -389,7 +467,7 @@ N: {{$commande->numero}}
             </div>
           </div>
         <div class="row">
-          
+
             <div class="col-md-12">
                 <div class="tab-content profile-tab" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -433,7 +511,7 @@ N: {{$commande->numero}}
                                         <p>{{$commande->secteur}}</p>
                                     </div>
                                 </div>
-                             
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Montant :</label>
@@ -447,6 +525,17 @@ N: {{$commande->numero}}
                                         @endif
                                     </div>
                                 </div>
+                                @can('livreur-admin')
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>La part du livreur :</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>{{$commande->livreurPart}} MAD</p>
+                                    </div>
+                                </div>
+                                @endcan
+
                                 @cannot('livreur')
                                 <div class="row">
                                     <div class="col-md-6">
@@ -455,9 +544,9 @@ N: {{$commande->numero}}
                                     <div class="col-md-6">
                                         <p>{{$commande->prix}} DH</p>
                                     </div>
-                                </div> 
+                                </div>
                                 @endcannot
-                               
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Nombre de colis :</label>
@@ -466,7 +555,7 @@ N: {{$commande->numero}}
                                         <p>{{$commande->colis}}</p>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label>Statut de la commande :</label>
@@ -504,27 +593,27 @@ N: {{$commande->numero}}
                                 <div class="row">
                                     <div class="col-md-4">
                                     <label>
-                                        <a  style="color: white" 
-                                    class="badge badge-pill 
+                                        <a  style="color: white"
+                                    class="badge badge-pill
                                     @switch($statut->name)
                                     @case("envoyée")
                                     badge-warning"
                                     @can('ramassage-commande')
-                                    title="Rammaser la commande" 
+                                    title="Rammaser la commande"
                                      href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
                                     @endcan
                                         @break
                                         @case("Ramassée")
                                     badge-secondary"
                                     @can('ramassage-commande')
-                                    title="Rammaser la commande" 
+                                    title="Rammaser la commande"
                                      href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
                                     @endcan
                                         @break
                                         @case("Expidiée")
                                     badge-primary"
                                     @can('ramassage-commande')
-                                    title="Rammaser la commande" 
+                                    title="Rammaser la commande"
                                      href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
                                     @endcan
                                         @break
@@ -532,32 +621,34 @@ N: {{$commande->numero}}
                                     @case("Modifiée")
                                     @case("Relancée")
                                     @case("Reporté")
+                                    @case("Pas de Réponse")
+
                                     badge-info"
                                         @if ($commande->traiter > 0)
-                                        title="Voir le bon de livraison" 
+                                        title="Voir le bon de livraison"
                                         href="{{route('bon.infos',$commande->traiter)}}"
                                         @else
-                                        title="Générer le bon de livraison" 
+                                        title="Générer le bon de livraison"
                                         href="{{route('bonlivraison.index')}}"
                                         @endif
-                                        
+
                                         @break
                                     @case("Livré")
                                     badge-success"
                                     @if ($commande->facturer > 0)
-                                        title="Voir la facture" 
+                                        title="Voir la facture"
                                         href="{{route('facture.infos',$commande->facturer)}}"
                                         @else
-                                        title="Générer la facture" 
+                                        title="Générer la facture"
                                         href="{{route('facture.index')}}"
                                         @endif
                                         @break
                                     @default
                                     badge-danger"
                                 @endswitch
-                                    
-                                     > 
-                                     <span style="font-size: 1.25em">{{$statut->name}}</span> 
+
+                                     >
+                                     <span style="font-size: 1.25em">{{$statut->name}}</span>
                                 </a>
                                     </label>
                                     </div>
@@ -571,9 +662,9 @@ N: {{$commande->numero}}
                                     @endcan
                                 </div>
                                 @endforeach
-                                
-                              
-                                
+
+
+
                         <div class="row">
                             <div class="col-md-12">
                                 <label>Commentaire</label><br/>
@@ -634,7 +725,7 @@ N: {{$commande->numero}}
                             @empty
                             <div class="row">
                                 <div class="col-md-12">
-                                    Aucune Relance 
+                                    Aucune Relance
                                 </div>
                             </div>
                         @endforelse
@@ -643,13 +734,13 @@ N: {{$commande->numero}}
                 </div>
             </div>
         </div>
-               
+
 </div>
 </div>
-   
+
 @can('delete-commande')
-@if ($commande->statut === "envoyée" || $modify === 1)
-<div class="container my-4">    
+@if ($commande->statut === "envoyée" || $modify === 1 || $commande->statut === "Refusée")
+<div class="container my-4">
     <div class="modal fade" id="modalSubscriptionFormEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -670,7 +761,7 @@ N: {{$commande->numero}}
                                         <input  value="{{ old('nom',$commande->nom) }}" name="nom" type="text" placeholder="Nom & Prénom" class="form-control form-control-line">
                                     </div>
                                 </div>
-                               
+
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="example-email" class="col-md-12">Nombre de Colis :</label>
@@ -678,40 +769,54 @@ N: {{$commande->numero}}
                                             <input  value="{{ old('colis',$commande->colis) }}" type="number" class="form-control form-control-line" name="colis" id="example-email">
                                         </div>
                                     </div>
-    
-    
-                                      @can('gestion-commande')
+
+
                                       <fieldset class="form-group col-md-6">
                                         <div class="row">
                                           <legend class="col-form-label  pt-0">Mode de paiement :</legend>
                                           <div class="col-sm-12">
                                             <div class="form-check">
-                                              <input  onclick="myFunctionEdit2(this.value)" class="form-check-input" type="radio" name="mode" id="cd" value="cd" checked>
+                                              <input  onclick="myFunctionEdit2(this.value)" class="form-check-input" type="radio" name="mode" id="cd" value="cd"
+                                              @if ($commande->montant != 0)
+                                                checked
+                                                @endif
+                                              >
                                               <label class="form-check-label" for="cd">
                                                 à la livraison
                                               </label>
                                             </div>
                                             <div class="form-check">
-                                              <input  onclick="myFunctionEdit2(this.value)" class="form-check-input" type="radio" name="mode" id="cp" value="cp">
+                                              <input  onclick="myFunctionEdit2(this.value)" class="form-check-input" type="radio" name="mode" id="cp" value="cp"
+                                              @if ($commande->montant == 0)
+                                                checked
+                                                @endif
+                                              >
                                               <label class="form-check-label" for="cp">
                                                 carte bancaire
                                               </label>
                                             </div>
-                                        
+
                                           </div>
                                         </div>
                                       </fieldset>
-                                     
 
-                                      <div class="form-group col-md-12" id="montant2"  style="display: block">
+                                      <div class="form-group col-md-12" id="montant2"
+                                      @if ($commande->montant != 0)
+                                      style="display: block"
+                                      @else
+                                      style="display: none"
+                                      @endif
+
+
+                                       >
                                         <label for="example-email" class="col-md-12">Montant (DH) :</label>
                                         <div class="col-md-12">
                                             <input  value="{{ old('montant',$commande->montant) }}" type="text" class="form-control form-control-line" name="montant" id="example-email">
                                         </div>
                                     </div>
-                                    @endcan
+
                                 </div>
-                
+
                                 <div class="form-group">
                                     <label class="col-md-12">Téléphone :</label>
                                     <div class="col-md-12">
@@ -742,124 +847,24 @@ N: {{$commande->numero}}
                                     <div class="col-sm-12">
                                         <select  value="{{ old('secteur',$commande->secteur) }}" name="secteur" class="form-control form-control-line">
                                             <option value="{{$commande->secteur}}" checked>{{$commande->secteur}}</option>
-                                            <option>Aviation</option>
-                                            <option>Al Kasaba</option>
-                                            <option>Cap spartel</option>
-                                            <option>Centre ville</option>
-                                            <option>Cité californie</option>
-                                            <option>Girari</option>
-                                            <option>Ibn Taymia</option>
-                                            <option>M'nar</option>
-                                            <option>M'sallah</option>
-                                            <option>Makhoukha</option>
-                                            <option>Malabata</option>
-                                            <option>Marchane</option>
-                                            <option>Marjane</option>
-                                            <option>Moujahidine</option>
-                                            <option>Moulay Youssef</option>
-                                            <option>Santa</option>
-                                            <option>Val Fleuri</option>
-                                            <option>Vieille montagne</option>
-                                            <option>Ziatene</option>
-                                            <option>Autre secteur</option>
-                                            <option>Achennad</option>
-                                            <option>Aharrarine</option>
-                                            <option>Ahlane</option>
-                                            <option>Aida</option>
-                                            <option>Al Anbar</option>
-                                            <option>Al Warda</option>
-                                            <option>Aouama Gharbia</option>
-                                            <option>Beausejour</option>
-                                            <option>Behair</option>
-                                            <option>Ben Dibane</option>
-                                            <option>Beni Makada Lakdima</option>
-                                            <option>Beni Said</option>
-                                            <option>Beni Touzine</option>
-                                            <option>Bir Aharchoune</option>
-                                            <option>Bir Chifa</option>
-                                            <option>Bir El Ghazi</option>
-                                            <option>Bouchta-Abdelatif</option>
-                                            <option>Bouhout 1</option>
-                                            <option>Bouhout 2</option>
-                                            <option>Dher Ahjjam</option>
-                                            <option>Dher Lahmam</option>
-                                            <option>El Baraka</option>
-                                            <option>El Haj El Mokhtar</option>
-                                            <option>El Khair 1</option>
-                                            <option>El Khair 2</option>
-                                            <option>El Mers 1</option>
-                                            <option>El Mers 2</option>
-                                            <option>El Mrabet</option>
-                                            <option>Ennasr</option>
-                                            <option>Gourziana</option>
-                                            <option>Haddad</option>
-                                            <option>Hanaa 1</option>
-                                            <option>Hanaa 2</option>
-                                            <option>Hanaa 3 - Soussi</option>
-                                            <option>Jirrari</option>
-                                            <option>Les Rosiers</option>
-                                            <option>Zemmouri</option>
-                                            <option>Zouitina</option>
-                                            <option>Al Amal</option>
-                                            <option>Al Mandar Al Jamil</option>
-                                            <option>Alia</option>
-                                            <option>Benkirane</option>
-                                            <option>Charf</option>
-                                            <option>Draoua</option>
-                                            <option>Drissia</option>
-                                            <option>El Majd</option>
-                                            <option>El Oued</option>
-                                            <option>Mghogha</option>
-                                            <option>Nzaha</option>
-                                            <option>Sania</option>
-                                            <option>Tanger City Center</option>
-                                            <option>Tanja Balia</option>
-                                            <option>Zone Industrielle Mghogha</option>
-                                            <option>Azib Haj Kaddour</option>
-                                            <option>Bel Air - Val fleuri</option>
-                                            <option>Bir Chairi</option>
-                                            <option>Branes 1</option>
-                                            <option>Branes 2</option>
-                                            <option>Casabarata</option>
-                                            <option>Castilla</option>
-                                            <option>Hay Al Bassatine</option>
-                                            <option>Hay El Boughaz</option>
-                                            <option>Hay Zaoudia</option>
-                                            <option>Lalla Chafia</option>
-                                            <option>Souani</option>
-                                            <option>Achakar</option>
-                                            <option>Administratif</option>
-                                            <option>Ahammar</option>
-                                            <option>Ain El Hayani</option>
-                                            <option>Algerie</option>
-                                            <option>Branes Kdima</option>
-                                            <option>Californie</option>
-                                            <option>Centre</option>
-                                            <option>De La Plage</option>
-                                            <option>Du Golf</option>
-                                            <option>Hay Hassani</option>
-                                            <option>Iberie</option>
-                                            <option>Jbel Kbir</option>
-                                            <option>Laaouina</option>
-                                            <option>Marchan</option>
-                                            <option>Mediouna</option>
-                                            <option>Mesnana</option>
-                                            <option>Mghayer</option>
-                                            <option>Mister Khouch</option>
-                                            <option>Mozart</option>
-                                            <option>Msala</option>
-                                            <option>Médina</option>
-                                            <option>Port Tanger ville</option>
-                                            <option>Rmilat</option>
-                                            <option>Star Hill</option>
-                                            <option>manar</option>
+
                                         </select>
                                     </div>
                                 </div>
+                                <div class="custom-control custom-control-alternative custom-checkbox">
+                                    <input class="custom-control-input" id="customCheckRegister" type="checkbox" name="isOpen" value="1"
+                                    @if ($commande->isOpen)
+                                         checked
+                                    @endif
+                                    >
+                                    <label class="custom-control-label" for="customCheckRegister">
+                                      <span >J'accepte l'ouverture du colis par le client.</span>
+                                    </label>
+                                  </div>
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
                                         <button class="btn btn-warning">Modifier</button>
-                                        
+
                                     </div>
                                 </div>
                             </form>
@@ -876,7 +881,7 @@ N: {{$commande->numero}}
                               </div>
                               @endif
                         </div>
-            
+
                       </div>
                     </div>
     </div>
@@ -884,7 +889,7 @@ N: {{$commande->numero}}
 @endif
 @endcan
 
-<div class="container my-4">    
+<div class="container my-4">
     <div class="modal fade" id="modalSubscriptionFormStatut" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -899,19 +904,21 @@ N: {{$commande->numero}}
                             <form class="form-horizontal form-material" method="POST" action="{{route('commandeStatut',['id' => $commande->id])}}">
                                 @csrf
                                 @method('PATCH')
-                                
+
                                 <div class="form-group">
                                     <label for="etat" class="col-sm-12">Statut :</label>
                                     <div class="col-sm-12">
                                         <select id="etat" onchange="reporter()" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
                                             <option>Livré</option>
                                             <option>Injoignable</option>
+                                            <option>Pas de Réponse</option>
                                             <option>Refusée</option>
-                                            <option>Retour Complet</option>
-                                            <option>Retour Partiel</option>
+                                            @cannot('livreur')
+                                            <option>Retour</option>
+                                            @endcannot
                                             <option>Reporté</option>
                                             <option>Annulée</option>
-                                        </select> 
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group" style="display: none" id="prevu">
@@ -928,8 +935,8 @@ N: {{$commande->numero}}
                                 </div>
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
-                                        <button class="btn btn-warning">Modifier statut</button>
-                                        
+                                        <button class="btn btn-warning">Enregistrer</button>
+
                                     </div>
                                 </div>
                             </form>
@@ -946,7 +953,7 @@ N: {{$commande->numero}}
                               </div>
                               @endif
                         </div>
-            
+
                       </div>
                     </div>
     </div>
@@ -958,7 +965,7 @@ N: {{$commande->numero}}
 <script>
     var xx = document.getElementById("prevu");
     function reporter() {
-        
+
     var test = document.getElementById("etat").value;
     //alert(test);
     if(test=='Reporté'){
@@ -971,7 +978,7 @@ N: {{$commande->numero}}
 </script>
 
 <script>
-    
+
     function myFunctionEdit1() {
         var x = document.getElementById("secteur2");
     var test = document.getElementById("ville2").value;

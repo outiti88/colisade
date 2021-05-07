@@ -52,6 +52,10 @@ class UsersController extends Controller
     {
         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
         $villes= DB::table('villes')->orderBy('name')->get();
+        $userVilles = explode(",", $user->ville);
+        unset($userVilles[count($userVilles)-1]);
+        //dd($userVilles);
+
 
 
         if(Gate::denies('edit-users')){
@@ -64,7 +68,8 @@ class UsersController extends Controller
             'nouveau'=>$nouveau,
             'user'=>$user,
             'roles'=>$roles,
-            'villes'=>$villes
+            'villes'=>$villes,
+            'userVilles' => $userVilles
         ]);
     }
 
@@ -83,13 +88,26 @@ class UsersController extends Controller
         if(Gate::denies('edit-users')){
             return redirect(route('admin.users.index'));
         }
-       // dd($request->roles);
+       //dd($request->roles[0] ==3);
        $user->roles()->sync($request->roles);
        $user->prix=$request->prix;
        $user->image=$request->image;
        $user->name=$request->name;
        $user->email=$request->email;
-       $user->ville=$request->ville;
+       if($request->roles[0] ==3){
+        $user->ville= "";
+        foreach ($request->ville as $index => $ville){
+         $user->ville .= $ville .',';
+        }
+       }
+       else{
+            $user->ville= "";
+        foreach ($request->ville as $index => $ville){
+            $user->ville .= $ville;
+        }
+       }
+       
+       
        $user->description = $request->description;
        $user->statut = $request->statut;
        $user->rib = $request->rib;

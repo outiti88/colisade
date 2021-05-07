@@ -24,11 +24,11 @@ class StoreCommande extends FormRequest
     public function rules()
     {
         return [
-            
+
             'telephone' =>'required|min:10|max:10',
             'ville' =>'required',
             'adresse' =>'required',
-            'colis' =>'required',
+            'colis' =>'required|min:1',
             'nom' =>'required'
         ];
     }

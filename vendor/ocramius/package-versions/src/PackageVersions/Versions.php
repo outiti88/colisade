@@ -32,6 +32,7 @@ final class Versions
   'dompdf/dompdf' => 'v0.8.6@db91d81866c69a42dad1d2926f61515a1e3f42c5',
   'dragonmantank/cron-expression' => 'v2.3.0@72b6fbf76adb3cf5bc0db68559b33d41219aba27',
   'egulias/email-validator' => '2.1.20@f46887bc48db66c7f38f668eb7d6ae54583617ff',
+  'ezyang/htmlpurifier' => 'v4.13.0@08e27c97e4c6ed02f37c5b2b20488046c8d90d75',
   'fideloper/proxy' => '4.4.0@9beebf48a1c344ed67c1d36bb1b8709db7c3c1a8',
   'fruitcake/laravel-cors' => 'v2.0.2@4b19bfc3bd422948af37a42a62fad7f49025894a',
   'guzzlehttp/guzzle' => '6.5.5@9d4290de1cfd701f38099ef7e183b64b4b7b0c5e',
@@ -46,7 +47,12 @@ final class Versions
   'league/commonmark' => '1.5.4@21819c989e69bab07e933866ad30c7e3f32984ba',
   'league/flysystem' => '1.1.3@9be3b16c877d477357c015cec057548cf9b2a14a',
   'league/mime-type-detection' => '1.4.0@fda190b62b962d96a069fcc414d781db66d65b69',
+  'maatwebsite/excel' => '3.1.30@aa5d2e4d25c5c8218ea0a15103da95f5f8728953',
+  'maennchen/zipstream-php' => '2.1.0@c4c5803cc1f93df3d2448478ef79394a5981cc58',
+  'markbaker/complex' => '2.0.0@9999f1432fae467bc93c53f357105b4c31bb994c',
+  'markbaker/matrix' => '2.1.2@361c0f545c3172ee26c3d596a0aa03f0cef65e6a',
   'monolog/monolog' => '2.1.1@f9eee5cec93dfb313a38b6b288741e84e53f02d5',
+  'myclabs/php-enum' => '1.8.0@46cf3d8498b095bd33727b13fd5707263af99421',
   'nesbot/carbon' => '2.39.1@7af467873250583cc967a59ee9df29fabab193c1',
   'nexmo/client' => '2.0.0@664082abac14f6ab9ceec9abaf2e00aeb7c17333',
   'nexmo/client-core' => '2.4.0@9c6147dc97290373d203a7ca45c1299a68278895',
@@ -60,6 +66,7 @@ final class Versions
   'php-http/guzzle6-adapter' => 'v2.0.1@6074a4b1f4d5c21061b70bab3b8ad484282fe31f',
   'php-http/httplug' => '2.2.0@191a0a1b41ed026b717421931f8d3bd2514ffbf9',
   'php-http/promise' => '1.1.0@4c4c1f9b7289a2ec57cde7f1e9762a5789506f88',
+  'phpoffice/phpspreadsheet' => '1.16.0@76d4323b85129d0c368149c831a07a3e258b2b50',
   'phpoption/phpoption' => '1.7.5@994ecccd8f3283ecf5ac33254543eb0ac946d525',
   'psr/container' => '1.0.0@b7ce3b176482dbbc1245ebf52b181af44c2cf55f',
   'psr/event-dispatcher' => '1.0.0@dbefd12671e8a14ec7f180cab83036ed26714bb0',
@@ -142,7 +149,7 @@ final class Versions
   'sebastian/version' => '2.0.1@99732be0ddb3361e16ad77b68ba41efc8e979019',
   'theseer/tokenizer' => '1.2.0@75a63c33a8577608444246075ea0af0d052e452a',
   'webmozart/assert' => '1.9.1@bafc69caeb4d49c39fd0779086c03a3738cbb389',
-  'laravel/laravel' => 'dev-master@caa2926df7be8aa5bf4effa5ddce1e8dbef1101a',
+  'laravel/laravel' => 'dev-master@daf718b0159c425720b516d6230bf9e39a887829',
 );
 
     private function __construct()

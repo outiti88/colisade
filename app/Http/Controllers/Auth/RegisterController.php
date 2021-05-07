@@ -73,7 +73,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
+       
         if(empty($data['image'])) $data['image']="https://tracking.colisade.ma/assets/images/favicon.png";
             if(empty($data['description'])) $data['description']=" ";
         $user = User::create([
@@ -88,6 +88,8 @@ class RegisterController extends Controller
             'rib'=>$data['rib'],
             
         ]);
+
+       
         if(empty($data['roles'])){
         $role = Role::select('id')->where('name','nouveau')->first();
         $user->roles()->attach($role);

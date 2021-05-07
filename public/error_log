@@ -1,0 +1,23 @@
+[04-Apr-2021 15:23:17 UTC] PHP Fatal error:  Uncaught Error: Interface 'JsonSerializable' not found in /home/colisade/public_html/Colisade_back/vendor/laravel/framework/src/Illuminate/Support/Enumerable.php:11
+Stack trace:
+#0 /home/colisade/public_html/Colisade_back/vendor/composer/ClassLoader.php(478): include()
+#1 /home/colisade/public_html/Colisade_back/vendor/composer/ClassLoader.php(346): Composer\Autoload\includeFile('/home/colisade/...')
+#2 [internal function]: Composer\Autoload\ClassLoader->loadClass('Illuminate\\Supp...')
+#3 /home/colisade/public_html/Colisade_back/vendor/laravel/framework/src/Illuminate/Support/Collection.php(11): spl_autoload_call('Illuminate\\Supp...')
+#4 /home/colisade/public_html/Colisade_back/vendor/composer/ClassLoader.php(478): include('/home/colisade/...')
+#5 /home/colisade/public_html/Colisade_back/vendor/composer/ClassLoader.php(346): Composer\Autoload\includeFile('/home/colisade/...')
+#6 [internal function]: Composer\Autoload\ClassLoader->loadClass('Illuminate\\Supp...')
+#7 /home/colisade/public_html/Colisade_back/v in /home/colisade/public_html/Colisade_back/vendor/laravel/framework/src/Illuminate/Support/Enumerable.php on line 11
+[04-Apr-2021 15:23:19 UTC] PHP Fatal error:  Uncaught Error: Interface 'JsonSerializable' not found in /home/colisade/public_html/Colisade_back/vendor/laravel/framework/src/Illuminate/Support/Enumerable.php:11
+Stack trace:
+#0 /home/colisade/public_html/Colisade_back/vendor/composer/ClassLoader.php(478): include()
+#1 /home/colisade/public_html/Colisade_back/vendor/composer/ClassLoader.php(346): Composer\Autoload\includeFile('/home/colisade/...')
+#2 [internal function]: Composer\Autoload\ClassLoader->loadClass('Illuminate\\Supp...')
+#3 /home/colisade/public_html/Colisade_back/vendor/laravel/framework/src/Illuminate/Support/Collection.php(11): spl_autoload_call('Illuminate\\Supp...')
+#4 /home/colisade/public_html/Colisade_back/vendor/composer/ClassLoader.php(478): include('/home/colisade/...')
+#5 /home/colisade/public_html/Colisade_back/vendor/composer/ClassLoader.php(346): Composer\Autoload\includeFile('/home/colisade/...')
+#6 [internal function]: Composer\Autoload\ClassLoader->loadClass('Illuminate\\Supp...')
+#7 /home/colisade/public_html/Colisade_back/v in /home/colisade/public_html/Colisade_back/vendor/laravel/framework/src/Illuminate/Support/Enumerable.php on line 11
+[04-Apr-2021 15:24:48 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 7.4.0". You are running 7.3.27. in /home/colisade/public_html/Colisade_back/vendor/composer/platform_check.php on line 24
+[04-Apr-2021 15:24:50 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 7.4.0". You are running 7.3.27. in /home/colisade/public_html/Colisade_back/vendor/composer/platform_check.php on line 24
+[04-Apr-2021 15:25:42 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 7.4.0". You are running 7.3.27. in /home/colisade/public_html/Colisade_back/vendor/composer/platform_check.php on line 24

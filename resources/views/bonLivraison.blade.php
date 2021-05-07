@@ -48,7 +48,7 @@
         <strong>Et voilà ! </strong>Le bon de livraison d'aujourd'hui à été bien générer !
           </div>
         @endif
-      
+
         <div class="col-5">
             <h4 class="page-title">Bon de livraison</h4>
             <div class="d-flex align-items-center">
@@ -70,7 +70,7 @@
                 </select>
                 @endcan
                 @cannot('ramassage-commande')
-                
+
                     <button data-toggle="modal" data-target="#genererBon"type="submit" class="btn btn-danger text-white m-r-5"><i class="fa fa-plus-square"></i> Générer le bon de livraison</button>
                 @endcan
             </div>
@@ -79,7 +79,7 @@
 </div>
 
 <div class="container-fluid">
-    
+
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -100,24 +100,38 @@
                                 <th scope="col">Montant Total</th>
                                 <th scope="col">Frais de Livraison</th>
                                 <th scope="col">Imprimer</th>
-                              
+
                               </tr>
                             </thead>
                             <tbody>
                                 @foreach ($bonLivraisons as $index => $bonLivraison)
-                              <tr 
+                              <tr
                               @if (\Carbon\Carbon::parse($bonLivraison->created_at)->format('d-m-Y') == date("d-m-Y") && session()->has('bonLivraison') )
                               style="background-color: #f7941e2e;"
                               @endif
                               >
                                 @can('ramassage-commande')
-                                <th scope="row"><img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31"></th>
-                                @endcan
+                                <th scope="row">
+                                  <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic
+                                      @if($users[$index]->statut)
+                                          vip
+                                      @endif
+
+                                      "
+
+                                              @can('edit-users')
+                                                  href="{{route('admin.users.edit',$users[$index]->id)}}"
+                                              @endcan
+
+                                      >
+                                      <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
+                                  </a>
+                              </th>                                @endcan
                                 <th>
                                   <a class="btn btn-light" href="{{route('bon.search',$bonLivraison->id)}}">
                                     BL_{{bin2hex(substr($users[$index]->name, - strlen($users[$index]->name) , 3)).$bonLivraison->id}}
                                   </a>
-                                  
+
                                 </th>
                                 <td>{{$bonLivraison->commande}}</td>
                                 <td>{{$bonLivraison->colis}}</td>
@@ -128,12 +142,17 @@
                                 <a target="_blank" class="btn btn-info text-white m-r-5" href="{{route('bon.gen',$bonLivraison->id)}}" >
                                   <i class="fas fa-print"></i></a>
                                </td>
-                             
+
                             </tr>
                               @endforeach
-    
+
                             </tbody>
                           </table>
+                          <div class="row">
+                            <div class="col-12 d-flex justify-content-center">
+                                {{$bonLivraisons ->appends($data)-> links()}}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -144,7 +163,7 @@
 
 
 
-<div class="container my-4">    
+<div class="container my-4">
     <div class="modal fade" id="modalBonLivraison" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -158,8 +177,8 @@
                         <div class="modal-body mx-3">
                             <form class="form-horizontal form-material" method="POST" action="{{route('bonlivraison.store')}}">
                                 @csrf
-                                
-                                
+
+
                                 <div class="form-group">
                                     <label for="client" class="col-sm-12">Fournisseur :</label>
                                     <div class="col-sm-12">
@@ -170,9 +189,9 @@
                                             {{$client->name}}
                                         </option>
                                             @endforeach
-                                           
+
                                         </select>
-                                        
+
                                     </div>
 
                                  <!--  <label for="ville" class="col-sm-12">Ville :</label>
@@ -208,7 +227,7 @@
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
                                         <button class="btn btn-warning">Générer</button>
-                                        
+
                                     </div>
                                 </div>
                             </form>
@@ -225,7 +244,7 @@
                               </div>
                               @endif
                         </div>
-            
+
                       </div>
                     </div>
     </div>

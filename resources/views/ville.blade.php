@@ -13,7 +13,7 @@
             color: #f7941e !important;
         }
         .page-item.active .page-link {
-            
+
             background-color: #f7941e !important;
             border-color: #f7941e !important;
             color: #fff !important;
@@ -60,49 +60,57 @@
 
                   </div>
                     <div class="row" id="test">
-                      
+
                         <div class="form-group col-md-12">
                           <label for="produit" class="col-sm-12">Nom de la ville :</label>
                           <div class="col-md-12">
                             <input  value="{{ old('name') }}" name="name" type="text" placeholder="Nom de la ville" class="form-control form-control-line" required>
 
-                            </div> 
+                            </div>
                           </div>
-                          
-                        
-                      
+
+
+
                     </div>
-                  
+
                   <div class="form-group">
                       <label class="col-md-12">Prix :</label>
                       <div class="col-md-12">
                           <input  value="{{ old('prix') }}" name="prix" type="number" placeholder="Prix de livraison" class="form-control form-control-line" required>
                       </div>
                   </div>
-             
-                 
+
+                  <div class="form-group">
+                    <label class="col-md-12">La part du livreur :</label>
+                    <div class="col-md-12">
+                        <input  value="{{ old('livreur') }}" name="livreur" type="number" placeholder="Part du livreur" class="form-control form-control-line" required>
+                    </div>
+                </div>
+
+
+
                   <div class="form-group">
                       <div class="modal-footer d-flex justify-content-center">
                           <button class="btn btn-danger">Ajouter</button>
-                          
+
                       </div>
                   </div>
               </form>
-           
+
           </div>
 
         </div>
       </div>
   </div>
 <div class="container-fluid">
-  
+
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">Total des villes: {{ $total }} Villes</div>
                 <input class="form-control" id="myInput" type="text" placeholder="Rechercher...">
 
-                
+
                 <div class="card-body" >
                     <div class="table-responsive">
                         <table class="table" >
@@ -110,24 +118,26 @@
                               <tr>
                                 <th scope="col">Ville</th>
                                 <th scope="col">Prix</th>
-                     
+                                <th scope="col">Part de Livreur</th>
+
                                 @can('edit-users')
                                 <th scope="col">Action</th>
                                 @endcan
-                                
+
                               </tr>
                             </thead>
-                           
+
                             <tbody id="myTable">
                                 @foreach ($villes as $ville)
                               <tr>
-                           
+
                                 <td>{{$ville->name}}</td>
                                 <td>{{$ville->prix}}</td>
-                               
+                                <td>{{$ville->livreur}}</td>
+
                                 @can('edit-users')
                                 <td>
-                                    <a class="btn btn-primary float-lef"  data-toggle="modal" data-target="#FormEdit{{$ville->id}}">
+                                    <a style="color: white" class="btn btn-primary float-lef"  data-toggle="modal" data-target="#FormEdit{{$ville->id}}">
                                        <i class="mdi mdi-account-edit"></i>
                                    </a>
 
@@ -141,45 +151,51 @@
                                             </button>
                                           </div>
                                           <div class="modal-body mx-3">
-                                              <form class="form-horizontal form-material" method="POST" action="{{route('ville.update',$ville->id)}}">
+                                              <form class="form-horizontal form-material" method="POST" action="{{route('ville.updateVille',$ville->id)}}">
                                                   @csrf
                                                   @method("PUT")
-                                
+
                                                   <div id="education_fields">
-                                
+
                                                   </div>
                                                     <div class="row" id="test">
-                                                      
+
                                                         <div class="form-group col-md-12">
                                                           <label for="produit" class="col-sm-12">Nom de la ville :</label>
                                                           <div class="col-md-12">
                                                             <input  value="{{$ville->name}}" name="name" type="text" placeholder="Nom de la ville" class="form-control form-control-line" required>
-                                
-                                                            </div> 
+
+                                                            </div>
                                                           </div>
-                                                          
-                                                        
-                                                      
+
+
+
                                                     </div>
-                                                  
+
                                                   <div class="form-group">
                                                       <label class="col-md-12">Prix :</label>
                                                       <div class="col-md-12">
                                                           <input  value="{{$ville->prix}}" name="prix" type="number" placeholder="Prix de livraison" class="form-control form-control-line" required>
                                                       </div>
                                                   </div>
-                                             
-                                                 
+
+                                                  <div class="form-group">
+                                                    <label class="col-md-12">La part du livreur :</label>
+                                                    <div class="col-md-12">
+                                                        <input  value="{{$ville->livreur}}" name="livreur" type="number" placeholder="Part du livreur" class="form-control form-control-line" required>
+                                                    </div>
+                                                </div>
+
                                                   <div class="form-group">
                                                       <div class="modal-footer d-flex justify-content-center">
                                                           <button class="btn btn-danger">Modifier</button>
-                                                          
+
                                                       </div>
                                                   </div>
                                               </form>
-                                           
+
                                           </div>
-                                
+
                                         </div>
                                       </div>
                                   </div>
@@ -191,12 +207,12 @@
 
 
                                 <a class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#FormDelete{{$ville->id}}"><i class="fas fa-trash-alt"></i></a>
-                               
+
                                 <div class="modal fade" id="FormDelete{{$ville->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                       <div class="modal-content">
                                         <div class="modal-header">
-                                          <h5 class="modal-title" id="exampleModalLabel">Êtes-vous sûr de vouloir supprimer cette ville ?</h5>
+                                          <h5 class="modal-title" id="exampleModalLabel">etes-vous sur de vouloir supprimer cette ville ?</h5>
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                           </button>
@@ -217,11 +233,11 @@
                                           </div>
                                         <div class="modal-footer">
                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                          
+
                                             <form action="{{route('ville.destroy',$ville->id)}}" method="POST" class="float-left">
                                                 @csrf
                                                 @method("DELETE")
-                                                <button type="submit" class="btn btn-danger text-white m-r-5">Ok</button> 
+                                                <button type="submit" class="btn btn-danger text-white m-r-5">Ok</button>
                                             </form>
                                         </div>
                                       </div>
@@ -231,14 +247,14 @@
 
                                </td>
                                 @endcan
-                                
+
                                 </tr>
                               @endforeach
-    
+
                             </tbody>
                           </table>
                     </div>
-                   
+
                 </div>
             </div>
         </div>

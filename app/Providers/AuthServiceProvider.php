@@ -30,10 +30,10 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('gestion-stock', function($user){
-            return $user->hasAnyRoles(['admin','ecom']);
+            return $user->hasAnyRoles(['admin','ecom','personel']);
         });
 
-        
+
 
         Gate::define('ramassage-commande', function($user){
             return $user->hasAnyRoles(['admin','livreur','personel']);
@@ -59,7 +59,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasRole('livreur');
         });
 
-        
+        Gate::define('livreur-admin', function($user){
+            return $user->hasAnyRoles(['admin','livreur']);
+        });
+
         Gate::define('ecom', function($user){
             return $user->hasRole('ecom');
         });

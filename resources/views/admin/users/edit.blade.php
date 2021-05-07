@@ -85,11 +85,18 @@
                             <input name="image" type="text" value="{{$user->image}}"class="form-control form-control-line">
                         </div>
                     </div>
-                    <div class="form-group row">
+
+                    @if (in_array("livreur",$user->roles()->get()->pluck('name')->toArray()))
+                    <div id="education_fields">
+          
+                    </div>
+
+                    @foreach ($userVilles as $index => $userville)
+                <div class="form-group row removeclass{{$index.$userville}}">
                         <label class="col-md-2 col-form-label text-md-right">Ville</label>
-                        <div class="col-md-10">
-                            <select name="ville" class="form-control form-control-line"  onchange="myFunction()" required>
-                                <option checked value="{{$user->ville}}"> {{$user->ville}}</option>
+                        <div class="col-md-8">
+                            <select name="ville[]" class="form-control form-control-line"  onchange="myFunction()" required>
+                                <option checked value="{{$userville}}"> {{$userville}}</option>
                                 @foreach ($villes as $ville)
                                 <option value="{{$ville->name}}" class="rounded-circle">
                                     {{$ville->name}}
@@ -98,7 +105,62 @@
                                
                             </select>
                         </div>
+                        <div class="input-group-btn col-md-1">
+                            <button class="btn btn-success " type="button"  onclick="education_fields();"> <span class="mdi mdi-library-plus" aria-hidden="true"></span> </button>
+                          </div>
+                          <div class="input-group-btn col-md-1">
+                          <button class="btn btn-danger" type="button" onclick="remove_education_fields('{{$index.$userville}}');">
+                                <span class="mdi mdi-close-box" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                  
+                        
                     </div>
+                    @endforeach
+                    
+                    <div class="form-group row"  style="display: none">
+                        <div  id="test">
+                            <label class="col-md-2 col-form-label text-md-right">Ville</label>
+                        <div class="col-md-8">
+                            <select name="ville[]" class="form-control form-control-line"  onchange="myFunction()">
+                                <option checked value="">Ajouter une ville</option>
+                                @foreach ($villes as $ville)
+                                <option value="{{$ville->name}}" class="rounded-circle">
+                                    {{$ville->name}}
+                                </option>
+                                @endforeach
+                               
+                            </select>
+                        </div>
+                        </div>
+                        <div class="input-group-btn col-md-1">
+                            <button class="btn btn-success " type="button"> <span class="mdi mdi-library-plus" aria-hidden="true"></span> </button>
+                          </div>
+                        </div>
+                    @else
+                    <div class="form-group row" >
+                            <label class="col-md-2 col-form-label text-md-right">Ville</label>
+                        <div class="col-md-10">
+                            <select name="ville[]" class="form-control form-control-line"  onchange="myFunction()">
+                            <option checked value="{{$user->ville}}">{{$user->ville}}</option>
+                                @foreach ($villes as $ville)
+                                <option value="{{$ville->name}}" class="rounded-circle">
+                                    {{$ville->name}}
+                                </option>
+                                @endforeach
+                               
+                            </select>
+                        </div>
+                    
+                        </div>
+                    @endif
+                    
+                  
+                         
+                  
+                        
+                    
+                    
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label text-md-right">Téléphone</label>
                         <div class="col-md-10">
@@ -204,4 +266,23 @@
             });
         </script>
     @endif
+    <script>
+        var room = 1;
+        function education_fields() {
+        
+            room++;
+            var objTo = document.getElementById('education_fields')
+            var divtest = document.createElement("div");
+            divtest.setAttribute("class", "row mb-2 removeclass"+room);
+            var rdiv = 'removeclass'+room;
+    
+            divtest.innerHTML  = $("#test").html() + '<div class="input-group-btn col-md-1"> <button class="btn btn-danger" type="button" onclick="remove_education_fields('+ room +');"> <span class="mdi mdi-close-box" aria-hidden="true"></span> </button></div></div></div></div><div class="clear"></div>';
+            
+            objTo.appendChild(divtest)
+        }
+        function remove_education_fields(rid) {
+            $('.removeclass'+rid).remove();
+        }
+    
+    </script>
 @endsection

@@ -13,7 +13,7 @@
             color: #f7941e !important;
         }
         .page-item.active .page-link {
-            
+
             background-color: #f7941e !important;
             border-color: #f7941e !important;
             color: #fff !important;
@@ -52,7 +52,7 @@
           </div>
         @endif
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">{{ __('Utilisateurs Colisade') }}</div>
                 <div class="card-header">Total des Utilisateurs: {{ $total }} Utilisateur</div>
@@ -67,18 +67,20 @@
                                 <th scope="col">Email</th>
                                 <th scope="col">Ville</th>
                                 <th scope="col">Rôles</th>
+                                <th scope="col">Date</th>
+
                                 @can('edit-users')
                                 <th scope="col">Action</th>
                                 @endcan
-                                
+
                               </tr>
                             </thead>
-                           
+
                             <tbody id="myTable">
                                 @foreach ($users as $user)
                               <tr>
                                 <th scope="row"><a><img src="{{$user->image}}" alt="user" class="rounded-circle
-                                    
+
                                     @if($user->statut)
                                     vip
                                 @endif
@@ -87,13 +89,14 @@
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->ville}}</td>
                                 <td>{{ implode(', ' , $user->roles()->get()->pluck('name')->toArray() )}}</td>
+                                <td>{{$user->created_at}}</td>
                                 @can('edit-users')
                                 <td>
                                     <a href="{{route('admin.users.edit',$user->id)}}">
                                        <button class="btn btn-primary float-lef"><i class="mdi mdi-account-edit"></i></button>
                                    </a>
                                 <a class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#FormDelete{{$user->id}}"><i class="fas fa-trash-alt"></i></a>
-                               
+
                                 <div class="modal fade" id="FormDelete{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                       <div class="modal-content">
@@ -119,11 +122,11 @@
                                           </div>
                                         <div class="modal-footer">
                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                          
+
                                             <form action="{{route('admin.users.destroy',$user->id)}}" method="POST" class="float-left">
                                                 @csrf
                                                 @method("DELETE")
-                                                <button type="submit" class="btn btn-danger text-white m-r-5">Ok</button> 
+                                                <button type="submit" class="btn btn-danger text-white m-r-5">Ok</button>
                                             </form>
                                         </div>
                                       </div>
@@ -133,14 +136,14 @@
 
                                </td>
                                 @endcan
-                                
+
                                 </tr>
                               @endforeach
-    
+
                             </tbody>
                           </table>
                     </div>
-                   
+
                 </div>
             </div>
         </div>

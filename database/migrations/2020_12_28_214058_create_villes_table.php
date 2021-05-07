@@ -11,7 +11,7 @@ class CreateVillesTable extends Migration
      *
      * @return void
      */
-    public function up()
+   /* public function up()
     {
         Schema::create('villes', function (Blueprint $table) {
             $table->id();
@@ -26,8 +26,8 @@ class CreateVillesTable extends Migration
      *
      * @return void
      */
-    public function down()
+   /*public function down()
     {
         Schema::dropIfExists('villes');
-    }
+    }*/
 }

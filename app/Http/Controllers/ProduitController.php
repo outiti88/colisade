@@ -35,6 +35,7 @@ class ProduitController extends Controller
      */
     public function index()
     {
+        $data = null;
         $nouveau =  User::whereHas('roles', function($q){$q->whereIn('name', ['nouveau']);})->where('deleted_at',NULL)->count();
 
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['ecom']);})->get();
@@ -53,7 +54,7 @@ class ProduitController extends Controller
         else{
             $produits= DB::table('produits')->where('user_id',Auth::user()->id )->orderBy('created_at', 'DESC')->paginate(10);
             $total =DB::table('produits')->where('user_id',Auth::user()->id )->count();
-            
+
         }
         foreach($produits as $produit){
             $dbStock = DB::table('stocks')->where('produit_id',$produit->id)->first();
@@ -64,14 +65,16 @@ class ProduitController extends Controller
                                     'total'=>$total,
                                     'users'=> $users,
                                     'clients' =>$clients,
-                                    'stock'=>$stock]);
+                                    'stock'=>$stock,
+                                    'data'=> $data]);
     }
 
 
 
 
     public function filter(Request $request){
-       
+
+        $data = $request->all();
         $clients = User::whereHas('roles', function($q){$q->whereIn('name', ['ecom']);})->get();
         $produits= DB::table('produits')->orderBy('created_at', 'DESC');
         $users = [] ;
@@ -82,6 +85,10 @@ class ProduitController extends Controller
 
         if($request->filled('categorie') && $request->categorie != "Tous"){
             $produits->where('categorie',$request->categorie);
+        }
+
+        if($request->filled('libelle')){
+            $produits->where('libelle','like','%'.$request->libelle.'%');
         }
 
         if(!Gate::denies('ramassage-commande')) {
@@ -106,16 +113,17 @@ class ProduitController extends Controller
             foreach($produits as $produit){
                 $dbStock = DB::table('stocks')->where('produit_id',$produit->id)->first();
                 $stock[] =  $dbStock ;
-        } 
-        
+        }
 
-   
 
-        return view('produit.index' , ['nouveau'=>$nouveau,'produits' => $produits, 
+
+
+        return view('produit.index' , ['nouveau'=>$nouveau,'produits' => $produits,
                                     'total'=>$total,
                                     'users'=> $users,
                                     'clients' =>$clients,
-                                    'stock'=>$stock]);
+                                    'stock'=>$stock,
+                                    'data'=> $data]);
     }
 
 
@@ -138,12 +146,12 @@ class ProduitController extends Controller
     public function store(Request $request)
     {
         if(Gate::denies('ecom')){
-           
+
                 return redirect('/commandes');
-            } 
+            }
             else{
                 $produit = new Produit();
-                
+
                 $produit->libelle = $request->libelle;
                 $produit->prix = $request->prix;
                 $produit->categorie = $request->categorie;
@@ -173,9 +181,9 @@ class ProduitController extends Controller
                 $stock->produit()->associate($produit)->save();
                 return redirect()->route('produit.index');
             }
-            
-        
-        
+
+
+
     }
 
     /**
@@ -233,13 +241,13 @@ class ProduitController extends Controller
                  $produit->photo = $filename ;
              }
              $produit->save();
-               
+
              $request->session()->flash('produit', 'modifié');
 
              return redirect()->route('produit.show',['produit' => $produit->id]);
         }
-        
-        
+
+
        // dd("salut");
     }
 

@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Stock;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+
 class StockController extends Controller
 {
      /**
@@ -23,6 +28,22 @@ class StockController extends Controller
     public function index()
     {
         //
+    }
+    
+    
+      public function corriger(Request $request, $id){
+       if(!Gate::denies('manage-users')){
+            $stock = DB::table('stocks')->where('produit_id',$id)->first();
+                    $stock = Stock::findOrFail($stock->id);
+                    $stock->qte = $request->qte ;
+                    $stock->save();
+                    $request->session()->flash('corriger', $request->qte);
+
+        }
+        else{
+            $request->session()->flash('noCorriger', $request->qte);
+        }
+        return back();
     }
 
     /**

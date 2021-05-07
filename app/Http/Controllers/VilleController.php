@@ -34,7 +34,7 @@ class VilleController extends Controller
                                 'villes'=>$villes,
                                 'total'=>$total
                                     ]);
-        
+
     }
 
     /**
@@ -58,6 +58,7 @@ class VilleController extends Controller
         $ville = new Ville() ;
         $ville->name = $request->name;
         $ville->prix = $request->prix;
+        $ville->livreur = $request->livreur;
         $ville->save();
         return back();
     }
@@ -93,9 +94,21 @@ class VilleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        dd($id);
         $ville = Ville::findOrFail($id);
         $ville->name = $request->name;
         $ville->prix = $request->prix;
+        $ville->livreur = $request->livreur;
+        $ville->save();
+        dd($ville);
+        return back();
+    }
+
+    public function updateVille(Request $request,$id){
+        $ville = Ville::findOrFail($id);
+        $ville->name = $request->name;
+        $ville->prix = $request->prix;
+        $ville->livreur = $request->livreur;
         $ville->save();
         return back();
     }

@@ -13,7 +13,7 @@
             color: #f7941e !important;
         }
         .page-item.active .page-link {
-            
+
             background-color: #f7941e !important;
             border-color: #f7941e !important;
             color: #fff !important;
@@ -90,7 +90,7 @@
 </div>
 
 <div class="container-fluid">
-    
+
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -115,15 +115,29 @@
                                 @can('ramassage-commande')
                                 <th scope="col">Envoyer par mail</th>
                                 @endcan
-                              
+
                               </tr>
                             </thead>
                             <tbody>
                                 @foreach ($factures as $index => $facture)
                               <tr>
                                 @can('ramassage-commande')
-                                <th scope="row"><img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31"></th>
-                                @endcan
+                                <th scope="row">
+                                    <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic
+                                        @if($users[$index]->statut)
+                                            vip
+                                        @endif
+
+                                        "
+
+                                                @can('edit-users')
+                                                    href="{{route('admin.users.edit',$users[$index]->id)}}"
+                                                @endcan
+
+                                        >
+                                        <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
+                                    </a>
+                                </th>                                @endcan
                                 <th>
                                     <a class="btn btn-light" href="{{route('facture.search',$facture->id)}}">
                                         {{$facture->numero}}
@@ -145,9 +159,14 @@
                                 @endcan
                             </tr>
                               @endforeach
-    
+
                             </tbody>
                           </table>
+                          <div class="row">
+                            <div class="col-12 d-flex justify-content-center">
+                                {{$factures ->appends($data)-> links()}}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -158,7 +177,7 @@
 
 
 
-<div class="container my-4">    
+<div class="container my-4">
     <div class="modal fade" id="modalfacture" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -172,8 +191,8 @@
                         <div class="modal-body mx-3">
                             <form class="form-horizontal form-material" method="POST" action="{{route('facture.store')}}">
                                 @csrf
-                                
-                                
+
+
                                 <div class="form-group">
                                     <label for="client" class="col-sm-12">Fournisseur :</label>
                                     <div class="col-sm-12">
@@ -184,17 +203,17 @@
                                             {{$client->name}}
                                         </option>
                                             @endforeach
-                                           
+
                                         </select>
-                                        
+
                                     </div>
                                 </div>
-                            
+
 
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
                                         <button class="btn btn-warning">Générer</button>
-                                        
+
                                     </div>
                                 </div>
                             </form>
@@ -211,7 +230,7 @@
                               </div>
                               @endif
                         </div>
-            
+
                       </div>
                     </div>
     </div>

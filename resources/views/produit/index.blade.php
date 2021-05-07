@@ -6,71 +6,7 @@
 
 @section('content')
 
-<div class="container my-4">    
-    <div class="modal fade" id="modalStockSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header text-center">
-                          <h4 class="modal-title w-100 font-weight-bold">Rechercher sur les receptions</h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body mx-3">
-                            <form class="form-horizontal form-material" method="GET" action="{{route('stock.filter')}}">
-                                @csrf
-                                @can('ramassage-commande')
-                                <div class="form-group row">
-                                    <label for="client" class="col-sm-4">Fournisseur :</label>
-                                    <div class="col-sm-8">
-                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
-                                            <option value="" disabled selected>Choisissez le fournisseur</option>
-                                            @foreach ($clients as $client)
-                                        <option value="{{$client->id}}" class="rounded-circle">
-                                            {{$client->name}}
-                                        </option>
-                                            @endforeach
-                                           
-                                        </select>
-                                        
-                                    </div>
-                                </div>
-                               
-                                @endcan
 
-
-                                  <div class="from-group row">
-                                    <label class="col-sm-4">Categorie :</label>
-                                    <div class="col-sm-8">
-                                        <select name="categorie" class="form-control form-control-line" >
-                                            <option >Tous</option>
-                                            <option >Vêtements</option>
-                                            <option >Chaussures</option>
-                                            <option >Bijoux et accessoires</option>
-                                            <option >Produits Cosmétiques</option>
-                                            <option >Produits High Tech</option>
-                                            <option >Librairie</option>
-                                            <option >Maroquinerie</option>
-                                            <option >Végétaux</option>
-                                            <option >Autres</option>
-                                        </select>
-                                    </div>
-                                  </div>
-                                
-                                <div class="form-group">
-                                    <div class="modal-footer d-flex justify-content-center">
-                                        <button type="submit" class="btn btn-warning"><i class="fa fa-search"></i> Rechercher</button>
-                                        
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-            
-                      </div>
-                    </div>
-    </div>
-</div>
 <div class="page-breadcrumb">
     <div class="row align-items-center">
         <div class="col-5">
@@ -86,7 +22,7 @@
         </div>
         <div class="col-7">
         <div class="row float-right d-flex ">
-            <div class=m-r-5" style="margin-right: 10px;">
+            <div class="m-r-5" style="margin-right: 10px;">
                 <a  class="btn btn-warning text-white"  data-toggle="modal" data-target="#modalStockSearch"><i class="fa fa-search"></i></a>
             </div>
             @can('ecom')
@@ -94,6 +30,80 @@
                 <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalStockAdd"><i class="fa fa-plus-square"></i> Ajouter</a>
             </div>
             @endcan
+            <div class="container my-4">
+                <div class="modal fade" id="modalStockSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header text-center">
+                                      <h4 class="modal-title w-100 font-weight-bold">Rechercher sur les Produits</h4>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body mx-3">
+                                        <form class="form-horizontal form-material" method="GET" action="{{route('stock.filter')}}">
+                                            @csrf
+                                            @can('ramassage-commande')
+                                            <div class="form-group row">
+                                                <label for="client" class="col-sm-4">Fournisseur :</label>
+                                                <div class="col-sm-8">
+                                                    <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
+                                                        <option value="" disabled selected>Choisissez le fournisseur</option>
+                                                        @foreach ($clients as $client)
+                                                    <option value="{{$client->id}}" class="rounded-circle">
+                                                        {{$client->name}}
+                                                    </option>
+                                                        @endforeach
+
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+                                            @endcan
+
+
+                                              <div class="form-group row">
+                                                <label class="col-sm-4">Categorie :</label>
+                                                <div class="col-sm-8">
+                                                    <select name="categorie" class="form-control form-control-line" >
+                                                        <option >Tous</option>
+                                                        <option >Vêtements</option>
+                                                        <option >Chaussures</option>
+                                                        <option >Bijoux et accessoires</option>
+                                                        <option >Produits Cosmétiques</option>
+                                                        <option >Produits High Tech</option>
+                                                        <option >Librairie</option>
+                                                        <option >Maroquinerie</option>
+                                                        <option >Végétaux</option>
+                                                        <option >Autres</option>
+                                                    </select>
+                                                </div>
+                                              </div>
+
+                                              <div class="form-group row">
+                                                <label for="libelle" class="col-sm-4">Libelle :</label>
+                                                <div class="col-sm-8">
+                                                    <input  type="text" class="form-control form-control-line" name="libelle" id="libelle">
+
+                                                </div>
+                                              </div>
+
+                                            <div class="form-group">
+                                                <div class="modal-footer d-flex justify-content-center">
+                                                    <button type="submit" class="btn btn-warning"><i class="fa fa-search"></i> Rechercher</button>
+
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                  </div>
+                                </div>
+                </div>
+            </div>
+
         </div>
         </div>
     </div>
@@ -101,11 +111,22 @@
 
 <div class="container-fluid">
     <div class="row">
-        
+           @if (session()->has('corriger'))
+        <div class="alert alert-dismissible alert-success col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Stock Bien Corrigé !</strong> La nouvelle quantité est : {{session()->get('corriger')}}  </a>.
+          </div>
+        @endif
+        @if (session()->has('noCorriger'))
+        <div class="alert alert-dismissible alert-danger col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Erreur !</strong> Vous ne pouvez pas modifier la quantité des produits en stock  </a>.
+          </div>
+        @endif
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Gerer votre stock</h4>
+                    <h4 class="card-title">Gérer votre stock</h4>
                     <h6 class="card-subtitle">Nombre total de vos articles : <code>{{$total}} Articles</code> .</h6>
                 </div>
                 <div class="table-responsive">
@@ -130,13 +151,13 @@
                            <tr>
                             @can('ramassage-commande')
                             <th scope="row">
-                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic" 
-                                       
+                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic"
+
                                             @can('edit-users')
                                                 href="{{route('admin.users.edit',$users[$index]->id)}}"
                                             @endcan
 
-                                        
+
                                     >
                                     <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
                                 </a>
@@ -150,62 +171,101 @@
                             <td>{{$produit->libelle}}</td>
                             <td>{{$produit->categorie}}</td>
                             <td>{{$produit->prix}} DH</td>
-                            <td>
+
+                            <td> <a  data-toggle="modal" data-target="#modalStockCorrection{{$produit->id}}" style="color: white; cursor: pointer;"  title="Corriger le stock"
                                 @if ($stock[$index]->qte > 0)
-                                    
-                                <a href="{{route('reception.index')}}" style="color: white" 
+
                                     class="badge badge-pill badge-success">
                                     {{$stock[$index]->qte}}
-                                </a>
+
                                 @else
                                     @if ($stock[$index]->etat == 'Nouveau' )
-                                    <a href="{{route('reception.index')}}" style="color: white" 
                                         class="badge badge-pill badge-primary">
                                         Nouveau
-                                    </a> 
+
                                     @else
-                                    <a href="{{route('reception.index')}}" style="color: white" 
                                         class="badge badge-pill badge-danger">
                                         RUPTURE
-                                    </a>
+
                                     @endif
                                 @endif
+                                    </a>
                                 </td>
+
+                                @can('manage-users')
+                                <div class="container my-4">
+                                    <div class="modal fade" id="modalStockCorrection{{$produit->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                        <div class="modal-header text-center">
+                                                          <h4 class="modal-title w-100 font-weight-bold">Corriger le stock de {{$produit->libelle}}</h4>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                        </div>
+                                                        <div class="modal-body mx-3">
+                                                            <form class="form-horizontal form-material" method="POST" action="{{route('stock.corriger',$produit->id)}}">
+                                                                @csrf
+                                                                <div class="form-group row">
+                                                                    <label for="qte" class="col-sm-4">Quantité :</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input  value="{{$stock[$index]->qte}}" type="number" class="form-control form-control-line" name="qte" id="qte" required>
+                                                                    </div>
+                                                                </div>
+
+
+
+                                                                <div class="form-group">
+                                                                    <div class="modal-footer d-flex justify-content-center">
+                                                                        <button type="submit" class="btn btn-success">Corriger</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+
+                                                      </div>
+                                                    </div>
+                                    </div>
+                                </div>
+                                @endcan
+
+
                                 <td>
                                     @if ($stock[$index]->cmd > 0)
-                                        <a href="{{route('reception.index')}}" style="color: white" 
+                                        <a href="{{route('reception.index')}}" style="color: white"
                                             class="badge badge-pill badge-info">
                                             {{$stock[$index]->cmd}}
                                         </a>
                                     @else
-                                    <a href="{{route('reception.index')}}" style="color: white" 
+                                    <a href="{{route('reception.index')}}" style="color: white"
                                             class="badge badge-pill badge-warning">
                                             PAS DE RECEPTION
                                         </a>
                                     @endif
-                                
+
                                 </td>
-                            
-         
+
+
                            <td style="font-size: 1.5em">
-                           
+
                             <a style="color: #f7941e" href="/produit/{{$produit->id}}">
-                                <i class="ti-pencil""></i></a>
+                                <i class="ti-pencil"></i></a>
                             </td>
                         </tr>
                         @empty
                         <tr>
                             <td colspan="10" style="text-align: center">Aucun produit enregistré!</td>
                         </tr>
-                        
+
                            @endforelse
-                         
+
                         </tbody>
-                        
+
                     </table>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
-                            {{$produits -> links()}}
+                            {{$produits ->appends($data)-> links()}}
                         </div>
                     </div>
                 </div>
@@ -219,7 +279,7 @@
 
 
 
-<div class="container my-4">    
+<div class="container my-4">
     @can('ecom')
     <div class="modal fade" id="modalStockAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                     aria-hidden="true">
@@ -234,21 +294,21 @@
                         <div class="modal-body mx-3">
                             <form class="form-horizontal form-material" method="POST" action="{{route('produit.store')}}" enctype="multipart/form-data">
                                 @csrf
-                                
+
                                 <div class="form-group">
                                     <label class="col-md-12">Libelle du Produit :</label>
                                     <div class="col-md-12">
                                         <input  value="{{ old('libelle') }}" name="libelle" type="text" placeholder="Libelle" class="form-control form-control-line" required>
                                     </div>
                                 </div>
-                               
+
                                 <div class="form-group col-md-12">
                                     <label for="example-email" class="col-md-12">Prix (DH) :</label>
                                     <div class="col-md-12">
                                         <input  value="{{ old('prix') }}" type="number" class="form-control form-control-line" name="prix" >
                                     </div>
                                 </div>
-                
+
                                 <div class="form-group">
                                     <label class="col-md-12">Description :</label>
                                     <div class="col-md-12">
@@ -283,7 +343,7 @@
                                 <div class="form-group">
                                     <div class="modal-footer d-flex justify-content-center">
                                         <button class="btn btn-danger">Ajouter</button>
-                                        
+
                                     </div>
                                 </div>
                             </form>
@@ -300,7 +360,7 @@
                               </div>
                               @endif
                         </div>
-            
+
                       </div>
                     </div>
     </div>
