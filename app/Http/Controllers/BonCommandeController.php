@@ -108,9 +108,6 @@ class BonCommandeController extends Controller
 
 
 
-
-
-
     public function gen(Request $request)
     {
         $ids = $request->btSelectItem;

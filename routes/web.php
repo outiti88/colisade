@@ -28,12 +28,14 @@ Route::get('/search', 'CommandeController@search')->name('commande.search')->mid
 
 Route::get('/commandes/filter', 'CommandeController@filter')->name('commande.filter')->middleware('can:valide');
 
-Route::patch('/commandes/{id}/livreur', 'CommandeController@affecterLivreur')->name('commande.livreur')->middleware('can:edit-users');
+Route::patch('/commandes/{id}/livreur', 'CommandeController@affecterLivreur')->name('commande.livreur')->middleware('can:manage-users');
 
 
 Route::get('/receptions/filter', 'ReceptionController@filter')->name('reception.filter')->middleware('can:gestion-stock');
 
 Route::get('/stock/filter', 'ProduitController@filter')->name('stock.filter')->middleware('can:gestion-stock');
+
+Route::get('/facture/filter', 'FactureController@filter')->name('facture.filter')->middleware('can:valide');
 
 
 Route::post('/commandes/{id}/relance', 'RelanceController@relancer')->name('relance.relancer')->middleware('can:ramassage-commande');
@@ -60,9 +62,14 @@ Route::get('/caisse/{id}/valide', 'CaisseController@edit')->name('caisse.edit')-
 
 Route::get('/commande/caisse/commande', 'CaisseController@create')->name('caisse.create')->middleware('can:edit-users');
 
-
-
 Route::post('/caisse', 'CaisseController@store')->name('caisse.store')->middleware('can:livreur-admin');
+
+Route::post('/reclamation', 'ReclamationController@store')->name('reclamation.store')->middleware('can:fournisseur');
+Route::get('/reclamation', 'ReclamationController@index')->name('reclamation.index')->middleware('can:delete-commande');
+Route::delete('/reclamation', 'ReclamationController@destroy')->name('reclamation.destroy')->middleware('can:delete-commande');
+Route::get('/reclamation/{id}', 'ReclamationController@traiter')->name('reclamation.traiter')->middleware('can:manage-users');
+Route::get('/filter/reclamation', 'ReclamationController@filter')->name('reclamation.filter');
+
 
 
 Route::put('/ville/{id}', 'VilleController@updateVille')->name('ville.updateVille')->middleware('can:edit-users');
@@ -113,6 +120,8 @@ Route::resource('/facture', 'FactureController')->only([
 Route::get('/facture/{id}/pdf', 'FactureController@gen')->name('facture.gen')->middleware('can:client-admin');
 
 Route::get('/BonCommande/pdf', 'BonCommandeController@gen')->name('bonCommande.index')->middleware('can:manage-users');
+
+Route::get('/tickets/pdf', 'CommandeController@ticketsBuilder')->name('ticket.index')->middleware('can:valide');
 
 Route::get('/facture/{id}/details', 'FactureController@search')->name('facture.search')->middleware('can:client-admin');
 

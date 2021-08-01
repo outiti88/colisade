@@ -25,11 +25,10 @@ class StoreCommande extends FormRequest
     {
         return [
 
-            'telephone' =>'required|min:10|max:10',
-            'ville' =>'required',
-            'adresse' =>'required',
-            'colis' =>'required|min:1',
-            'nom' =>'required'
+            'telephone' => 'required|min:10|max:10',
+            'ville' => 'required',
+            'adresse' => 'required',
+            'nom' => 'required'
         ];
     }
 }

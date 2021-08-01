@@ -40,7 +40,7 @@ class UsersController extends Controller
                                 'nouveau'=>$nouveau]);
     }
 
-  
+
 
     /**
      * Show the form for editing the specified resource.
@@ -81,9 +81,9 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
-    {   
+    {
         //dd($user);
-        
+
 
         if(Gate::denies('edit-users')){
             return redirect(route('admin.users.index'));
@@ -106,13 +106,15 @@ class UsersController extends Controller
             $user->ville .= $ville;
         }
        }
-       
-       
+
+
        $user->description = $request->description;
+       $user->storeName = $request->storeName;
+       $user->cin = $request->cin;
        $user->statut = $request->statut;
        $user->rib = $request->rib;
        $user->save();
-       
+
        return redirect()->route('admin.users.index');
     }
 

@@ -48,8 +48,8 @@ class BonLivraisonController extends Controller
         }
 
         foreach ($bonLivraisons->paginate(10) as $bonLivraison) {
-            if (!empty(User::find($bonLivraison->user_id)))
-                $users[] =  User::find($bonLivraison->user_id);
+            if (!empty(User::withTrashed()->find($bonLivraison->user_id)))
+                $users[] =  User::withTrashed()->find($bonLivraison->user_id);
         }
 
         $total = $bonLivraisons->count();
@@ -346,8 +346,7 @@ class BonLivraisonController extends Controller
 
 
         foreach ($commandes as $commande) {
-            if (!empty(User::find($commande->user_id)))
-                $users[] =  User::find($commande->user_id);
+            $users[] =  User::withTrashed()->find($commande->user_id);
         }
         //$commandes = Commande::all()->paginate(3) ;
         return view('commande.colis', [
@@ -384,8 +383,7 @@ class BonLivraisonController extends Controller
 
 
         foreach ($bonLivraisons->paginate(10) as $bonLivraison) {
-            if (!empty(User::find($bonLivraison->user_id)))
-                $users[] =  User::find($bonLivraison->user_id);
+            $users[] =  User::withTrashed()->find($bonLivraison->user_id);
         }
         $total = $bonLivraisons->count();
         $bonLivraisons = $bonLivraisons->paginate(10);

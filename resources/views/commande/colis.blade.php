@@ -48,6 +48,7 @@
             border-bottom-left-radius: 4px;
         }
 
+
         @media screen and (min-width: 768px) {
             #adv-search {
                 width: 500px;
@@ -243,7 +244,7 @@
                             class="table table-hover" style="font-size: 0.72em;">
                         <thead>
                             <tr>
-                                @can('edit-users')
+                                @can('manage-users')
                                     @if ($checkBox==1)
                                         <th  class="bs-checkbox " style="width: 36px; " data-field="state"><div class="th-inner "><label>
                                             <input  id="check_bl" onclick="checkFunction()" name="btSelectAll" type="checkbox">
@@ -266,173 +267,211 @@
 
                             </tr>
                         </thead>
-                        <tbody id="myTable">
-                            <form method="GET" action="{{route('bonCommande.index')}}">
-                                @csrf
-                                <input type="hidden" name="livreur" value="{{ request()->get('livreur') }}">
-                           @forelse ($commandes as $index => $commande)
-                           <tr>
-                            @can('edit-users')
-                            @if ($checkBox==1)
-                                <td class="bs-checkbox " style="width: 36px; "><label>
+                        <form id="commandes-form" method="GET">
+                            <tbody id="myTable">
 
-                                        <input value="{{$commande->id}}" class="cb" name="btSelectItem[]" type="checkbox">
-                                        <span></span>
-                                        </label>
+                                    @csrf
+                                    <input type="hidden" name="livreur" value="{{ request()->get('livreur') }}">
+                                    @forelse ($commandes as $index => $commande)
+                                        <tr>
+                                            @can('manage-users')
+                                            @if ($checkBox==1)
+                                                <td class="bs-checkbox " style="width: 36px; ">
+                                                    <label>
+                                                        <input value="{{$commande->id}}"  class="cb" name="btSelectItem[]" type="checkbox">
+                                                        <span></span>
+                                                    </label>
+                                                </td>
+                                            @endif
 
 
-                                </td>
-                            @endif
-
-
-                            <th scope="row">
-                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic
-                                    @if($users[$index]->statut)
-                                        vip
-                                    @endif
-
-                                    "
-                                            @can('edit-users')
-                                                href="{{route('admin.users.edit',$users[$index]->id)}}"
+                                            <th scope="row">
+                                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic @if($users[$index]->statut) vip @endif "
+                                                            @can('edit-users')
+                                                                href="{{route('admin.users.edit',$users[$index]->id)}}"
+                                                            @endcan >
+                                                    <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
+                                                </a>
+                                            </th>
                                             @endcan
+                                            <th scope="row">
 
-                                    >
-                                    <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
-                                </a>
-                            </th>
-                            @endcan
-                            <th scope="row">
+                                                @if ($commande->facturer != 0)
 
-                                @if ($commande->facturer != 0)
+                                                    <a href="{{route('facture.infos',$commande->facturer)}}" style="color: white; background-color: #f7941e" class="badge badge-pill" >
+                                                        <span style="font-size: 1.25em">Facturée</span>
+                                                    </a>
+                                                    <br>
+                                                @else
+                                                    @if ($commande->traiter != 0)
+                                                    <a href="{{route('bon.infos',$commande->traiter)}}" style="color: white" class="badge badge-pill badge-dark">
+                                                        <span style="font-size: 1.25em">Bon livraison</span>
+                                                    </a>
+                                                    <br>
+                                                    @endif
+                                                @endif
+                                                {{$commande->numero}}
 
-                                    <a href="{{route('facture.infos',$commande->facturer)}}" style="color: white; background-color: #f7941e"
-                                    class="badge badge-pill" >
-                                    <span style="font-size: 1.25em">Facturée</span>
-                                    </a>
-                                    <br>
-                                @else
-                                    @if ($commande->traiter != 0)
+                                            </th>
+                                            <td>{{$commande->nom}}</td>
+                                            <td>{{$commande->telephone}}</td>
+                                            <td>{{$commande->ville}}</td>
+                                            @if ($commande->montant > 0)
+                                            <td>{{$commande->montant}} DH</td>
+                                            @else
+                                            <td> <i class="far fa-credit-card"></i> CARD PAYMENT </td>
+                                            @endif
+                                            @cannot('livreur')
+                                            <td>{{$commande->prix}} DH</td>
+                                            @endcannot
+                                            <td>{{$commande->created_at}}</td>
+                                            <td>
+                                                <a  style="color: white; cursor:pointer"
+                                                    @switch($commande->statut)
+                                                        @case("envoyée")
+                                                        class="badge badge-pill badge-warning"
+                                                            @can('ramassage-commande')
+                                                                title="Rammaser la commande"
+                                                                href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                                            @endcan
+                                                        @break
+                                                        @case("Reporté") class="badge badge-pill orangeBadge" @break
+                                                        @case("Pas de Réponse") class="badge badge-pill violetBadge" @break
+                                                        @case("Modifiée") class="badge badge-pill cielBadge" @break
+                                                        @case("Relancée") class="badge badge-pill relanceBadge" @break
+                                                        @case("En cours") class="badge badge-pill badge-info" @break
+                                                        @case("Ramassée")
+                                                            class="badge badge-pill badge-secondary"
+                                                            @can('ramassage-commande')
+                                                                title="Recevoir la commande"
+                                                                href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                                            @endcan
+                                                        @break
+                                                        @case("Reçue")
+                                                            class="badge badge-pill badge-dark"
+                                                            @can('ramassage-commande')
+                                                                title="Envoyer la commande"
+                                                                href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                                            @endcan
+                                                        @break
+                                                        @case("Expidiée")
+                                                            class="badge badge-pill badge-primary"
+                                                            @can('ramassage-commande')
+                                                                title="Valider la commande"
+                                                                href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                                            @endcan
+                                                        @break
+                                                        @case("Livré") class="badge badge-pill badge-success" @break
+                                                        @default class="badge badge-pill badge-danger"
+                                                    @endswitch
+                                                    @can('livreur')
+                                                        @if (( $commande->statut === "Pas de Réponse" || $commande->statut === "Livré" || $commande->statut === "Injoignable" || $commande->statut === "En cours" || $commande->statut === "Refusée" || $commande->statut === "Modifiée" || $commande->statut === "Annulée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->facturer == 0 )
+                                                            data-toggle="modal" data-target="#modalSubscriptionFormStatut{{$commande->id}}"
+                                                        @endif
+                                                    @endcan
+                                                    @can('manage-users')
+                                                        @if (( $commande->statut === "Pas de Réponse" || $commande->statut === "Livré" || $commande->statut === "Injoignable" || $commande->statut === "En cours" || $commande->statut === "Refusée" || $commande->statut === "Modifiée" || $commande->statut === "Annulée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->facturer == 0 )
+                                                        data-toggle="modal" data-target="#modalSubscriptionFormStatut{{$commande->id}}"
+                                                        @endif
+                                                    @endcan >
+                                                        <span style="font-size: 1.25em">{{$commande->statut}}</span>
+                                                </a>
+                                                <br>
+                                                @if ($commande->statut == "Reporté" || $commande->statut == "Relancée")
+                                                    Pour le: <br>{{$commande->postponed_at}}
+                                                @else
+                                                ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}})
 
-                                    <a href="{{route('bon.infos',$commande->traiter)}}" style="color: white"
-                                    class="badge badge-pill badge-dark">
-                                    <span style="font-size: 1.25em">Bon livraison</span>
-                                    </a>
-                                    <br>
-                                    @endif
+                                                @endif
+                                            </td>
+                                            <td style="font-size: 1.5em"><a title="Voir le detail" style="color: #f7941e" href="/commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
+                                        </tr>
+
+                                        <div class="container my-4">
+                                            <div class="modal fade" id="modalSubscriptionFormStatut{{$commande->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header text-center">
+                                                                <h4 class="modal-title w-100 font-weight-bold">Changer le statut</h4>
+
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                </div>
+                                                                <h5 class="font-weight-bold" style="text-align: center">Commande Numero : {{$commande->numero}}</h5>
+
+                                                                <div class="modal-body mx-3">
+
+
+                                                                        <div class="form-group">
+                                                                            <label for="etat{{$commande->id}}" class="col-sm-12">Statut :</label>
+                                                                            <div class="col-sm-12">
+                                                                                <select id="etat{{$commande->id}}" onchange="reporter({{$commande->id}})"  class="form-control form-control-line" >
+                                                                                    <option>Livré</option>
+                                                                                    <option>Injoignable</option>
+                                                                                    <option>Pas de Réponse</option>
+                                                                                    <option>Refusée</option>
+                                                                                    @cannot('livreur')
+                                                                                    <option>Retour</option>
+                                                                                    @endcannot
+                                                                                    <option>Reporté</option>
+                                                                                    <option>Annulée</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group" style="display: none" id="prevu{{$commande->id}}">
+                                                                            <label for="datePrevu{{$commande->id}}" class="col-sm-12">Date Prévue :</label>
+                                                                            <div class="col-sm-12">
+                                                                            <input class="form-control"  type="date" id="datePrevu{{$commande->id}}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-sm-12">Commentaire :</label>
+                                                                            <div class="col-sm-12">
+                                                                                <textarea id="commentaire{{$commande->id}}"  rows="5" class="form-control form-control-line"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="modal-footer d-flex justify-content-center">
+                                                                                <a class="btn btn-warning" style="color:white" onclick="changeStatus({{$commande->id}})">Enregistrer</a>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    {{-- </form> --}}
+                                                                    @if ($errors->any())
+                                                                    <div class="alert alert-dismissible alert-danger">
+                                                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                        <ul>
+                                                                            @foreach ($errors->all() as $error)
+                                                                                <li>
+                                                                                <strong>{{$error}}</strong>
+                                                                                </li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    </div>
+                                                                    @endif
+                                                                </div>
+
+                                                            </div>
+                                                            </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" style="text-align: center">Aucune commande enregistrée!</td>
+                                        </tr>
+
+                                    @endforelse
+
+                            @if ($checkBox==1)
+                                @if (request()->get('livreur') != null)
+                                <button style="margin: 20px;" onclick="submitForm1()" class="btn btn-primary">Bon de Commande</button>
                                 @endif
-                                {{$commande->numero}}
-
-                            </th>
-                            <td>{{$commande->nom}}</td>
-                            <td>{{$commande->telephone}}</td>
-                            <td>{{$commande->ville}}</td>
-                            @if ($commande->montant > 0)
-                            <td>{{$commande->montant}} DH</td>
-                            @else
-                            <td> <i class="far fa-credit-card"></i> CARD PAYMENT
-                            </td>
+                                <button style="margin: 20px;" onclick="submitForm2()" class="btn btn-info">Ticket de Commande</button>
                             @endif
-                            @cannot('livreur')
-                            <td>{{$commande->prix}} DH</td>
-                            @endcannot
-                            <td>{{$commande->created_at}}</td>
-                            <td>
-
-                                <a  style="color: white"
-                                    class="badge badge-pill
-                                    @switch($commande->statut)
-                                    @case("envoyée")
-                                    badge-warning"
-                                    @can('ramassage-commande')
-                                    title="Rammaser la commande"
-                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
-                                    @endcan
-                                        @break
-                                    @case("Reporté")
-                                      orangeBadge"
-                                    @break
-                                    @case("Pas de Réponse")
-                                    violetBadge"
-                                    @break
-                                    @case("Modifiée")
-                                    cielBadge"
-                                    @break
-                                    @case("Relancée")
-                                    relanceBadge"
-                                    @break
-                                    @case("En cours")
-                                    badge-info"
-                                        @if ($commande->traiter > 0)
-                                        title="Voir le bon de livraison"
-                                        href="{{route('bon.gen',$commande->traiter)}}"
-                                        target="_blank"
-                                        @else
-                                        title="Générer le bon de livraison"
-                                        href="{{route('bonlivraison.index')}}"
-                                        @endif
-
-                                        @break
-                                    @case("Ramassée")
-                                    badge-secondary"
-                                        @can('ramassage-commande')
-                                        title="Recevoir la commande"
-                                         href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
-                                        @endcan
-                                    @break
-                                    @case("Reçue")
-                                    badge-dark"
-                                    @can('ramassage-commande')
-                                    title="Envoyer la commande"
-                                     href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
-                                    @endcan
-                                @break
-                                    @case("Expidiée")
-                                        badge-primary"
-                                        @can('ramassage-commande')
-                                        title="Valider la commande"
-                                         href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
-                                        @endcan
-                                    @break
-                                    @case("Livré")
-                                    badge-success"
-                                    @if ($commande->facturer > 0)
-                                        title="Voir la facture"
-                                        href="{{route('facture.gen',$commande->facturer)}}"
-                                        target="_blank"
-                                        @else
-                                        title="Générer la facture"
-                                        href="{{route('facture.index')}}"
-                                        @endif
-                                        @break
-                                    @default
-                                    badge-danger"
-                                @endswitch
-
-                                     >
-                                     <span style="font-size: 1.25em">{{$commande->statut}}</span>
-                                </a>
-                                <br>
-                                @if ($commande->statut == "Reporté" || $commande->statut == "Relancée")
-                                    Pour le: <br>{{$commande->postponed_at}}
-                                @else
-                                ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}})
-
-                                @endif
-                            </td>
-                           <td style="font-size: 1.5em"><a title="Voir le detail" style="color: #f7941e" href="/commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="10" style="text-align: center">Aucune commande enregistrée!</td>
-                        </tr>
-
-                           @endforelse
-                           @if ($checkBox==1)
-                           <button style="margin: 20px;" type="submit" class="btn btn-primary">Bon de Commande</button>
-                           @endif
-
-                        </form>
-                        </tbody>
+                            </tbody>
+                    </form>
 
 
                     </table>
@@ -447,6 +486,7 @@
 
     </div>
 </div>
+
 
 
 <div class="container my-4">
@@ -663,14 +703,9 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="example-email" class="col-md-12">Nombre de Colis :</label>
-                                        <div class="col-md-12">
-                                            <input  value="{{ old('colis') }}" type="number" class="form-control form-control-line" name="colis" id="example-email">
-                                        </div>
-                                    </div>
 
-                                      <fieldset class="form-group col-md-4">
+
+                                      <fieldset class="form-group col-md-6">
                                         <div class="row">
                                           <legend class="col-form-label  pt-0">Mode de paiement :</legend>
                                           <div class="col-sm-12">
@@ -691,7 +726,7 @@
                                         </div>
                                       </fieldset>
 
-                                      <div class="form-group col-md-4" id="isOpen">
+                                      <div class="form-group col-md-6" id="isOpen">
                                         <label for="isOpen" class="col-md-12">Client peut ouvrir le colis :</label>
                                         <div class="col-md-12">
                                             <input  value="1" type="checkbox" class="form-control form-control-line" name="isOpen" id="isOpen">
@@ -795,20 +830,11 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="example-email" class="col-md-12">Nombre de Colis :</label>
-                                        <div class="col-md-12">
-                                            <input  value="{{ old('colis') }}" type="number" class="form-control form-control-line" name="colis" id="example-email">
-                                        </div>
-                                    </div>
 
-
-
-                                      <fieldset class="form-group col-md-6">
-                                        <div class="row">
+                                      <fieldset class="form-group col-md-12">
                                           <legend class="col-form-label  pt-0">Mode de paiement :</legend>
-                                          <div class="col-sm-12">
+                                          <div class="col-sm-12" style="display: flex;justify-content: space-around;
+                                          align-items: center;">
                                             <div class="form-check">
                                               <input  onclick="myFunction2(this.value)" class="form-check-input" type="radio" name="mode" id="cd" value="cd" checked>
                                               <label class="form-check-label" for="cd">
@@ -823,16 +849,13 @@
                                             </div>
 
                                           </div>
-                                        </div>
                                       </fieldset>
 
-                                      <div class="form-group col-md-12" id="montant"  style="display: block">
-                                        <label for="example-email" class="col-md-12">Montant (MAD) :</label>
-                                        <div class="col-md-12">
-                                            <input  value="{{ old('montant') }}" type="text" class="form-control form-control-line" name="montant" id="example-email">
-                                        </div>
+                                <div class="form-group col-md-12" id="montant"  style="display: block">
+                                    <label for="example-email" class="col-md-12">Montant (MAD) :</label>
+                                    <div class="col-md-12">
+                                        <input  value="{{ old('montant') }}" type="text" class="form-control form-control-line" name="montant" id="example-email">
                                     </div>
-
                                 </div>
 
                                 <div class="form-group">
@@ -951,7 +974,7 @@
 
                                 </div>
                                 <div class="input-group-btn col-md-2" style="position: relative; left:350px; top:-55px">
-                                  <button class="btn btn-success " type="button"  onclick="education_fields();"> <span class="mdi mdi-library-plus" aria-hidden="true"></span> </button>
+                                  <button class="btn btn-success " type="button"  onclick="education_fields()"> <span class="mdi mdi-library-plus" aria-hidden="true"></span> </button>
                                 </div>
                               <div class="form-group">
                                   <label class="col-md-12">Nom et Prénom du destinataire :</label>
@@ -960,28 +983,20 @@
                                   </div>
                               </div>
 
-                              <div class="row form-group ">
-                                  <div class="form-group col-md-6">
-                                      <label for="qte" class="col-md-12">Nombre de Colis :</label>
-                                      <div class="col-md-12">
-                                          <input  value="{{ old('colis') }}" type="number" class="form-control form-control-line" name="colis" id="qte">
-                                      </div>
-                                  </div>
 
-
-
-                                    <fieldset class="form-group col-md-6">
+                                    <fieldset class="form-group col-md-12">
                                       <div class="row">
                                         <legend class="col-form-label  pt-0">Mode de paiement :</legend>
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-12" style="display: flex;justify-content: space-around;
+                                          align-items: center;">
                                           <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="mode" id="cd" value="cd" checked>
+                                            <input  onclick="myFunction2(this.value)" class="form-check-input" type="radio" name="mode" id="cd" value="cd" checked>
                                             <label class="form-check-label" for="cd">
                                               à la livraison
                                             </label>
                                           </div>
                                           <div class="form-check">
-                                            <input  class="form-check-input" type="radio" name="mode" id="cp" value="cp">
+                                            <input  onclick="myFunction2(this.value)"  class="form-check-input" type="radio" name="mode" id="cp" value="cp">
                                             <label class="form-check-label" for="cp">
                                               carte bancaire
                                             </label>
@@ -991,9 +1006,13 @@
                                       </div>
                                     </fieldset>
 
-                              </div>
-
-
+                                    <div class="form-group col-md-12" id="montant" style="display: block">
+                                        <label for="montantin" class="col-md-12">Montant (DH) : <br>
+                                            <span style="font-size: 0.75em;">Le montant va être automatiquement calculer si vous ne le mentionner pas</span></label>
+                                        <div class="col-md-12">
+                                            <input  value="{{ old('montant') }}" type="text" class="form-control form-control-line" name="montant" id="montantin">
+                                        </div>
+                                    </div>
 
                               <div class="form-group">
                                   <label class="col-md-12">Téléphone :</label>
@@ -1068,7 +1087,13 @@
 @endcan
 
 
-
+<form class="form-horizontal form-material" method="POST" id="changingStatusByModelForm">
+    @csrf
+    @method('PATCH')
+    <input type="text" name="statut" id="orderSatus"  style="display: none"> </input>
+    <input name="prevu_at" id="orderPostponedDate" type="date"  style="display: none">
+    <input type="text" name="commentaire" id="orderComment"  style="display: none"></input>
+</form>
 
 
 @endsection
@@ -1130,10 +1155,55 @@ function checkFunction(){
             cb.checked = false;
         });
     }
+}
+
+function submitForm1(){
+    let form = document.getElementById('commandes-form');
+
+    form.action = "{{route('bonCommande.index')}}";
+    form.submit();
+}
+
+function submitForm2(){
+    let form = document.getElementById('commandes-form');
+    form.action = "{{route('ticket.index')}}";
+    form.submit();
+}
+
+function changeStatus(id) {
+    let form = document.getElementById('changingStatusByModelForm');
+    let orderSatusToCommit = document.getElementById('orderSatus');
+    let orderPostponedDateToCommit = document.getElementById('orderPostponedDate');
+    let orderCommentToCommit = document.getElementById('orderComment');
+
+    let orderSatusForm = document.getElementById('etat'+id).value;
+    let orderPostponedDateForm = document.getElementById('datePrevu'+id).value;
+    let orderCommentForm = document.getElementById('commentaire'+id).value;
+
+    orderSatusToCommit.value = orderSatusForm ;
+    orderPostponedDateToCommit.value = orderPostponedDateForm ;
+    orderCommentToCommit.value = orderCommentForm ;
+    form.action = "/commandes/"+id+"/statut";
+    form.method = "post";
+    form.submit();
+}
+
+
+</script>
+
+<script>
+    function reporter(id) {
+        var xx = document.getElementById("prevu"+id);
+
+        var test = document.getElementById("etat"+id).value;
+        //alert(test);
+        if(test=='Reporté'){
+            xx.style.display = "block";
+        }
+        else{
+            xx.style.display = "none";
+        }
     }
-
-
-
 </script>
 
 @endsection

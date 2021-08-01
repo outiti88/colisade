@@ -91,8 +91,10 @@
                 @if ($nouveau > 0)
                 <span class="badge badge-danger">{{$nouveau}}</span>
                 @endif
-
                 </span></a></li>
+                @endcan
+                @can('client-admin')
+                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('reclamation.index')}}" aria-expanded="false"><i class="fab fa-buffer"></i><span class="hide-menu">Reclamations</span></a></li>
 
                 @endcan
             </ul>

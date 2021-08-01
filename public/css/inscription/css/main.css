@@ -239,7 +239,7 @@ iframe {
     align-items: center;
     padding: 15px;
     background: #f2f2f2;
-    height: 656px;
+    height: 800px;
 }
 
 .wrap-login100 {
@@ -325,9 +325,7 @@ iframe {
     width: 50%;
 }
 
-.rs2-wrap-input100 {
-    border-left: none;
-}
+
 
 .input100 {
     display: block;

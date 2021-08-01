@@ -14,7 +14,9 @@ class Produit extends Model
         return $this->hasOne('App\Stock');
     }
 
- 
+    public function commandes(){
+        return $this->BelongsToMany('App\Commande');
+    }
 
       public function mouvements(){
         return $this->hasMany('App\Mouvement');

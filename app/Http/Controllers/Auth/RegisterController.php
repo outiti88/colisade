@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Role;
-
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -33,7 +33,7 @@ class RegisterController extends Controller
      */
     protected $redirectTo =  RouteServiceProvider::USER;
 
-   
+
     /**
      * Create a new controller instance.
      *
@@ -45,9 +45,9 @@ class RegisterController extends Controller
     }*/
     public function __construct()
     {
-      
+
     }
-    
+
 
     /**
      * Get a validator for an incoming registration request.
@@ -73,7 +73,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-       
+
         if(empty($data['image'])) $data['image']="https://tracking.colisade.ma/assets/images/favicon.png";
             if(empty($data['description'])) $data['description']=" ";
         $user = User::create([
@@ -86,10 +86,12 @@ class RegisterController extends Controller
             'ville'=>$data['ville'],
             'image'=>$data['image'],
             'rib'=>$data['rib'],
-            
+            'storeName'=>$data['storeName'],
+            'cin'=>$data['cin'],
+
         ]);
 
-       
+
         if(empty($data['roles'])){
         $role = Role::select('id')->where('name','nouveau')->first();
         $user->roles()->attach($role);
@@ -102,6 +104,8 @@ class RegisterController extends Controller
     }
 
     protected function nouveau(){
-        return view('auth.nouveau');
+        $villes = DB::table('villes')->orderBy('name')->get();
+
+        return view('auth.nouveau' , ['villes' => $villes]);
     }
 }

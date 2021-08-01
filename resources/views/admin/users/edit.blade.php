@@ -13,7 +13,7 @@
             color: #f7941e !important;
         }
         .page-item.active .page-link {
-            
+
             background-color: #f7941e !important;
             border-color: #f7941e !important;
             color: #fff !important;
@@ -37,12 +37,12 @@
                 </nav>
             </div>
         </div>
-    
+
     </div>
 </div>
 
 <div class="container-fluid">
-    
+
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
@@ -65,7 +65,18 @@
                             @enderror
                         </div>
                     </div>
-
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label text-md-right">Nom du store</label>
+                        <div class="col-md-10">
+                            <input name="storeName" type="text" value="{{$user->storeName}}" class="form-control form-control-line" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label text-md-right">N° CIN</label>
+                        <div class="col-md-10">
+                            <input name="cin" type="text" value="{{$user->cin}}" class="form-control form-control-line" required>
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label for="email" class="col-md-2 col-form-label text-md-right">Email: </label>
 
@@ -88,7 +99,7 @@
 
                     @if (in_array("livreur",$user->roles()->get()->pluck('name')->toArray()))
                     <div id="education_fields">
-          
+
                     </div>
 
                     @foreach ($userVilles as $index => $userville)
@@ -102,7 +113,7 @@
                                     {{$ville->name}}
                                 </option>
                                 @endforeach
-                               
+
                             </select>
                         </div>
                         <div class="input-group-btn col-md-1">
@@ -113,11 +124,11 @@
                                 <span class="mdi mdi-close-box" aria-hidden="true"></span>
                             </button>
                         </div>
-                  
-                        
+
+
                     </div>
                     @endforeach
-                    
+
                     <div class="form-group row"  style="display: none">
                         <div  id="test">
                             <label class="col-md-2 col-form-label text-md-right">Ville</label>
@@ -129,7 +140,7 @@
                                     {{$ville->name}}
                                 </option>
                                 @endforeach
-                               
+
                             </select>
                         </div>
                         </div>
@@ -148,19 +159,14 @@
                                     {{$ville->name}}
                                 </option>
                                 @endforeach
-                               
+
                             </select>
                         </div>
-                    
+
                         </div>
                     @endif
-                    
-                  
-                         
-                  
-                        
-                    
-                    
+
+
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label text-md-right">Téléphone</label>
                         <div class="col-md-10">
@@ -168,7 +174,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-2 col-form-label text-md-right">ICE</label>
+                        <label class="col-md-2 col-form-label text-md-right">N° Registre de Commerce</label>
                         <div class="col-md-10">
                             <input name="description" type="text" value="{{$user->description}}"class="form-control form-control-line">
                         </div>
@@ -180,8 +186,8 @@
                         </div>
                     </div>
 
-                    
-                    
+
+
                     <div class="form-group row">
                         <label for="roles" class="col-md-12 col-form-label text-center font-bold font-16">Rôles Colisade : </label>
                         <label for="roles" class="col-md-2 col-form-label text-md-right">Rôle : </label>
@@ -214,10 +220,10 @@
                             <input type="radio" name="roles[]" value="5" id="cls" @if(implode($user->roles()->get()->pluck('name')->toarray()) == "ecom") checked @endif>
                             <label for="cls">Collecte, Stockage, Livraison</label>
                         </div>
-                      
-                    
+
+
                         </div>
-                        
+
 
                             <label for="type" class="col-md-2 col-form-label text-md-right">Statut : </label>
                             <div class="col-md-10 d-flex p-t-10 justify-content-around">
@@ -229,7 +235,7 @@
                                 <input type="radio" name="statut" value="1" id="VIP" @if($user->statut) checked @endif>
                                 <label for="VIP">VIP</label>
                             </div>
-                        
+
                             </div>
 
                     </div>
@@ -241,8 +247,8 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Modifier</button>
                 </form>
-                     
-                  
+
+
                 </div>
             </div>
         </div>
@@ -269,20 +275,20 @@
     <script>
         var room = 1;
         function education_fields() {
-        
+
             room++;
             var objTo = document.getElementById('education_fields')
             var divtest = document.createElement("div");
             divtest.setAttribute("class", "row mb-2 removeclass"+room);
             var rdiv = 'removeclass'+room;
-    
+
             divtest.innerHTML  = $("#test").html() + '<div class="input-group-btn col-md-1"> <button class="btn btn-danger" type="button" onclick="remove_education_fields('+ room +');"> <span class="mdi mdi-close-box" aria-hidden="true"></span> </button></div></div></div></div><div class="clear"></div>';
-            
+
             objTo.appendChild(divtest)
         }
         function remove_education_fields(rid) {
             $('.removeclass'+rid).remove();
         }
-    
+
     </script>
 @endsection

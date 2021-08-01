@@ -161,7 +161,7 @@
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                      @can('edit-users')
+                                      @can('manage-users')
                                       @if ($reception->etat == 'Envoyé')
 
                                       <a style="color: white"
@@ -190,7 +190,7 @@
                                     @switch($reception->etat)
                                     @case("Envoyé")
                                     badge-warning"
-                                    @can('edit-users')
+                                    @can('manage-users')
                                     title="Valider la reception"
                                      href="{{ route('reception.valide',$reception->id) }}"
                                     @endcan

@@ -81,9 +81,8 @@
                 <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalfacture"><i class="fa fa-plus-square">
                     </i> Générer la facture
                 </a>
-
-                </select>
                 @endcan
+                    <a  class="btn btn-warning text-white"  data-toggle="modal" data-target="#modalFactureSearch"><i class="fa fa-search"></i></a>
             </div>
         </div>
     </div>
@@ -235,6 +234,69 @@
                     </div>
     </div>
 </div>
+
+
+<div class="container my-4">
+    <div class="modal fade" id="modalFactureSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header text-center">
+                          <h4 class="modal-title w-100 font-weight-bold">Rechercher sur les Factures</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <form class="form-horizontal form-material" method="GET" action="{{route('facture.filter')}}">
+                                @csrf
+                                @can('ramassage-commande')
+                                <div class="form-group row">
+                                    <label for="client" class="col-sm-4">Fournisseur :</label>
+                                    <div class="col-sm-8">
+                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
+                                            <option value="" disabled selected>Choisissez le fournisseur</option>
+                                            @foreach ($clients as $client)
+                                        <option value="{{$client->id}}" class="rounded-circle">
+                                            {{$client->name}}
+                                        </option>
+                                            @endforeach
+
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                @endcan
+
+                                <div class="form-group row">
+                                  <label for="date_facture_min" class="col-sm-4">Date Min :</label>
+                                  <div class="col-sm-8">
+                                    <input class="form-control" name="date_facture_min" type="date" id="date_facture_min">
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="date_facture_max" class="col-sm-4">Date Max:</label>
+                                  <div class="col-sm-8">
+                                    <input class="form-control" name="date_facture_max" type="date" id="date_facture_max">
+                                  </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-warning"><i class="fa fa-search"></i> Rechercher</button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                      </div>
+                    </div>
+    </div>
+</div>
+
 
 
 @endsection
