@@ -45,7 +45,7 @@
 
             @yield('content')
             <footer class="footer text-center">
-                Copyright © 2021 All rights reserved | Made with <i class="mdi mdi-heart" aria-hidden="true"></i>  by <a href="http://idesignbusiness.ma//" target="_blank">iDesign Business</a>
+                Copyright © 2021 All rights reserved | Made with <i class="mdi mdi-heart" aria-hidden="true"></i>  by <a href="https://idesignbusiness.ma//" target="_blank">iDesign Business</a>
             </footer>
         </div>
 

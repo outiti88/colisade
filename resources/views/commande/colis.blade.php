@@ -70,6 +70,9 @@
             border-color: #f7941e !important;
             color: #fff !important;
         }
+        .bnt-product{
+            padding : 7px;
+        }
     </style>
 @endsection
 
@@ -92,18 +95,20 @@
         <div class="row float-right d-flex ">
             @can('client-admin')
             <div class="m-r-5">
-                <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i></a>
+                <a  class="btn btn-danger text-white"  data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-square"></i><span class="quick-action">Ajouter</span></a>
             </div>
+            @cannot('ecom')
             <div class="m-r-5">
 
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EXCELMODAL">
-                    <i class="fas fa-file-upload"></i>
+                  <i class="fas fa-file-upload"></i>  <span class="quick-action">Excel</span>
                   </button>
             </div>
+            @endcannot
 
             @endcan
             <div class="m-r-5" style="margin-right: 10px;">
-                <a  class="btn btn-warning text-white"  data-toggle="modal" data-target="#modalSearchForm"><i class="fa fa-search"></i></a>
+                <a  class="btn btn-warning text-white"  data-toggle="modal" data-target="#modalSearchForm"><i class="fa fa-search"></i><span class="quick-action">Filtrer</span></a>
             </div>
         </div>
         </div>
@@ -240,53 +245,56 @@
                     <input class="form-control" id="myInput" type="text" placeholder="Rechercher...">
                 </div>
                 <div class="table-responsive">
-                    <table  data-click-to-select="true"
-                            class="table table-hover" style="font-size: 0.72em;">
+                    <form id="commandes-form" method="GET">
+
+                        @csrf
+                        <input type="hidden" name="livreur" value="{{ request()->get('livreur') }}">
+                    <table id="table"
+                    data-toggle="table"
+                    data-filter-control="true"
+                    data-click-to-select="true"
+                    data-toolbar="#toolbar"
+                    class="table-responsive"  data-click-to-select="true" class="table table-hover" style="font-size: 0.72em;">
                         <thead>
                             <tr>
-                                @can('manage-users')
+
                                     @if ($checkBox==1)
-                                        <th  class="bs-checkbox " style="width: 36px; " data-field="state"><div class="th-inner "><label>
-                                            <input  id="check_bl" onclick="checkFunction()" name="btSelectAll" type="checkbox">
-                                            </label></div>
+                                        <th class="active">
+                                            <input type="checkbox" class="select-all checkbox" name="select-all" />
                                         </th>
                                     @endif
+                                @can('manage-users')
                                 <th scope="col">Client</th>
                                 @endcan
-                                <th scope="col">Numero Commande</th>
-                                <th scope="col">Nom Complet</th>
-                                <th scope="col">Téléphone</th>
-                                <th scope="col">Ville</th>
-                                <th scope="col">Montant</th>
+                                <th data-field="Numero" data-filter-control="input" data-sortable="true" scope="col">Numero Commande</th>
+                                <th data-field="Nom" data-filter-control="input" data-sortable="true" scope="col">Nom Complet</th>
+                                <th data-field="telephone" data-filter-control="input" data-sortable="true" scope="col">Téléphone</th>
+                                <th data-field="Ville" data-filter-control="input" data-sortable="true" scope="col">Ville</th>
+                                <th data-field="Montant" data-filter-control="input" data-sortable="true" scope="col">Montant</th>
                                 @cannot('livreur')
-                                <th scope="col">Prix de Livraison</th>
+                                <th scope="col" data-sortable="true" data-filter-control="input">Prix de Livraison</th>
                                 @endcannot
-                                <th scope="col">Date</th>
-                                <th scope="col">Statut</th>
-                                <th scope="col">Ticket</th>
+                                <th scope="col" data-sortable="true" data-filter-control="input">Date de modification</th>
+                                <th scope="col" data-sortable="true" data-filter-control="input">Statut</th>
+                                <th scope="col" >Ticket</th>
 
                             </tr>
                         </thead>
-                        <form id="commandes-form" method="GET">
+
                             <tbody id="myTable">
 
-                                    @csrf
-                                    <input type="hidden" name="livreur" value="{{ request()->get('livreur') }}">
                                     @forelse ($commandes as $index => $commande)
                                         <tr>
-                                            @can('manage-users')
-                                            @if ($checkBox==1)
-                                                <td class="bs-checkbox " style="width: 36px; ">
-                                                    <label>
-                                                        <input value="{{$commande->id}}"  class="cb" name="btSelectItem[]" type="checkbox">
-                                                        <span></span>
-                                                    </label>
-                                                </td>
-                                            @endif
 
+                                            @if ($checkBox==1)
+                                                    <td class="active">
+                                                        <input type="checkbox" class="select-item checkbox" name="item[]" value="{{$commande->id}}" />
+                                                    </td>
+                                            @endif
+                                            @can('manage-users')
 
                                             <th scope="row">
-                                                <a title="{{$users[$index]->name}}" class=" text-muted waves-effect waves-dark pro-pic @if($users[$index]->statut) vip @endif "
+                                                <a title="{{$users[$index]->name}} Tel: {{$users[$index]->telephone}}" class=" text-muted waves-effect waves-dark pro-pic @if($users[$index]->statut) vip @endif "
                                                             @can('edit-users')
                                                                 href="{{route('admin.users.edit',$users[$index]->id)}}"
                                                             @endcan >
@@ -305,13 +313,15 @@
                                                 @else
                                                     @if ($commande->traiter != 0)
                                                     <a href="{{route('bon.infos',$commande->traiter)}}" style="color: white" class="badge badge-pill badge-dark">
-                                                        <span style="font-size: 1.25em">Bon livraison</span>
+                                                        <span  style="font-size: 1.25em">Bon livraison</span>
                                                     </a>
                                                     <br>
                                                     @endif
                                                 @endif
-                                                {{$commande->numero}}
-
+                                                <a data-toggle="modal" data-target="#productDetailsModal{{$commande->id}}" class="badge badge-pill badge-warning" style="font-size: 1em; color: white; cursor:pointer"> {{$commande->numero}} </a>
+                                                    @if ($commande->isChanged)
+                                                    <br><span class="badge badge-pill badge-info" style="font-size: 1.1em; color:white"><i class="fas fa-exchange-alt"></i> Commande Changée</span>
+                                                    @endif
                                             </th>
                                             <td>{{$commande->nom}}</td>
                                             <td>{{$commande->telephone}}</td>
@@ -457,6 +467,37 @@
                                                             </div>
                                             </div>
                                         </div>
+
+                                        <div class="modal fade" id="productDetailsModal{{$commande->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Produits de la commande: {{$commande->numero}}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <ul class="list-group">
+                                                        @forelse ($commande->produits()->get() as $produit)
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <a href="{{route('produit.show',$produit->id)}}">{{$produit->libelle}}</a>
+                                                            <span class="badge badge-primary badge-pill">{{$produit->pivot->qte}}</span>
+                                                        </li>
+
+                                                        @empty
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        AUCUN PRODUIT POUR CETTE COMMANDE
+                                                        </li>
+                                                        @endforelse
+                                                    </ul>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
                                     @empty
                                         <tr>
                                             <td colspan="10" style="text-align: center">Aucune commande enregistrée!</td>
@@ -464,17 +505,23 @@
 
                                     @endforelse
 
+
                             @if ($checkBox==1)
                                 @if (request()->get('livreur') != null)
-                                <button style="margin: 20px;" onclick="submitForm1()" class="btn btn-primary">Bon de Commande</button>
+                                    @can('ramassage-commande')
+                                    <button style="margin: 20px;" onclick="submitForm1()" class="btn btn-primary">Bon de Commande</button>
+                                    @endcan
                                 @endif
                                 <button style="margin: 20px;" onclick="submitForm2()" class="btn btn-info">Ticket de Commande</button>
                             @endif
                             </tbody>
-                    </form>
+
+
+
 
 
                     </table>
+                </form>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             {{$commandes ->appends($data)-> links()}}
@@ -550,6 +597,24 @@
                                     </div>
                                 </div>
                                 @endcan
+                                @can('gestion-stock')
+                                <div class="form-group row">
+                                    <label for="produit" class="col-sm-4">Produit :</label>
+                                    <div class="col-md-8">
+                                        <select name="produit" id="produit" class="form-control form-control-line" value="{{request()->get('produit')}}" >
+                                            <option value="" disabled selected>Produit</option>
+
+                                            @foreach ($produits as $produit)
+                                        <option value="{{$produit->id}}" class="rounded-circle" @if(request()->get('produit') == $produit->id) selected @endif>
+                                            {{$produit->libelle .'     (quantité: '. $produit->stock()->first()->qte.')'}}
+                                        </option>
+                                            @endforeach
+
+                                        </select>
+                                      </div>
+                                    </div>
+                                @endcan
+
 
                                 <div class="form-group row">
                                     <label class="col-md-4">Nom et Prénom:</label>
@@ -759,7 +824,7 @@
                                             <option checked>Choisissez la ville</option>
                                             @foreach ($villes as $ville)
                                             <option value="{{$ville->name}}" class="rounded-circle">
-                                                {{$ville->name}}
+                                                {{$ville->name}} ({{$ville->prix}}DH)
                                             </option>
                                             @endforeach
 
@@ -877,7 +942,7 @@
                                             <option checked>Choisissez la ville</option>
                                             @foreach ($villes as $ville)
                                             <option value="{{$ville->name}}" class="rounded-circle">
-                                                {{$ville->name}}
+                                                {{$ville->name}} ({{$ville->prix}}DH)
                                             </option>
                                             @endforeach
 
@@ -897,6 +962,12 @@
                                     <input class="custom-control-input" id="customCheckRegister" type="checkbox" name="isOpen" value="1">
                                     <label class="custom-control-label" for="customCheckRegister">
                                       <span >J'accepte l'ouverture du colis par le client.</span>
+                                    </label>
+                                  </div>
+                                <div class="custom-control custom-control-alternative custom-checkbox">
+                                    <input class="custom-control-input" id="isChanged" type="checkbox" name="isChanged" value="1">
+                                    <label class="custom-control-label" for="isChanged">
+                                      <span >C'est une commande de change.</span>
                                     </label>
                                   </div>
                                 <div class="form-group">
@@ -949,14 +1020,14 @@
                               </div>
                                 <div class="row" id="test">
 
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-5" style="padding: 0">
                                       <label for="produit" class="col-sm-12">Produit :</label>
                                       <div class="col-md-12">
                                           <select name="produit[]" id="produit" class="form-control form-control-line" value="{{ old('produit') }}" required>
                                               <option value="" disabled selected>Produit</option>
                                               @foreach ($produits as $produit)
                                           <option value="{{$produit->id}}" class="rounded-circle">
-                                              {{$produit->reference .' '.$produit->libelle}}
+                                            {{$produit->libelle .'     (quantité: '. $produit->stock()->first()->qte.')'}}
                                           </option>
                                               @endforeach
 
@@ -964,18 +1035,24 @@
                                         </div>
                                       </div>
 
-                                      <div class="form-group col-md-4 input-group">
-                                        <label for="qte" class="col-md-12">Quantité:</label>
-                                        <div class="col-md-12">
-                                            <input  value="{{ old('qte') }}" type="number" class="form-control form-control-line" name="qte[]" id="qte" required>
+                                      <div class="form-group col-md-5 input-group" style="padding: 0">
+                                        <label for="qte" class="col-md-4">Quantité:</label>
+                                        <div class="col-md-12" style="
+                                        display: flex;
+                                        align-items: center;
+                                        align-content: center;
+                                    ">
+                                            <div class="col-md-8">
+                                                <input  value="{{ old('qte') }}" type="number" class="form-control form-control-line" name="qte[]" id="qte" required>
+                                            </div>
+                                            <div class="input-group-btn col-md-4" >
+                                                <button class="btn btn-success bnt-product" type="button"  onclick="education_fields()"> <span class="mdi mdi-library-plus" aria-hidden="true"></span> </button>
+                                              </div>
                                         </div>
-
                                     </div>
 
                                 </div>
-                                <div class="input-group-btn col-md-2" style="position: relative; left:350px; top:-55px">
-                                  <button class="btn btn-success " type="button"  onclick="education_fields()"> <span class="mdi mdi-library-plus" aria-hidden="true"></span> </button>
-                                </div>
+
                               <div class="form-group">
                                   <label class="col-md-12">Nom et Prénom du destinataire :</label>
                                   <div class="col-md-12">
@@ -1027,7 +1104,7 @@
                                         <option checked>Choisissez la ville</option>
                                         @foreach ($villes as $ville)
                                           <option value="{{$ville->name}}" class="rounded-circle">
-                                              {{$ville->name}}
+                                              {{$ville->name}} ({{$ville->prix}}DH)
                                           </option>
                                           @endforeach
 
@@ -1057,6 +1134,12 @@
                                 </label>
                               </div>
 
+                              <div class="custom-control custom-control-alternative custom-checkbox">
+                                <input  class="custom-control-input" id="isChanged" type="checkbox" name="isChanged" value="1">
+                                <label class="custom-control-label" for="isChanged">
+                                  <span >C'est une commande de change.</span>
+                                </label>
+                              </div>
 
                               <div class="form-group">
                                   <div class="modal-footer d-flex justify-content-center">
@@ -1127,7 +1210,7 @@
         divtest.setAttribute("class", "row removeclass"+room);
         var rdiv = 'removeclass'+room;
 
-        divtest.innerHTML  = $("#test").html() + '<div class="input-group-btn"> <button class="btn btn-danger m-t-25" type="button" onclick="remove_education_fields('+ room +');"> <span class="mdi mdi-close-box" aria-hidden="true"></span> </button></div></div></div></div><div class="clear"></div>';
+        divtest.innerHTML  = $("#test").html() + '<div class="input-group-btn bnt-product"> <button class="btn btn-danger bnt-product m-t-25" type="button" onclick="remove_education_fields('+ room +');"> <span class="mdi mdi-close-box" aria-hidden="true"></span> </button></div></div></div></div><div class="clear"></div>';
 
         objTo.appendChild(divtest)
     }
@@ -1204,6 +1287,87 @@ function changeStatus(id) {
             xx.style.display = "none";
         }
     }
+</script>
+
+<script>
+    var $table = $('#table');
+    $(function () {
+        $('#toolbar').find('select').change(function () {
+            $table.bootstrapTable('refreshOptions', {
+                exportDataType: $(this).val()
+            });
+        });
+    })
+
+		var trBoldBlue = $("table");
+
+	$(trBoldBlue).on("click", "tr", function (){
+			$(this).toggleClass("bold-blue");
+	});
+</script>
+<script>
+    $(function(){
+
+        //button select all or cancel
+        $("#select-all").click(function () {
+            var all = $("input.select-all")[0];
+            all.checked = !all.checked
+            var checked = all.checked;
+            $("input.select-item").each(function (index,item) {
+                item.checked = checked;
+            });
+        });
+
+        //button select invert
+        $("#select-invert").click(function () {
+            $("input.select-item").each(function (index,item) {
+                item.checked = !item.checked;
+            });
+            checkSelected();
+        });
+
+        //button get selected info
+        $("#selected").click(function () {
+            var items=[];
+            $("input.select-item:checked:checked").each(function (index,item) {
+                items[index] = item.value;
+            });
+            if (items.length < 1) {
+                alert("no selected items!!!");
+            }else {
+                var values = items.join(',');
+                console.log(values);
+                var html = $("<div></div>");
+                html.html("selected:"+values);
+                html.appendTo("body");
+            }
+        });
+
+        //column checkbox select all or cancel
+        $("input.select-all").click(function () {
+            var checked = this.checked;
+            $("input.select-item").each(function (index,item) {
+                item.checked = checked;
+            });
+        });
+
+        //check selected items
+        $("input.select-item").click(function () {
+            var checked = this.checked;
+            console.log(checked);
+            checkSelected();
+        });
+
+        //check is all selected
+        function checkSelected() {
+            var all = $("input.select-all")[0];
+            var total = $("input.select-item").length;
+            var len = $("input.select-item:checked:checked").length;
+            console.log("total:"+total);
+            console.log("len:"+len);
+            all.checked = len===total;
+        }
+    });
 </script>
 
 @endsection

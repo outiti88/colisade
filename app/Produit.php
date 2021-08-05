@@ -18,6 +18,9 @@ class Produit extends Model
         return $this->BelongsToMany('App\Commande');
     }
 
+    public function receptions(){
+        return $this->BelongsToMany('App\Reception');
+    }
       public function mouvements(){
         return $this->hasMany('App\Mouvement');
     }

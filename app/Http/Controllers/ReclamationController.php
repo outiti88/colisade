@@ -30,7 +30,7 @@ class ReclamationController extends Controller
     {
         $clients = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['client', 'ecom']);
-        })->get();
+        })->orderBy('name')->get();
         $commandes = [];
         $fournisseurs = [];
         $data = null;
@@ -113,7 +113,7 @@ class ReclamationController extends Controller
         $data = $request->all();
         $clients = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['client', 'ecom']);
-        })->get();
+        })->orderBy('name')->get();
 
         $nouveau =  User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['nouveau']);

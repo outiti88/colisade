@@ -41,10 +41,18 @@ class FactureController extends Controller
             $factures = DB::table('factures')->orderBy('created_at', 'DESC');
             $clients = User::whereHas('roles', function ($q) {
                 $q->whereIn('name', ['client', 'ecom']);
+            })->whereHas('commandes', function ($q) {
+                $q->where('facturer', '0')->where('statut','Livré');
             })->get();
         } else {
             $factures = DB::table('factures')->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC');
         }
+
+        // $userTmp = User::withTrashed()->find($facture->user_id);
+        //     $commandeNonFacrurer = $userTmp->whereHas('commandes', function ($q) {
+        //             $q->where('facturer', '0')->where('commande','Livré');
+        //         })->count();
+        //     if($commandeNonFacrurer>0) $users[] = $userTmp;
 
         foreach ($factures->paginate(10) as $facture) {
             $users[] =  User::withTrashed()->find($facture->user_id);
@@ -126,8 +134,8 @@ class FactureController extends Controller
                 $facture->numero = 'FAC_' . date("mdis");
                 $facture->colis = DB::table('commandes')->where('user_id', $user)->whereIn('statut', ['Refusée'])->where('facturer', '0')->sum('colis');
                 $facture->livre = $nbrCmdLivre;
-                $fprixRefuser = DB::table('commandes')->where('user_id', $user)->where('statut', 'Refusée')->where('facturer', '0')->count();
-                $facture->prix = DB::table('commandes')->where('user_id', $user)->where('statut', 'Livré')->where('facturer', '0')->sum('prix') + (10 * $fprixRefuser); //prix des commandes livrées
+                $fprixRefuser = DB::table('commandes')->where('user_id', $user)->where('statut', 'Refusée')->where('facturer', '0')->sum('refusePart');
+                $facture->prix = DB::table('commandes')->where('user_id', $user)->where('statut', 'Livré')->where('facturer', '0')->sum('prix') + $fprixRefuser; //prix des commandes livrées
 
                 $facture->montant = DB::table('commandes')->where('user_id', $user)->where('statut', 'Livré')->where('facturer', '0')->sum('montant');
                 $facture->commande = DB::table('commandes')->where('user_id', $user)->whereIn('statut', ['Refusée'])->where('facturer', '0')->count(); //nbr de commanddes non livrée
@@ -375,10 +383,10 @@ class FactureController extends Controller
 
         $clients = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['client', 'ecom']);
-        })->get();
+        })->orderBy('name')->get();
         $livreurs = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['livreur']);
-        })->get();
+        })->orderBy('name')->get();
 
         $users = [];
         $produits = [];

@@ -40,7 +40,7 @@
         @if (session()->has('nbrCmdRamasse'))
         <div class="alert alert-dismissible alert-danger col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Erreur ! </strong>vous ne pouvez pas charger la facture avec sans traité tous les commandes ! <br>
+        <strong>Erreur ! </strong>vous ne pouvez pas charger la facture sans traiter tous les commandes ! <br>
         Il vous reste {{session()->get('nbrCmdRamasse')}} à traiter !
           </div>
         @endif
@@ -97,7 +97,7 @@
 
                 <div class="card-body ">
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover" style="font-size: 0.9em;">
                             <thead>
                               <tr>
                                 @can('ramassage-commande')

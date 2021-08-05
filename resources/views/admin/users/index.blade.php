@@ -63,39 +63,31 @@
                             <thead>
                               <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Nom & Prénom</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Ville</th>
-                                <th scope="col">Rôles</th>
-                                <th scope="col">Date</th>
-
                                 @can('edit-users')
                                 <th scope="col">Action</th>
                                 @endcan
-
+                                <th scope="col">Nom & Prénom</th>
+                                <th scope="col">Rôles</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Ville</th>
                               </tr>
                             </thead>
 
                             <tbody id="myTable">
                                 @foreach ($users as $user)
-                              <tr>
-                                <th scope="row"><a><img src="{{$user->image}}" alt="user" class="rounded-circle
-
+                              <tr style="padding: 0; margin:0">
+                                <th  style="padding: 0.5rem; margin:0" scope="row"><a><img src="{{$user->image}}" alt="user" class="rounded-circle
                                     @if($user->statut)
                                     vip
                                 @endif
                                     " width="31"></a></th>
-                                <td>{{$user->name}}</td>
-                                <td>{{$user->email}}</td>
-                                <td>{{$user->ville}}</td>
-                                <td>{{ implode(', ' , $user->roles()->get()->pluck('name')->toArray() )}}</td>
-                                <td>{{$user->created_at}}</td>
-                                @can('edit-users')
-                                <td>
+                                    @can('edit-users')
+                                <td  style="padding: 0.5rem; margin:0; display:flex">
                                     <a href="{{route('admin.users.edit',$user->id)}}">
-                                       <button class="btn btn-primary float-lef"><i class="mdi mdi-account-edit"></i></button>
+                                       <button style="padding: 0.5rem;" class="btn btn-primary float-lef"><i class="mdi mdi-account-edit"></i></button>
                                    </a>
-                                <a class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#FormDelete{{$user->id}}"><i class="fas fa-trash-alt"></i></a>
+                                <a style="padding: 0.5rem;" class="btn btn-danger text-white m-r-5" data-toggle="modal" data-target="#FormDelete{{$user->id}}"><i class="fas fa-trash-alt"></i></a>
 
                                 <div class="modal fade" id="FormDelete{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -136,6 +128,13 @@
 
                                </td>
                                 @endcan
+                                <td   style="padding: 0.5rem; margin:0">{{$user->name}}</td>
+                                <td  style="padding: 0.5rem; margin:0">{{ implode(', ' , $user->roles()->get()->pluck('name')->toArray() )}}</td>
+                                <td  style="padding: 0.5rem; margin:0">{{$user->created_at}}</td>
+
+                                <td  style="padding: 0.5rem; margin:0">{{$user->email}}</td>
+                                <td  style="padding: 0.5rem; margin:0">{{$user->ville}}</td>
+
 
                                 </tr>
                               @endforeach

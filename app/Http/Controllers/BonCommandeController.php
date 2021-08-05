@@ -24,14 +24,14 @@ class BonCommandeController extends Controller
      */
     public function index(Request $request)
     {
-        $commandes = DB::table('commandes')->where('commandes.deleted_at', NULL)->whereIn('commandes.id', $request->btSelectItem);
-        $this->gen($request->btSelectItem);
-        //dd(count($request->btSelectItem));
+        $commandes = DB::table('commandes')->where('commandes.deleted_at', NULL)->whereIn('commandes.id', $request->item);
+        $this->gen($request->item);
+        //dd(count($request->item));
     }
 
     public function commandes($request, $n, $i)
     {
-        $ids = $request->btSelectItem;
+        $ids = $request->item;
         $date = date("j, n, Y");
         $commandes = DB::table('commandes')->where('commandes.deleted_at', NULL)->whereIn('commandes.id', $ids)->get();
 
@@ -76,7 +76,7 @@ class BonCommandeController extends Controller
 
     public function content($request, $n, $i)
     {
-        $ids = $request->btSelectItem;
+        $ids = $request->item;
         //dd($request->livreur);
         $user = DB::table('users')->find($request->livreur);
 
@@ -110,11 +110,11 @@ class BonCommandeController extends Controller
 
     public function gen(Request $request)
     {
-        $ids = $request->btSelectItem;
+        $ids = $request->item;
         if ($ids == null) return back();
 
         if (!(count($ids) > 0)) return back();
-        $commandes = DB::table('commandes')->where('commandes.deleted_at', NULL)->whereIn('commandes.id', $ids)->get();
+        //$commandes = DB::table('commandes')->where('commandes.deleted_at', NULL)->whereIn('commandes.id', $ids)->get();
         $pdf = \App::make('dompdf.wrapper');
         $style = '
         <!doctype html>

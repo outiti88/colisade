@@ -139,7 +139,7 @@ N: {{$commande->numero}}
         <div class="col-6">
             <div class="row float-right">
                 @can('fournisseur')
-                <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalReclamation"><i class="fab fa-buffer"></i></a>
+                <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalReclamation"><i class="fab fa-buffer"></i> <span class="quick-action">Réclamer</span></a>
                 <div class="modal fade" id="modalReclamation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
@@ -195,14 +195,14 @@ N: {{$commande->numero}}
                     @endcan
                     @can('livreur')
                     @if (( $commande->statut === "Pas de Réponse" || $commande->statut === "Livré" || $commande->statut === "Injoignable" || $commande->statut === "En cours" || $commande->statut === "Refusée" || $commande->statut === "Modifiée" || $commande->statut === "Annulée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ))
-                    <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
+                    <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><span class="quick-action">Statut</span><i class="fas fa-edit"></i></a>
                     @endif
                     @endcan
                     @can('manage-users')
                         @if ( $commande->statut !== "Retour en stock")
-                        <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><i class="fas fa-edit"></i></a>
+                        <a  class="btn btn-warning text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormStatut"><span class="quick-action">Statut</span><i class="fas fa-edit"></i></a>
                         @endif
-                        <a  class="btn btn-dark text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormLivreur"><i class="fas fa-user"></i> Affecter</a>
+                        <a  class="btn btn-dark text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormLivreur"><span class="quick-action">Affecter</span><i class="fas fa-user"></i></a>
 
                         <div class="modal fade" id="modalSubscriptionFormLivreur" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -255,19 +255,14 @@ N: {{$commande->numero}}
                     @endcan
 
 
-                    @can('manage-users')
-                    @if ($commande->statut === "Refusée"  )
-                    <a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
-                    @endif
-                    @endcan
 
 
 
                     @can('delete-commande')
                     @if ($commande->statut === "envoyée" || $modify === 1  )
-                    <a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><i class="fas fa-edit"></i></a>
+                    <a  class="btn btn-primary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormEdit"><span class="quick-action">Modifier</span><i class="fas fa-edit"></i></a>
 
-                    <a class="btn btn-secondary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormDelete"><i class="fas fa-trash-alt"></i></a>
+                    <a class="btn btn-secondary text-white m-r-5" data-toggle="modal" data-target="#modalSubscriptionFormDelete"><span class="quick-action">Supprimer</span><i class="fas fa-trash-alt"></i></a>
 
                                 <div class="modal fade" id="modalSubscriptionFormDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">

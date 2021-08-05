@@ -23,12 +23,12 @@
             </div>
             <div class="row float-right" id="navbar-example3">
               <a onclick="productedit()" href="#from_product_edit" class="btn btn-warning text-white m-r-5">Modifier <i class="fas fa-edit"></i></a>
-        
+
             </div>
         </div>
-        
+
       </div>
-    
+
 </div>
 <!-- ============================================================== -->
 <!-- End Bread crumb and right sidebar toggle -->
@@ -40,7 +40,7 @@
 <div class="container-fluid">
     <!-- ============================================================== -->
     <div class="row">
-           
+
         @if (session()->has('produit'))
         <div class="alert alert-dismissible alert-success col-12">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -50,7 +50,7 @@
     </div>    <!-- ============================================================== -->
     <!-- Row -->
     <div class="row">
-        
+
         <!-- Column -->
         <div class="col-lg-4 col-xlg-3 col-md-5">
             <div class="card">
@@ -60,9 +60,9 @@
                         <div class="js--image-preview">
                            <img class="photo_produit" src="/uploads/produit/{{$produit->photo}}" alt="" width="250" height="250">
                             </div>
-                       
+
                       </div>
-                    
+
                         <h4 class="card-title m-t-10">{{$produit->libelle}}</h4>
                         <h6 class="card-subtitle">{{$produit->description}}</h6>
                         <div class="row text-center justify-content-md-center">
@@ -71,17 +71,12 @@
                         </div>
                     </center>
                 </div>
-                <div>
-                    <hr> </div>
-                {{-- <div class="card-body"> 
-                    <h3>Mouvement du stock</h3>
-                    <small class="text-muted">Addresse email </small>
-                    <h6>test test</h6> <small class="text-muted p-t-30 db">Téléphone</small>
-                    <h6>test test</h6> <small class="text-muted p-t-30 db">Addresse</small>
-                    <h6>test test</h6>
-                    </div> --}}
+
             </div>
         </div>
+
+
+
         <!-- Column -->
         <!-- Column -->
         <div class="col-lg-8 col-xlg-9 col-md-7" data-spy="scroll" data-target="#edit_product" data-offset="0">
@@ -104,7 +99,7 @@
                             @enderror
                         </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="col-md-12">Prix de produit</label>
                             <div class="col-md-12">
@@ -117,7 +112,7 @@
                             <textarea name="description" rows="5" class="form-control form-control-line">{{$produit->description}}</textarea>
                             </div>
                         </div>
-                     
+
                         <div class="form-group">
                             <label class="col-sm-12">Catégorie :</label>
                             <div class="col-sm-12">
@@ -157,11 +152,26 @@
         <!-- Column -->
     </div>
 
+    <div class="row">
+        <div class="col-lg-12 col-xlg-3 col-md-5">
+            <div class="card">
+                <div class="card-body">
+                <center class="m-t-30">
+
+                </center>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
 </div>
 @endsection
 
 @section('javascript')
-    
+
   <script>
     function productedit() {
   document.getElementById("fieldset_edit").disabled = !document.getElementById("fieldset_edit").disabled;

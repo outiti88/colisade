@@ -33,7 +33,7 @@ class BonLivraisonController extends Controller
             $q->whereIn('name', ['nouveau']);
         })->where('deleted_at', NULL)->count();
 
-        $ramasse = DB::table('commandes')->where('user_id', Auth::user()->id)->where('statut', 'Ramassée')->where('traiter', '0')->count();
+        $ramasse = DB::table('commandes')->where('user_id', Auth::user()->id)->where('statut', 'Reçue')->where('traiter', '0')->count();
         $nonRammase = DB::table('commandes')->where('user_id', Auth::user()->id)->where('statut', 'envoyée')->where('traiter', '0')->count();
 
         $clients = []; //tableau des clients existe dans la base de données
@@ -84,25 +84,25 @@ class BonLivraisonController extends Controller
             $user = Auth::user()->id; //session du client
         }
         $date = now();
-        $cmdExist =  DB::table('commandes')->where('statut', 'Ramassée')->where('traiter', '0')->where('user_id', $user)->count();
+        $cmdExist =  DB::table('commandes')->where('statut', 'Reçue')->where('traiter', '0')->where('user_id', $user)->count();
 
         // dd($cmdExist , $user);
 
         $bon_livraison = DB::table('bon_livraisons')->whereDate('created_at', now())->where('user_id', Auth::user()->id)->count();
 
 
-        if (($cmdExist == 0)) { // 0 commande Ramassée et jamais traiter
+        if (($cmdExist == 0)) { // 0 commande Reçue et jamais traiter
             $request->session()->flash('cmdExist');
         } else {
             $bonLivraison = new BonLivraison();
-            $bonLivraison->colis = DB::table('commandes')->where('user_id', $user)->where('statut', 'Ramassée')->where('traiter', '0')->sum('colis');
-            $bonLivraison->commande = DB::table('commandes')->where('user_id', $user)->where('statut', 'Ramassée')->where('traiter', '0')->count();
-            $bonLivraison->prix = DB::table('commandes')->where('user_id', $user)->where('statut', 'Ramassée')->where('traiter', '0')->sum('prix');
-            $bonLivraison->montant = DB::table('commandes')->where('user_id', $user)->where('statut', 'Ramassée')->where('traiter', '0')->sum('montant');
+            $bonLivraison->colis = DB::table('commandes')->where('user_id', $user)->where('statut', 'Reçue')->where('traiter', '0')->sum('colis');
+            $bonLivraison->commande = DB::table('commandes')->where('user_id', $user)->where('statut', 'Reçue')->where('traiter', '0')->count();
+            $bonLivraison->prix = DB::table('commandes')->where('user_id', $user)->where('statut', 'Reçue')->where('traiter', '0')->sum('prix');
+            $bonLivraison->montant = DB::table('commandes')->where('user_id', $user)->where('statut', 'Reçue')->where('traiter', '0')->sum('montant');
             $bonLivraison->nonRammase = 0;
             $bonLivraison->user()->associate($user)->save();
 
-            $affected = DB::table('commandes')->where('user_id', $user)->where('statut', 'Ramassée')->where('traiter', '=', '0')->update(array('traiter' => $bonLivraison->id));
+            $affected = DB::table('commandes')->where('user_id', $user)->where('statut', 'Reçue')->where('traiter', '=', '0')->update(array('traiter' => $bonLivraison->id));
             //dd($affected);
 
             $request->session()->flash('ajoute');
@@ -311,12 +311,11 @@ class BonLivraisonController extends Controller
 
         $clients = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['client', 'ecom']);
-        })->get();
+        })->orderBy('name')->get();
         $produits = [];
         $livreurs = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['livreur']);
-        })->get();
-
+        })->orderBy('name')->get();
         $villes = DB::table('villes')->orderBy('name')->get();
 
 
@@ -389,7 +388,7 @@ class BonLivraisonController extends Controller
         $bonLivraisons = $bonLivraisons->paginate(10);
         $data = null;
         if ($total > 0) {
-            $ramasse = DB::table('commandes')->where('user_id', Auth::user()->id)->where('statut', 'Ramassée')->where('traiter', '0')->count();
+            $ramasse = DB::table('commandes')->where('user_id', Auth::user()->id)->where('statut', 'Reçue')->where('traiter', '0')->count();
             $nonRammase = DB::table('commandes')->where('user_id', Auth::user()->id)->where('statut', 'envoyée')->where('traiter', '0')->count();
 
             return view('bonLivraison', [

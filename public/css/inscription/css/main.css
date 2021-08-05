@@ -437,6 +437,7 @@ input.input100 {
 }
 
 @media (max-width: 768px) {
+
     .login100-form {
         width: 100%;
     }

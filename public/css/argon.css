@@ -616,6 +616,7 @@ pre code
 }
 @media (min-width: 576px)
 {
+
     .container
     {
         max-width: 540px;
@@ -623,6 +624,7 @@ pre code
 }
 @media (min-width: 768px)
 {
+
     .container
     {
         max-width: 720px;
@@ -1069,6 +1071,8 @@ pre code
 {
     margin-left: 91.66667%;
 }
+
+
 
 @media (min-width: 576px)
 {
@@ -2449,6 +2453,10 @@ pre code
 
 @media (max-width: 767.98px)
 {
+    .quick-action{
+        display: none !important;
+    }
+
     .table-responsive-md
     {
         display: block;
@@ -22716,6 +22724,7 @@ a.btn-icon-only
 {
     padding-right: 1.5rem;
     padding-left: 1.5rem;
+    width: 15%;
 }
 
 .table .custom-toggle

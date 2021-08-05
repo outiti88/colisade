@@ -59,6 +59,7 @@ class VilleController extends Controller
         $ville->name = $request->name;
         $ville->prix = $request->prix;
         $ville->livreur = $request->livreur;
+        $ville->refuse = $request->refuse;
         $ville->save();
         return back();
     }
@@ -94,14 +95,7 @@ class VilleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($id);
-        $ville = Ville::findOrFail($id);
-        $ville->name = $request->name;
-        $ville->prix = $request->prix;
-        $ville->livreur = $request->livreur;
-        $ville->save();
-        dd($ville);
-        return back();
+
     }
 
     public function updateVille(Request $request,$id){
@@ -109,6 +103,7 @@ class VilleController extends Controller
         $ville->name = $request->name;
         $ville->prix = $request->prix;
         $ville->livreur = $request->livreur;
+        $ville->refuse = $request->refuse;
         $ville->save();
         return back();
     }

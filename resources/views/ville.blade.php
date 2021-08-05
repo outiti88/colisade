@@ -87,6 +87,12 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                  <label class="col-md-12">Prix du refusé :</label>
+                  <div class="col-md-12">
+                      <input  value="{{ old('refuse') }}" name="refuse" type="number" placeholder="Prix du refusé" class="form-control form-control-line" required>
+                  </div>
+              </div>
 
 
                   <div class="form-group">
@@ -119,6 +125,7 @@
                                 <th scope="col">Ville</th>
                                 <th scope="col">Prix</th>
                                 <th scope="col">Part de Livreur</th>
+                                <th scope="col">Prix du refusé</th>
 
                                 @can('edit-users')
                                 <th scope="col">Action</th>
@@ -134,6 +141,7 @@
                                 <td>{{$ville->name}}</td>
                                 <td>{{$ville->prix}}</td>
                                 <td>{{$ville->livreur}}</td>
+                                <td>{{$ville->refuse}}</td>
 
                                 @can('edit-users')
                                 <td>
@@ -179,12 +187,19 @@
                                                       </div>
                                                   </div>
 
-                                                  <div class="form-group">
-                                                    <label class="col-md-12">La part du livreur :</label>
-                                                    <div class="col-md-12">
-                                                        <input  value="{{$ville->livreur}}" name="livreur" type="number" placeholder="Part du livreur" class="form-control form-control-line" required>
+                                                    <div class="form-group">
+                                                        <label class="col-md-12">La part du livreur :</label>
+                                                        <div class="col-md-12">
+                                                            <input  value="{{$ville->livreur}}" name="livreur" type="number" placeholder="Part du livreur" class="form-control form-control-line" required>
+                                                        </div>
                                                     </div>
-                                                </div>
+
+                                                    <div class="form-group">
+                                                        <label class="col-md-12">Prix du refusé :</label>
+                                                        <div class="col-md-12">
+                                                            <input  value="{{$ville->refuse}}" name="refuse" type="number" placeholder="Prix du refusé" class="form-control form-control-line" required>
+                                                        </div>
+                                                    </div>
 
                                                   <div class="form-group">
                                                       <div class="modal-footer d-flex justify-content-center">

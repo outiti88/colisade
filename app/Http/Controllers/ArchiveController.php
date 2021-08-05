@@ -51,10 +51,10 @@ class ArchiveController extends Controller
         $data = null;
         $clients = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['client', 'ecom']);
-        })->get();
+        })->orderBy('name')->get();
         $livreurs = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['livreur']);
-        })->get();
+        })->orderBy('name')->get();
         $nouveau =  User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['nouveau']);
         })->where('deleted_at', NULL)->count();
@@ -84,8 +84,6 @@ class ArchiveController extends Controller
         } elseif (!Gate::denies('livreur')) {
             //session livreur
             //dd("test");
-
-            $userVilles = array_filter(explode(",", Auth::user()->ville));
 
             $total = DB::table('commandes')
                 ->join('users', 'users.id', '=', 'commandes.user_id')
@@ -143,10 +141,10 @@ class ArchiveController extends Controller
         $commandes = DB::table('commandes')->where('commandes.deleted_at', NULL);
         $clients = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['client', 'ecom']);
-        })->get();
+        })->orderBy('name')->get();
         $livreurs = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['livreur']);
-        })->get();
+        })->orderBy('name')->get();
         $nouveau =  User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['nouveau']);
         })->where('deleted_at', NULL)->count();

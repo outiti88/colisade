@@ -54,7 +54,18 @@
 
                 @endcan
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/profil" aria-expanded="false"><i class="mdi mdi-account-network"></i><span class="hide-menu">Profile</span></a></li>
-                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/commandes" aria-expanded="false"><i class="mdi mdi-package-variant"></i><span class="hide-menu">Gestion des commandes</span></a></li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/commandes" aria-expanded="false"><i class="mdi mdi-package-variant"></i>
+
+                        @can('manage-users')
+                            <span class="hide-menu">Commandes</span>
+                            <span class="badge badge-danger">{{App\Commande::where('statut','Reporté')->count()}}</span>
+                        @endcan
+                        @cannot('manage-users')
+                        <span class="hide-menu">Gestion des commandes</span>
+                    @endcan
+                    </a>
+                </li>
                 @cannot('livreur')
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('bonlivraison.index')}}" aria-expanded="false"><i class="mdi mdi-note-text"></i><span class="hide-menu">Bon de livraison</span></a></li>
                 @can('client-admin')
@@ -79,7 +90,16 @@
 
                 @can('gestion-stock')
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('produit.index')}}" aria-expanded="false"><i class="mdi mdi-package-variant-closed"></i><span class="hide-menu">Gestion du stock</span></a></li>
-                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('reception.index')}}" aria-expanded="false"><i class="mdi mdi-truck"></i><span class="hide-menu">Reception</span></a></li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('reception.index')}}" aria-expanded="false"><i class="mdi mdi-truck"></i>
+                        <span class="hide-menu">
+                            Reception
+                            @can('manage-users')
+                            <span class="badge badge-danger">{{App\Reception::where('etat','Envoyé')->count()}}</span>
+                            @endcan
+                        </span>
+                    </a>
+                </li>
                 @endcan
                 @can('manage-users')
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('Relance.index')}}" aria-expanded="false"><i class="mdi mdi-creation"></i><span class="hide-menu">Commandes VIP</span></a></li>
@@ -94,7 +114,15 @@
                 </span></a></li>
                 @endcan
                 @can('client-admin')
-                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('reclamation.index')}}" aria-expanded="false"><i class="fab fa-buffer"></i><span class="hide-menu">Reclamations</span></a></li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('reclamation.index')}}" aria-expanded="false"><i class="fab fa-buffer"></i>
+                        <span class="hide-menu">Reclamations
+                            @can('manage-users')
+                            <span class="badge badge-danger">{{App\Reclamation::where('etat',0)->count()}}</span>
+                            @endcan
+                        </span>
+                    </a>
+                </li>
 
                 @endcan
             </ul>

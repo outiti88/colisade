@@ -54,28 +54,32 @@ class ReceptionController extends Controller
         } else {
             $receptions = DB::table('receptions')->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(10);
             $total = DB::table('receptions')->where('user_id', Auth::user()->id)->count();
-            $produits = DB::table('produits')->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+            $produits = Produit::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
         }
 
         $details = [];
+        $i = 0;
+        $test = [];
 
-        //dd($receptions);
+
         foreach ($receptions as $index => $recep) {
-            $reception_produits = DB::table('reception_produits')->where('reception_id', $recep->id)->get();
+            $reception_produits = DB::table('produit_reception')->where('reception_id', $recep->id)->get();
+            $test[] = $reception_produits;
             //dd($reception_produits);
-
             foreach ($reception_produits as $recet) {
                 //dd($recet->produit_id);
-                $produit = DB::table('produits')->where('id', $recet->produit_id)->get();
+                $produit = Produit::where('id', $recet->produit_id)->first();
                 //dd($produit);
                 $details[$index][] = array(
-                    "produit" => $produit[0],
+                    "produit" => $produit,
                     "qte" => $recet->qte
                 );
             }
         }
 
-        //dd($details);
+        // dd($receptions[2]->id);
+        // dd($test,$receptions,$details);
+
 
         return view('reception.index', [
             'nouveau' => $nouveau,
@@ -125,19 +129,19 @@ class ReceptionController extends Controller
         } else {
             $receptions = $receptions->where('user_id', Auth::user()->id)->paginate(10);
             $total = DB::table('receptions')->where('user_id', Auth::user()->id)->count();
-            $produits = DB::table('produits')->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+            $produits = Produit::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
         }
 
         $details = [];
 
         //dd($receptions);
         foreach ($receptions as $index => $recep) {
-            $reception_produits = DB::table('reception_produits')->where('reception_id', $recep->id)->get();
+            $reception_produits = DB::table('produit_reception')->where('reception_id', $recep->id)->get();
             //dd($reception_produits);
 
             foreach ($reception_produits as $recet) {
                 //dd($recet->produit_id);
-                $produit = DB::table('produits')->where('id', $recet->produit_id)->get();
+                $produit = Produit::where('id', $recet->produit_id)->get();
                 //dd($produit);
                 $details[$index][] = array(
                     "produit" => $produit[0],
@@ -181,17 +185,25 @@ class ReceptionController extends Controller
             $reception->colis = count($request->produit);
             $reception->user()->associate(Auth::user())->save();
 
+
             foreach ($request->produit as $index => $produit) {
 
                 $stock = DB::table('stocks')->where('produit_id', $produit)->first();
                 $stock = Stock::find($stock->id);
                 $stock->cmd += $request->qte[$index];
                 $stock->save();
-                $reception_produit = new ReceptionProduit();
-                $reception_produit->reception_id = $reception->id;
-                $reception_produit->produit_id = $produit;
-                $reception_produit->qte = $request->qte[$index];
-                $reception_produit->save();
+
+                $reception_produits = [];
+                foreach ($request->produit as $index => $produit) {
+                    $reception_produit = new ReceptionProduit();
+
+                    $reception_produit->qte =  $request->qte[$index];
+                    $reception_produit->produit_id =  $request->produit[$index];
+                    $reception_produits[] = $reception_produit;
+                }
+
+                $reception->produits()->sync($this->mapQuantity($reception_produits));
+
             }
 
             //notification
@@ -200,6 +212,13 @@ class ReceptionController extends Controller
 
             return redirect()->route('reception.index');
         }
+    }
+
+    private function mapQuantity($quantity)
+    {
+        return collect($quantity)->map(function ($i) {
+            return ['qte' => $i->qte , 'produit_id'=> $i->produit_id];
+        });
     }
 
     public function showFromNotify(Reception $reception, DatabaseNotification $notification)
@@ -252,7 +271,7 @@ class ReceptionController extends Controller
                 $reception->etat = "Validé";
                 $reception->save();
 
-                $reception_produits = DB::table('reception_produits')->where('reception_id', $id)->get();
+                $reception_produits = DB::table('produit_reception')->where('reception_id', $id)->get();
                 foreach ($reception_produits as $index => $reception_produit) {
                     $stock = DB::table('stocks')->where('produit_id', $reception_produit->produit_id)->first();
                     $stock = Stock::findOrFail($stock->id);

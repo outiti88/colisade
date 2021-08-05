@@ -24,7 +24,7 @@ use Nexmo\Laravel\Facade\Nexmo;
 use App\Exports\CommandesExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CommandesImport;
-
+use App\Reclamation;
 
 class CommandeController extends Controller
 {
@@ -77,6 +77,7 @@ class CommandeController extends Controller
      */
     public function index()
     {
+
         //dd(auth()->user()->unreadNotifications );
         //dd(Auth::user()->id );
         $data = null;
@@ -107,14 +108,21 @@ class CommandeController extends Controller
         }
 
         if (!Gate::denies('manage-users')) {
+            $produits_total = Produit::get();
+            foreach ($produits_total as $produit) {
+                $stock = DB::table('stocks')->where('produit_id', $produit->id)->get();
+                if ($stock[0]->qte > 0) {
+                    $produits[] = $produit;
+                }
+            }
             //session administrateur donc on affiche tous les commandes
-            $total = DB::table('commandes')->where('deleted_at', NULL)
+            $total = Commande::where('deleted_at', NULL)
                 ->where(function ($q) {
                     $q->whereDate('updated_at', '>=', now()->subMonth())
                         ->orWhereNotIn('commandes.statut', ['livré', 'Retour en stock']);
                 })
                 ->count();
-            $commandes = DB::table('commandes')->where('deleted_at', NULL)
+            $commandes = Commande::where('deleted_at', NULL)
                 ->where(function ($q) {
                     $q->whereDate('updated_at', '>=', now()->subMonth())
                         ->orWhereNotIn('commandes.statut', ['livré', 'Retour en stock']);
@@ -126,7 +134,7 @@ class CommandeController extends Controller
             //session livreur
             //dd("test");
 
-            $commandes = DB::table('commandes')->where('deleted_at', NULL)->where('livreur', Auth::user()->id)
+            $commandes = Commande::where('deleted_at', NULL)->where('livreur', Auth::user()->id)
                 ->whereNotIn('commandes.statut', ['envoyée', 'Ramassée', 'Recue'])
                 ->orderBy('updated_at', 'DESC');
             $total = $commandes->get()->count();
@@ -136,14 +144,14 @@ class CommandeController extends Controller
 
             //dd($clients[0]->id);
         } else {
-            $total = DB::table('commandes')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)
+            $total = Commande::where('deleted_at', NULL)->where('user_id', Auth::user()->id)
                 ->where(function ($q) {
                     $q->whereDate('updated_at', '>=', now()->subMonth())
                         ->orWhereNotIn('commandes.statut', ['livré', 'Retour en stock', 'Retour']);
                 })->count();
 
 
-            $commandes = DB::table('commandes')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)
+            $commandes = Commande::where('deleted_at', NULL)->where('user_id', Auth::user()->id)
                 ->where(function ($q) {
                     $q->whereDate('updated_at', '>=', now()->subMonth())
                         ->orWhereNotIn('commandes.statut', ['livré', 'Retour en stock', 'Retour']);
@@ -173,13 +181,13 @@ class CommandeController extends Controller
 
     public function filter(Request $request)
     {
-        $commandes = DB::table('commandes')->where('commandes.deleted_at', NULL);
+        $commandes = Commande::where('commandes.deleted_at', NULL);
         $clients = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['client', 'ecom']);
-        })->get();
+        })->orderBy('name')->get();
         $livreurs = User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['livreur']);
-        })->get();
+        })->orderBy('name')->get();
         $nouveau =  User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['nouveau']);
         })->where('deleted_at', NULL)->count();
@@ -195,6 +203,17 @@ class CommandeController extends Controller
             //dd($produits);
         }
 
+        if (!Gate::denies('manage-users')) {
+            $produits_total = Produit::get();
+            foreach ($produits_total as $produit) {
+                $stock = DB::table('stocks')->where('produit_id', $produit->id)->get();
+                if ($stock[0]->qte > 0) {
+                    $produits[] = $produit;
+                }
+            }
+        }
+
+
         if (Gate::denies('ramassage-commande')) { //session client donc on cherche seulement dans ses propres commandes
             $commandes->where('user_id', Auth::user()->id);
             $clients = null;
@@ -206,6 +225,16 @@ class CommandeController extends Controller
             $commandes->whereIn('commandes.ville', $userVilles);
         }
 
+        if ($request->filled('produit')) {
+            $productId = $request->produit;
+            $cmdIds =[];
+            $productFiltred = Produit::find($productId);
+
+            foreach ($productFiltred->commandes()->get() as $cmd) {
+                $cmdIds[] = $cmd->id;
+            }
+            $commandes->whereIn('id',$cmdIds);
+        }
         if ($request->filled('statut')) {
             //dd("salut");
             if (!Gate::denies('livreur')) {
@@ -373,8 +402,8 @@ class CommandeController extends Controller
                         $users[] =  User::withTrashed()->find($bonLivraison->user_id);
                 }
                 if ($total > 0) {
-                    $ramasse = DB::table('commandes')->where('user_id', Auth::user()->id)->where('statut', 'Rammasée')->where('traiter', '0')->count();
-                    $nonRammase = DB::table('commandes')->where('user_id', Auth::user()->id)->where('statut', 'envoyée')->where('traiter', '0')->count();
+                    $ramasse = Commande::where('user_id', Auth::user()->id)->where('statut', 'Rammasée')->where('traiter', '0')->count();
+                    $nonRammase = Commande::where('user_id', Auth::user()->id)->where('statut', 'envoyée')->where('traiter', '0')->count();
 
                     //dd($bonLivraisons);
                     return view('bonLivraison', [
@@ -398,24 +427,24 @@ class CommandeController extends Controller
         $produits = [];
         if (!Gate::denies('manage-users')) {
             //session administrateur donc on affiche tous les commandes
-            $total = DB::table('commandes')->where('numero', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->count();
-            $commandes = DB::table('commandes')->where('numero', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->orderBy('created_at', 'DESC')->paginate(50);
+            $total = Commande::where('numero', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->count();
+            $commandes = Commande::where('numero', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->orderBy('created_at', 'DESC')->paginate(50);
         } elseif (!Gate::denies('livreur')) {
             $request->session()->flash('search', $request->search);
             return redirect()->route('commandes.index');
         } else {
-            $commandes = DB::table('commandes')->where('numero', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(50);
-            $total = DB::table('commandes')->where('numero', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)->count();
+            $commandes = Commande::where('numero', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(50);
+            $total = Commande::where('numero', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)->count();
         }
 
         if ($total == 0) { //recherche par statut
             if (!Gate::denies('ramassage-commande')) {
                 //session administrateur donc on affiche tous les commandes
-                $total = DB::table('commandes')->where('statut', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->count();
-                $commandes = DB::table('commandes')->where('statut', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->orderBy('created_at', 'DESC')->paginate(50);
+                $total = Commande::where('statut', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->count();
+                $commandes = Commande::where('statut', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->orderBy('created_at', 'DESC')->paginate(50);
             } else {
-                $commandes = DB::table('commandes')->where('statut', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(50);
-                $total = DB::table('commandes')->where('statut', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)->count();
+                $commandes = Commande::where('statut', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(50);
+                $total = Commande::where('statut', 'like', '%' . $request->search . '%')->where('deleted_at', NULL)->where('user_id', Auth::user()->id)->count();
             }
         }
         //dd($commandes);
@@ -426,6 +455,15 @@ class CommandeController extends Controller
                 $produits = Produit::where('user_id', Auth::user()->id)->get();
                 //dd($produits);
             }
+            if (!Gate::denies('manage-users')) {
+            $produits_total = Produit::get();
+            foreach ($produits_total as $produit) {
+                $stock = DB::table('stocks')->where('produit_id', $produit->id)->get();
+                if ($stock[0]->qte > 0) {
+                    $produits[] = $produit;
+                }
+            }
+        }
             foreach ($commandes as $commande) {
                 if (!empty(User::withTrashed()->find($commande->user_id)))
                     $users[] =  User::withTrashed()->find($commande->user_id);
@@ -471,11 +509,6 @@ class CommandeController extends Controller
     public function store(Request $request)
     {
         //dd(!(gmdate("H")+1 <= 18));
-
-
-        //dd(now(),$bon_livraison);
-        $villes = DB::table('villes')->orderBy('name')->get();
-
 
         if (!Gate::denies('manage-users')) {
             if (isset($request->client)) {
@@ -526,6 +559,7 @@ class CommandeController extends Controller
         $commande->facturer = 0;
         $commande->numero = substr($fournisseur->name, -strlen($fournisseur->name), 2) . "-" . date("md-is") . "-" . $this->unique_code(4);
         $commande->isOpen = $request->isOpen;
+        $commande->isChanged = $request->isChanged;
         $livreurForCmd = User::where('ville', 'like',  '%' . $request->ville . ',%')->whereHas('roles', function ($q) {
             $q->whereIn('name', ['livreur']);
         })->first();
@@ -534,6 +568,7 @@ class CommandeController extends Controller
 
         $ville = DB::table('villes')->where('name', $commande->ville)->first();
         $commande->livreurPart = $ville == null ? 15 : $ville->livreur;
+        $commande->refusePart = $ville == null ? 10 : $ville->refuse;
 
         if (!Gate::denies('ecom')) {
             if (isset($request->produit)) {
@@ -628,7 +663,7 @@ class CommandeController extends Controller
      */
     public function show(Commande $commande)
     {
-       //dd($commande->produits()->get());
+       //dd($commande->produits()->first());
         // dd(DB::getQueryLog());
 
         $users[] = "";
@@ -826,7 +861,8 @@ class CommandeController extends Controller
 
     public function ticketsBuilder(Request $request){
 
-        $ids = $request->btSelectItem;
+
+        $ids = $request->item;
 
         if ($ids == null) return back();
 
@@ -886,7 +922,7 @@ class CommandeController extends Controller
 
 
         $content ='';
-        $commandes = Commande::where('deleted_at', NULL)->whereIn('id', $request->btSelectItem)->get();
+        $commandes = Commande::where('deleted_at', NULL)->whereIn('id', $request->item)->get();
         foreach ($commandes as $commande) {
             $content .= $this->content($commande);
           }
@@ -1174,7 +1210,9 @@ class CommandeController extends Controller
             $newCommande->livreur = $commande->livreur;
             $newCommande->user_id = $commande->user_id;
             $commande->livreurPart = $commande->livreurPart;
+            $commande->refusePart = $commande->refusePart;
             $commande->isOpen = $request->isOpen;
+            $commande->isChanged = $request->isChanged;
 
 
 
@@ -1210,6 +1248,7 @@ class CommandeController extends Controller
 
             $ville = DB::table('villes')->where('name', $request->ville)->first();
             $commande->livreurPart = $ville == null ? 15 : $ville->livreur;
+            $commande->refusePart = $ville == null ? 10 : $ville->refuse;
 
             //dd($request->secteur);
 
@@ -1270,7 +1309,7 @@ class CommandeController extends Controller
         if (($commande->statut === "envoyée" || $commande->statut === "Reçue" || $commande->statut === "Ramassée" || $commande->statut === "Expidiée")) {
             $user_ville = User::findOrFail($commande->user_id);
             if ($commande->statut === "envoyée")
-                $commande->statut = "Ramassée";
+                $commande->statut = "Reçue";
 
             elseif ($commande->statut === "Ramassée") {
                 if (!Gate::denies('livreur')) return back();
@@ -1289,7 +1328,7 @@ class CommandeController extends Controller
                 if ($user_ville->ville == $commande->ville || $commande->ville == "Rabat") {
                     $commande->statut = "En cours";
                 } else {
-                    $commande->statut = "Ramassée";
+                    $commande->statut = "Reçue";
                 }
             }
 
