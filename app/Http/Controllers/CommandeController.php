@@ -1386,6 +1386,75 @@ class CommandeController extends Controller
         return back();
     }
 
+    public function updateSatuts(Request $request){
+
+        if ($request->item == null) return back();
+
+        $commandes = Commande::whereIn('id',$request->item)->get();
+
+        if (!Gate::denies('manage-users')) {
+            foreach ($commandes as $commande) {
+                $commande->statut = $request->newStatut;
+                $commande->commentaire = $request->commentaire;
+                $commande->postponed_at = $request->prevu_at;
+
+                $statut = new Statut();
+                $statut->commande_id = $commande->id;
+                $statut->name = $commande->statut;
+                $statut->user()->associate(Auth::user())->save();
+                $commande->save();
+            }
+            $request->session()->flash('editBatch', count($request->item));
+        }
+        return redirect()->route('commandes.index');
+    }
+
+    public function expedier(Request $request){
+
+        if ($request->item == null) return back();
+
+        $commandes = Commande::whereIn('id',$request->item)->get();
+
+        if (!Gate::denies('manage-users')) {
+            foreach ($commandes as $commande) {
+                $commande->statut = 'Expidiée';
+                $commande->commentaire = $request->commentaire;
+                $commande->postponed_at = $request->prevu_at;
+
+                $statut = new Statut();
+                $statut->commande_id = $commande->id;
+                $statut->name = $commande->statut;
+                $statut->user()->associate(Auth::user())->save();
+                $commande->save();
+            }
+            $request->session()->flash('editBatch', count($request->item));
+        }
+        return redirect()->route('commandes.index');
+    }
+
+    public function recevoir(Request $request){
+
+        if ($request->item == null) return back();
+
+        $commandes = Commande::whereIn('id',$request->item)->get();
+
+        if (!Gate::denies('manage-users')) {
+            foreach ($commandes as $commande) {
+                $commande->statut = 'Reçue';
+                $commande->commentaire = $request->commentaire;
+                $commande->postponed_at = $request->prevu_at;
+
+                $statut = new Statut();
+                $statut->commande_id = $commande->id;
+                $statut->name = $commande->statut;
+                $statut->user()->associate(Auth::user())->save();
+                $commande->save();
+            }
+            $request->session()->flash('editBatch', count($request->item));
+        }
+        return redirect()->route('commandes.index');
+    }
+
     public function statutAdmin(Request $request, $id)
     {
         $finalLivreurState = array("En cours","Livré", "Injoignable", "Pas de Réponse", "Refusée", "Annulée", "Reporté", "Retour"); // les états finaux

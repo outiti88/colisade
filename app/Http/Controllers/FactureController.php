@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facture;
 
 use App\BonLivraison;
+use App\Commande;
 use App\Produit;
 use App\User;
 use Illuminate\Support\Facades\Gate;
@@ -153,7 +154,7 @@ class FactureController extends Controller
     public function commandes(Facture $facture, $n, $i)
     {
         $user = $facture->user_id;
-        $commandes = DB::table('commandes')->where('user_id', $user)->whereIn('statut', ['Refusée','livré'])->where('facturer', $facture->id)->get();
+        $commandes = DB::table('commandes')->where('user_id', $user)->where('facturer', $facture->id)->get();
         $content =
             '
         <div class="invoice">
@@ -173,8 +174,7 @@ class FactureController extends Controller
         foreach ($commandes as $index => $commande) {
 
             if (($index >= $i * 8) && ($index < 8 * ($i + 1))) { //les infromations de la table depe,d de la page actuelle
-                $statut = DB::table('statuts')->where('commande_id', $commande->id)->where('name', 'livré')->get()->first();
-                $price = ($commande->statut == 'Livré')? $commande->prix : 10;
+                $price = ($commande->statut == 'Livré')? $commande->prix : $commande->refusePart;
                 if ($commande->montant == 0) {
                     $montant = "Payée Par CB";
                 } else {
@@ -186,7 +186,7 @@ class FactureController extends Controller
             <td>' . $commande->ville . '</td>
             <td>' . $commande->telephone . '</td>
             <td>' . $montant . '</td>
-            <td>' . $commande->statut . '</td>
+            <td>' . (($commande->statut == 'Retour en stock') ? 'Refusée' : $commande->statut) . '</td>
             <td>' . $price . '</td>
             <td>' . $commande->updated_at . '</td>
             ' . '</tr>';
@@ -202,12 +202,11 @@ class FactureController extends Controller
         $user = $facture->user_id;
         $user = DB::table('users')->find($user);
         $livraisonNonPaye = 0;
+        $prixLivrer = DB::table('commandes')->where('user_id', $user->id)->where('facturer', $facture->id)->where('statut', 'livré')->sum('prix');
+        $prixRefuser =  DB::table('commandes')->where('user_id', $user->id)->where('facturer', $facture->id)->whereIn('statut', ['Retour en stock','Refusée'])->sum('refusePart');
 
-        $commandes = DB::table('commandes')->where('user_id', $user->id)->where('statut', 'livré')->where('facturer', $facture->id)->get();
-        foreach ($commandes as $index => $commande) {
+        $livraisonNonPaye += $prixRefuser + $prixLivrer;
 
-            $livraisonNonPaye += $commande->prix;
-        }
         $net = $facture->montant - $livraisonNonPaye;
 
         //les information du fournisseur (en-tete)
@@ -404,21 +403,22 @@ class FactureController extends Controller
 
         if (!Gate::denies('manage-users')) {
             //session administrateur donc on affiche tous les commandes
-            $total = DB::table('commandes')->where('deleted_at', NULL)->where('facturer', $id)->count();
-            $commandes = DB::table('commandes')->where('deleted_at', NULL)->where('facturer', $id)->orderBy('created_at', 'DESC')->paginate(10);
+            $total = Commande::where('deleted_at', NULL)->where('facturer', $id)->count();
+            $commandes = Commande::where('deleted_at', NULL)->where('facturer', $id)->orderBy('created_at', 'DESC')->paginate(10);
             //dd($commandes);
 
             //dd($clients[0]->id);
         } else {
-            $commandes = DB::table('commandes')->where('deleted_at', NULL)->where('facturer', $id)->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(10);
-            $total = DB::table('commandes')->where('deleted_at', NULL)->where('facturer', $id)->where('user_id', Auth::user()->id)->count();
+            $commandes = Commande::where('deleted_at', NULL)->where('facturer', $id)->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(10);
+            $total = Commande::where('deleted_at', NULL)->where('facturer', $id)->where('user_id', Auth::user()->id)->count();
 
             //dd("salut");
         }
 
 
         foreach ($commandes as $commande) {
-            $users[] =  User::withTrashed()->find($commande->user_id);
+            if (!empty(User::withTrashed()->find($commande->user_id)))
+                $users[] =  User::withTrashed()->find($commande->user_id);
         }
         //$commandes = Commande::all()->paginate(3) ;
         return view('commande.colis', [

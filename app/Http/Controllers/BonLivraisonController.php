@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BonLivraison;
+use App\Commande;
 use App\Produit;
 use App\User;
 use Illuminate\Support\Facades\Gate;
@@ -331,21 +332,24 @@ class BonLivraisonController extends Controller
         }
 
         $users = [];
-        if (!Gate::denies('ramassage-commande')) {
+        if (!Gate::denies('manage-users')) {
             //session administrateur donc on affiche tous les commandes
-            $total = DB::table('commandes')->where('deleted_at', NULL)->where('traiter', $id)->count();
-            $commandes = DB::table('commandes')->where('deleted_at', NULL)->where('traiter', $id)->orderBy('created_at', 'DESC')->paginate(10);
+            $total = Commande::where('deleted_at', NULL)->where('traiter', $id)->count();
+            $commandes = Commande::where('deleted_at', NULL)->where('traiter', $id)->orderBy('created_at', 'DESC')->paginate(10);
+            //dd($commandes);
 
             //dd($clients[0]->id);
         } else {
-            $commandes = DB::table('commandes')->where('deleted_at', NULL)->where('traiter', $id)->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(10);
-            $total = DB::table('commandes')->where('deleted_at', NULL)->where('traiter', $id)->where('user_id', Auth::user()->id)->count();
+            $commandes = Commande::where('deleted_at', NULL)->where('traiter', $id)->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(10);
+            $total = Commande::where('deleted_at', NULL)->where('traiter', $id)->where('user_id', Auth::user()->id)->count();
+
             //dd("salut");
         }
 
 
         foreach ($commandes as $commande) {
-            $users[] =  User::withTrashed()->find($commande->user_id);
+            if (!empty(User::withTrashed()->find($commande->user_id)))
+                $users[] =  User::withTrashed()->find($commande->user_id);
         }
         //$commandes = Commande::all()->paginate(3) ;
         return view('commande.colis', [

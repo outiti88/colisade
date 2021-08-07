@@ -105,10 +105,9 @@
                                 @endcan
                                 <th scope="col">Code</th>
                                 <th scope="col">Commandes livrées</th>
+                                <th scope="col">Commandes non livrées</th>
                                 <th scope="col">Montant Total</th>
                                 <th scope="col">Frais de Livraison</th>
-                                <th scope="col">Commandes non livrées</th>
-                                <th scope="col">Colis non livrés</th>
                                 <th scope="col">Date d'ajout</th>
                                 <th scope="col">Imprimer la facture</th>
                                 @can('ramassage-commande')
@@ -143,10 +142,9 @@
                                     </a>
                                 </th>
                                 <td>{{ $facture->livre}}</td>
+                                <td>{{$facture->commande}}</td>
                                 <td>{{ $facture->montant}} DH</td>
                                 <td>{{ $facture->prix}} DH</td>
-                                <td>{{$facture->commande}}</td>
-                                <td>{{$facture->colis}}</td>
                                 <td>{{ $facture->created_at}}</td>
                                 <td>
                                     <a class="btn btn-warning text-white m-r-5" href="{{route('facture.gen',$facture->id)}}" target="_blank"><i class="mdi mdi-printer"></i></a>

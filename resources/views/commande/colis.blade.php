@@ -175,6 +175,12 @@
         <strong>Succès !</strong> La commande a été bien enregistrée <a  href="commandes/{{session()->get('statut')}}" class="alert-link">(Voir la commande)</a>.
           </div>
         @endif
+        @if (session()->has('editBatch'))
+        <div class="alert alert-dismissible alert-success col-12">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Succès !</strong> Vous avez modifié le statut de {{session()->get('editBatch')}} Commandes.
+          </div>
+        @endif
 
         @if (session()->has('delete'))
         <div class="alert alert-dismissible alert-danger col-12">
@@ -238,17 +244,52 @@
           </div>
         @endif
         <div class="col-12">
+
             <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Gestion des commandes / colis</h4>
+
+                <div class="card-body" style="padding-bottom: 0;">
                     <h6 class="card-subtitle">Nombre total des commandes : <code>{{$total}} Commandes</code> .</h6>
+                    <h4 class="card-title" style="margin-bottom: 0;margin-top: 1rem">Statut des commandes : </h4>
+                    <div class="row" style="display: flex;align-items: center;align-content: stretch;flex-wrap: wrap;justify-content: space-evenly">
+
+                        @cannot('livreur')
+                            <a href="/commandes/filter?statut=envoyée" style="display:block ; margin: 0.5rem; font-size: 0.8em;padding: 1rem !important;color: white; cursor:pointer;margin-top:0.5rem" class="badge badge-warning">
+                                <span >Envoyée</span>
+                            </a>
+                            <a href="/commandes/filter?statut=Reçue" style="display:block ; margin: 0.5rem; font-size: 0.8em;padding: 1rem !important;color: white; cursor:pointer;margin-top:0.5rem" class="badge badge-secondary">
+                                <span >Reçue</span>
+                            </a>
+                        @endcannot
+                        <a href="/commandes/filter?statut=Expidiée" style="display:block ; margin: 0.5rem; font-size: 0.8em;padding: 1rem !important;color: white; cursor:pointer;margin-top:0.5rem" class="badge badge-primary">
+                            <span >Expediée</span>
+                        </a>
+                        <a href="/commandes/filter?statut=en cours" style="display:block ; margin: 0.5rem; font-size: 0.8em;padding: 1rem !important;color: white; cursor:pointer;margin-top:0.5rem" class="badge badge-info">
+                            <span >En cours</span>
+                        </a>
+                        <a href="/commandes/filter?statut=Livré" style="display:block ; margin: 0.5rem; font-size: 0.8em;padding: 1rem !important;color: white; cursor:pointer;margin-top:0.5rem" class="badge badge-success">
+                            <span >Livrée</span>
+                        </a>
+                        <a href="/commandes/filter?statut=Refusée" style="display:block ; margin: 0.5rem; font-size: 0.8em;padding: 1rem !important;color: white; cursor:pointer;margin-top:0.5rem" class="badge badge-danger">
+                            <span >Refusée</span>
+                        </a>
+                        <a href="/commandes/filter?statut=Pas de Réponse" style="display:block ; margin: 0.5rem; font-size: 0.8em;padding: 1rem !important;color: white; cursor:pointer;margin-top:0.5rem" class="badge violetBadge">
+                            <span >Pas de réponse</span>
+                        </a>
+                        <a href="/commandes/filter?statut=Reporté" style="display:block ; margin: 0.5rem; font-size: 0.8em;padding: 1rem !important;color: white; cursor:pointer;margin-top:0.5rem" class="badge orangeBadge">
+                            <span >Reportée</span>
+                        </a>
+
+                    </div>
                     <input class="form-control" id="myInput" type="text" placeholder="Rechercher...">
                 </div>
+
                 <div class="table-responsive">
                     <form id="commandes-form" method="GET">
 
                         @csrf
                         <input type="hidden" name="livreur" value="{{ request()->get('livreur') }}">
+                        <input type="hidden" name="oldStatut" value="{{ request()->get('statut') }}">
+                        <input type="hidden" id="newStatut" name="newStatut" value="">
                     <table id="table"
                     data-toggle="table"
                     data-filter-control="true"
@@ -280,122 +321,121 @@
 
                             </tr>
                         </thead>
-
                             <tbody id="myTable">
 
-                                    @forelse ($commandes as $index => $commande)
-                                        <tr>
+                                @forelse ($commandes as $index => $commande)
+                                    <tr>
 
-                                            @if ($checkBox==1)
-                                                    <td class="active">
-                                                        <input type="checkbox" class="select-item checkbox" name="item[]" value="{{$commande->id}}" />
-                                                    </td>
-                                            @endif
-                                            @can('manage-users')
+                                        @if ($checkBox==1)
+                                                <td class="active">
+                                                    <input type="checkbox" class="select-item checkbox" name="item[]" value="{{$commande->id}}" />
+                                                </td>
+                                        @endif
+                                        @can('manage-users')
 
-                                            <th scope="row">
-                                                <a title="{{$users[$index]->name}} Tel: {{$users[$index]->telephone}}" class=" text-muted waves-effect waves-dark pro-pic @if($users[$index]->statut) vip @endif "
-                                                            @can('edit-users')
-                                                                href="{{route('admin.users.edit',$users[$index]->id)}}"
-                                                            @endcan >
-                                                    <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
-                                                </a>
-                                            </th>
-                                            @endcan
-                                            <th scope="row">
+                                        <th scope="row">
+                                            <a title="{{$users[$index]->name}} Tel: {{$users[$index]->telephone}}" class=" text-muted waves-effect waves-dark pro-pic @if($users[$index]->statut) vip @endif "
+                                                        @can('edit-users')
+                                                            href="{{route('admin.users.edit',$users[$index]->id)}}"
+                                                        @endcan >
+                                                <img src="{{$users[$index]->image}}" alt="user" class="rounded-circle" width="31">
+                                            </a>
+                                        </th>
+                                        @endcan
+                                        <th scope="row">
 
-                                                @if ($commande->facturer != 0)
+                                            @if ($commande->facturer != 0)
 
-                                                    <a href="{{route('facture.infos',$commande->facturer)}}" style="color: white; background-color: #f7941e" class="badge badge-pill" >
-                                                        <span style="font-size: 1.25em">Facturée</span>
-                                                    </a>
-                                                    <br>
-                                                @else
-                                                    @if ($commande->traiter != 0)
-                                                    <a href="{{route('bon.infos',$commande->traiter)}}" style="color: white" class="badge badge-pill badge-dark">
-                                                        <span  style="font-size: 1.25em">Bon livraison</span>
-                                                    </a>
-                                                    <br>
-                                                    @endif
-                                                @endif
-                                                <a data-toggle="modal" data-target="#productDetailsModal{{$commande->id}}" class="badge badge-pill badge-warning" style="font-size: 1em; color: white; cursor:pointer"> {{$commande->numero}} </a>
-                                                    @if ($commande->isChanged)
-                                                    <br><span class="badge badge-pill badge-info" style="font-size: 1.1em; color:white"><i class="fas fa-exchange-alt"></i> Commande Changée</span>
-                                                    @endif
-                                            </th>
-                                            <td>{{$commande->nom}}</td>
-                                            <td>{{$commande->telephone}}</td>
-                                            <td>{{$commande->ville}}</td>
-                                            @if ($commande->montant > 0)
-                                            <td>{{$commande->montant}} DH</td>
-                                            @else
-                                            <td> <i class="far fa-credit-card"></i> CARD PAYMENT </td>
-                                            @endif
-                                            @cannot('livreur')
-                                            <td>{{$commande->prix}} DH</td>
-                                            @endcannot
-                                            <td>{{$commande->created_at}}</td>
-                                            <td>
-                                                <a  style="color: white; cursor:pointer"
-                                                    @switch($commande->statut)
-                                                        @case("envoyée")
-                                                        class="badge badge-pill badge-warning"
-                                                            @can('ramassage-commande')
-                                                                title="Rammaser la commande"
-                                                                href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
-                                                            @endcan
-                                                        @break
-                                                        @case("Reporté") class="badge badge-pill orangeBadge" @break
-                                                        @case("Pas de Réponse") class="badge badge-pill violetBadge" @break
-                                                        @case("Modifiée") class="badge badge-pill cielBadge" @break
-                                                        @case("Relancée") class="badge badge-pill relanceBadge" @break
-                                                        @case("En cours") class="badge badge-pill badge-info" @break
-                                                        @case("Ramassée")
-                                                            class="badge badge-pill badge-secondary"
-                                                            @can('ramassage-commande')
-                                                                title="Recevoir la commande"
-                                                                href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
-                                                            @endcan
-                                                        @break
-                                                        @case("Reçue")
-                                                            class="badge badge-pill badge-dark"
-                                                            @can('ramassage-commande')
-                                                                title="Envoyer la commande"
-                                                                href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
-                                                            @endcan
-                                                        @break
-                                                        @case("Expidiée")
-                                                            class="badge badge-pill badge-primary"
-                                                            @can('ramassage-commande')
-                                                                title="Valider la commande"
-                                                                href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
-                                                            @endcan
-                                                        @break
-                                                        @case("Livré") class="badge badge-pill badge-success" @break
-                                                        @default class="badge badge-pill badge-danger"
-                                                    @endswitch
-                                                    @can('livreur')
-                                                        @if (( $commande->statut === "Pas de Réponse" || $commande->statut === "Livré" || $commande->statut === "Injoignable" || $commande->statut === "En cours" || $commande->statut === "Refusée" || $commande->statut === "Modifiée" || $commande->statut === "Annulée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->facturer == 0 )
-                                                            data-toggle="modal" data-target="#modalSubscriptionFormStatut{{$commande->id}}"
-                                                        @endif
-                                                    @endcan
-                                                    @can('manage-users')
-                                                        @if (( $commande->statut === "Pas de Réponse" || $commande->statut === "Livré" || $commande->statut === "Injoignable" || $commande->statut === "En cours" || $commande->statut === "Refusée" || $commande->statut === "Modifiée" || $commande->statut === "Annulée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->facturer == 0 )
-                                                        data-toggle="modal" data-target="#modalSubscriptionFormStatut{{$commande->id}}"
-                                                        @endif
-                                                    @endcan >
-                                                        <span style="font-size: 1.25em">{{$commande->statut}}</span>
+                                                <a href="{{route('facture.infos',$commande->facturer)}}" style="color: white; background-color: #f7941e" class="badge badge-pill" >
+                                                    <span style="font-size: 1.25em">Facturée</span>
                                                 </a>
                                                 <br>
-                                                @if ($commande->statut == "Reporté" || $commande->statut == "Relancée")
-                                                    Pour le: <br>{{$commande->postponed_at}}
-                                                @else
-                                                ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}})
-
+                                            @else
+                                                @if ($commande->traiter != 0)
+                                                <a href="{{route('bon.infos',$commande->traiter)}}" style="color: white" class="badge badge-pill badge-dark">
+                                                    <span  style="font-size: 1.25em">Bon livraison</span>
+                                                </a>
+                                                <br>
                                                 @endif
-                                            </td>
-                                            <td style="font-size: 1.5em"><a title="Voir le detail" style="color: #f7941e" href="/commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
-                                        </tr>
+                                            @endif
+                                            <a data-toggle="modal" data-target="#productDetailsModal{{$commande->id}}" class="badge badge-pill badge-warning" style="font-size: 1em; color: white; cursor:pointer"> {{$commande->numero}} </a>
+                                                @if ($commande->isChanged)
+                                                <br><span class="badge badge-pill badge-info" style="font-size: 1.1em; color:white"><i class="fas fa-exchange-alt"></i> Commande Changée</span>
+                                                @endif
+                                        </th>
+                                        <td>{{$commande->nom}}</td>
+                                        <td>{{$commande->telephone}}</td>
+                                        <td>{{$commande->ville}}</td>
+                                        @if ($commande->montant > 0)
+                                        <td>{{$commande->montant}} DH</td>
+                                        @else
+                                        <td> <i class="far fa-credit-card"></i> CARD PAYMENT </td>
+                                        @endif
+                                        @cannot('livreur')
+                                        <td>{{$commande->prix}} DH</td>
+                                        @endcannot
+                                        <td>{{$commande->created_at}}</td>
+                                        <td>
+                                            <a  style="color: white; cursor:pointer"
+                                                @switch($commande->statut)
+                                                    @case("envoyée")
+                                                    class="badge badge-pill badge-warning"
+                                                        @can('ramassage-commande')
+                                                            title="Rammaser la commande"
+                                                            href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                                        @endcan
+                                                    @break
+                                                    @case("Reporté") class="badge badge-pill orangeBadge" @break
+                                                    @case("Pas de Réponse") class="badge badge-pill violetBadge" @break
+                                                    @case("Modifiée") class="badge badge-pill cielBadge" @break
+                                                    @case("Relancée") class="badge badge-pill relanceBadge" @break
+                                                    @case("En cours") class="badge badge-pill badge-info" @break
+                                                    @case("Ramassée")
+                                                        class="badge badge-pill badge-secondary"
+                                                        @can('ramassage-commande')
+                                                            title="Recevoir la commande"
+                                                            href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                                        @endcan
+                                                    @break
+                                                    @case("Reçue")
+                                                        class="badge badge-pill badge-dark"
+                                                        @can('ramassage-commande')
+                                                            title="Envoyer la commande"
+                                                            href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                                        @endcan
+                                                    @break
+                                                    @case("Expidiée")
+                                                        class="badge badge-pill badge-primary"
+                                                        @can('ramassage-commande')
+                                                            title="Valider la commande"
+                                                            href="{{ route('commandeStatut',['id'=> $commande->id]) }}"
+                                                        @endcan
+                                                    @break
+                                                    @case("Livré") class="badge badge-pill badge-success" @break
+                                                    @default class="badge badge-pill badge-danger"
+                                                @endswitch
+                                                @can('livreur')
+                                                    @if (( $commande->statut === "Pas de Réponse" || $commande->statut === "Livré" || $commande->statut === "Injoignable" || $commande->statut === "En cours" || $commande->statut === "Refusée" || $commande->statut === "Modifiée" || $commande->statut === "Annulée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->facturer == 0 )
+                                                        data-toggle="modal" data-target="#modalSubscriptionFormStatut{{$commande->id}}"
+                                                    @endif
+                                                @endcan
+                                                @can('manage-users')
+                                                    @if (( $commande->statut === "Pas de Réponse" || $commande->statut === "Livré" || $commande->statut === "Injoignable" || $commande->statut === "En cours" || $commande->statut === "Refusée" || $commande->statut === "Modifiée" || $commande->statut === "Annulée" || $commande->statut === "Relancée" || $commande->statut === "Reporté" ) && $commande->facturer == 0 )
+                                                    data-toggle="modal" data-target="#modalSubscriptionFormStatut{{$commande->id}}"
+                                                    @endif
+                                                @endcan >
+                                                    <span style="font-size: 1.25em">{{$commande->statut}}</span>
+                                            </a>
+                                            <br>
+                                            @if ($commande->statut == "Reporté" || $commande->statut == "Relancée")
+                                                Pour le: <br>{{$commande->postponed_at}}
+                                            @else
+                                            ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}})
+
+                                            @endif
+                                        </td>
+                                        <td style="font-size: 1.5em"><a title="Voir le detail" style="color: #f7941e" href="/commandes/{{$commande->id}}"><i class="mdi mdi-eye"></i></a></td>
+                                    </tr>
 
                                         <div class="container my-4">
                                             <div class="modal fade" id="modalSubscriptionFormStatut{{$commande->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -412,8 +452,6 @@
                                                                 <h5 class="font-weight-bold" style="text-align: center">Commande Numero : {{$commande->numero}}</h5>
 
                                                                 <div class="modal-body mx-3">
-
-
                                                                         <div class="form-group">
                                                                             <label for="etat{{$commande->id}}" class="col-sm-12">Statut :</label>
                                                                             <div class="col-sm-12">
@@ -507,12 +545,30 @@
 
 
                             @if ($checkBox==1)
-                                @if (request()->get('livreur') != null)
-                                    @can('ramassage-commande')
-                                    <button style="margin: 20px;" onclick="submitForm1()" class="btn btn-primary">Bon de Commande</button>
-                                    @endcan
-                                @endif
-                                <button style="margin: 20px;" onclick="submitForm2()" class="btn btn-info">Ticket de Commande</button>
+                                <div class="card-body" style="padding-bottom: 0;padding-top: 0;">
+                                    <h4 class="card-title" style="margin-bottom: 0;margin-top: 1rem">Actions : </h4>
+                                    <div class="row" style="display: flex;align-items: center;align-content: stretch;flex-wrap: wrap;">
+                                        @if (request()->get('livreur') != null)
+                                        @can('manage-users')
+                                        <button  style="margin:15px" onclick="submitForm1()" class="btn btn-primary">Bon de Commande</button>
+                                        @endcan
+                                        @endif
+                                        @can('manage-users')
+                                            @if (request()->get('statut') != null)
+                                                <a style="margin:15px" data-toggle="modal" data-target="#modalQuickStatusChange"  class="btn btn-danger text-white">Changer le statut</a>
+                                                @if (request()->get('statut') == 'envoyée')
+                                                    <button  onclick="recevoir()" class="btn btn-danger text-white">Recevoir</button>
+                                                @endif
+                                                @if (request()->get('statut') == 'Reçue')
+                                                    <button style="margin:15px" onclick="expedier()" class="btn btn-danger text-white">Expédier</button>
+                                                @endif
+                                            @endif
+                                        @endcan
+                                    <button style="margin:15px"  onclick="submitForm2()" class="btn btn-danger text-white">Ticket de Commande</button>
+                                    </div>
+
+                                </div>
+
                             @endif
                             </tbody>
 
@@ -534,7 +590,51 @@
     </div>
 </div>
 
+<div class="container my-4">
+    <div class="modal fade" id="modalQuickStatusChange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Changer le statut</h4>
 
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body mx-3">
+                        <div class="form-group">
+                            <label for="statutQuick" class="col-sm-12">Statut :</label>
+                            <div class="col-sm-12">
+                                <select id="statutQuick"   class="form-control form-control-line" >
+                                    @can('manage-users')
+                                    <option>envoyée</option>
+                                    <option>Ramassée</option>
+                                    <option>Reçue</option>
+                                    <option>Expidiée</option>
+                                    <option>En cours</option>
+                                    @endcan
+                                    <option>Livré</option>
+                                    <option>Injoignable</option>
+                                    <option>Pas de Réponse</option>
+                                    <option>Refusée</option>
+                                    @cannot('livreur')
+                                    <option>Retour</option>
+                                    @endcannot
+                                    <option>Annulée</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="modal-footer d-flex justify-content-center">
+                                <a class="btn btn-warning" style="color:white" onclick="submitForm3()">Enregistrer</a>
+                            </div>
+                        </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container my-4">
     <div class="modal fade" id="modalSearchForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -1240,6 +1340,7 @@ function checkFunction(){
     }
 }
 
+
 function submitForm1(){
     let form = document.getElementById('commandes-form');
 
@@ -1250,6 +1351,28 @@ function submitForm1(){
 function submitForm2(){
     let form = document.getElementById('commandes-form');
     form.action = "{{route('ticket.index')}}";
+    form.submit();
+}
+
+
+function recevoir() {
+    let form = document.getElementById('commandes-form');
+    form.action = "{{route('commande.recevoir')}}";
+    form.submit();
+}
+
+function expedier() {
+    let form = document.getElementById('commandes-form');
+    form.action = "{{route('commande.expedier')}}";
+    form.submit();
+}
+
+function submitForm3(){
+    let statut = document.getElementById('statutQuick');
+    let newStatut = document.getElementById('newStatut');
+    newStatut.value = statut.value;
+    let form = document.getElementById('commandes-form');
+    form.action = "{{route('commande.statut.update')}}";
     form.submit();
 }
 

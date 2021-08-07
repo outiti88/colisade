@@ -30,6 +30,11 @@ Route::get('/commandes/filter', 'CommandeController@filter')->name('commande.fil
 
 Route::patch('/commandes/{id}/livreur', 'CommandeController@affecterLivreur')->name('commande.livreur')->middleware('can:manage-users');
 
+Route::get('/order/status/update', 'CommandeController@updateSatuts')->name('commande.statut.update')->middleware('can:manage-users');
+
+Route::get('/order/status/expedier', 'CommandeController@expedier')->name('commande.expedier')->middleware('can:manage-users');
+Route::get('/order/status/recevoir', 'CommandeController@recevoir')->name('commande.recevoir')->middleware('can:manage-users');
+
 
 Route::get('/receptions/filter', 'ReceptionController@filter')->name('reception.filter')->middleware('can:gestion-stock');
 

@@ -229,11 +229,11 @@ N: {{$commande->numero}}
                                             <select name="livreur" id="livreur" class="form-control form-control-line" value="{{ old('livreur') }}">
                                                 <option value=""  selected >Choisissez le livreur</option>
                                                 <option selected value="{{$livreur->id}}" class="rounded-circle">
-                                                    {{$livreur->name}}
+                                                    {{$livreur->name}} => ({{count(App\Commande::where('livreur',$livreur->id)->get())}} Commandes)
                                                 </option>
                                                 @foreach ($livreurs as $livreur)
                                                     <option value="{{$livreur->id}}" class="rounded-circle">
-                                                        {{$livreur->name}}
+                                                        {{$livreur->name}} => ({{count(App\Commande::where('livreur',$livreur->id)->get())}} Commandes)
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -316,9 +316,9 @@ N: {{$commande->numero}}
             @if (session()->has('cmdRefuser'))
             <div class="alert alert-dismissible alert-danger col-12">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Succés !</strong> Le statut de la commande numero {{session()->get('edit')}} est Refusée et elle n'est pas encore facturée !
-            <br>
-                vous ne pouvez pas changer le statut en  <b>"Retour en stock"</b>
+                Vous ne pouvez pas changer le statut en  <b>"Retour en stock"</b>
+                <br>
+            <strong> Car: Le statut de la commande numero {{session()->get('edit')}} est Refusée et elle n'est pas encore facturée !</strong>
               </div>
               @endif
             @if (session()->has('statut'))
@@ -931,7 +931,7 @@ N: {{$commande->numero}}
                                     <div class="col-sm-12">
                                         <select id="etat" onchange="reporter()" name="statut" class="form-control form-control-line" value="{{ old('statut',$commande->statut) }}" required>
                                             @can('manage-users')
-                                                <option>Retour</option>
+                                                <option>envoyée</option>
                                                 <option>Ramassée</option>
                                                 <option>Reçue</option>
                                                 <option>Expidiée</option>

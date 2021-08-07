@@ -83,7 +83,7 @@
                                 @endif
                                     " width="31"></a></th>
                                     @can('edit-users')
-                                <td  style="padding: 0.5rem; margin:0; display:flex">
+                                <td  style="padding: 0.5rem; margin:0; display:flex  ;  width: auto;">
                                     <a href="{{route('admin.users.edit',$user->id)}}">
                                        <button style="padding: 0.5rem;" class="btn btn-primary float-lef"><i class="mdi mdi-account-edit"></i></button>
                                    </a>

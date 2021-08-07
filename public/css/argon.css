@@ -157,7 +157,7 @@ sup
 a
 {
     text-decoration: none;
-
+    min-width: 10%;
     color: #5e72e4;
     background-color: transparent;
 }
