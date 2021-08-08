@@ -179,6 +179,18 @@ class CommandeController extends Controller
     }
 
 
+
+
+    public function outRange(Commande $commande, Request $request){
+        $commande->ville .= ' (Hors Zone)';
+        $commande->prix = $request->horsZone;
+        $commande->livreurPart = $request->horsZoneLivreurPart;
+        $commande->save();
+        $request->session()->flash('statut', 'modifié');
+        return back();
+    }
+
+
     public function filter(Request $request)
     {
         $commandes = Commande::where('commandes.deleted_at', NULL);

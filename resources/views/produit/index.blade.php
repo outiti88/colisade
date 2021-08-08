@@ -83,7 +83,7 @@
                                               </div>
 
                                               <div class="form-group row">
-                                                <label for="libelle" class="col-sm-4">Libelle :</label>
+                                                <label for="libelle" class="col-sm-4">Nom du Produit :</label>
                                                 <div class="col-sm-8">
                                                     <input  type="text" class="form-control form-control-line" name="libelle" id="libelle">
 
@@ -138,7 +138,7 @@
                                 @endcan
                                 <th scope="col">Image</th>
                                 <th scope="col">Reference</th>
-                                <th scope="col">Libelle</th>
+                                <th scope="col">Nom du Produit</th>
                                 <th scope="col">Categorie</th>
                                 <th scope="col">Prix</th>
                                 <th scope="col">Quantité</th>
@@ -296,9 +296,9 @@
                                 @csrf
 
                                 <div class="form-group">
-                                    <label class="col-md-12">Libelle du Produit :</label>
+                                    <label class="col-md-12">Nom du Produit :</label>
                                     <div class="col-md-12">
-                                        <input  value="{{ old('libelle') }}" name="libelle" type="text" placeholder="Libelle" class="form-control form-control-line" required>
+                                        <input  value="{{ old('libelle') }}" name="libelle" type="text" placeholder="Nom du Produit" class="form-control form-control-line" required>
                                     </div>
                                 </div>
 
@@ -309,7 +309,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" style="display:none">
                                     <label class="col-md-12">Description :</label>
                                     <div class="col-md-12">
                                         <textarea  name="description" rows="5" class="form-control form-control-line">{{ old('description') }}</textarea>

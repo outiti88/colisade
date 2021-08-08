@@ -34,6 +34,9 @@ Route::get('/order/status/update', 'CommandeController@updateSatuts')->name('com
 
 Route::get('/order/status/expedier', 'CommandeController@expedier')->name('commande.expedier')->middleware('can:manage-users');
 Route::get('/order/status/recevoir', 'CommandeController@recevoir')->name('commande.recevoir')->middleware('can:manage-users');
+Route::get('/order/status/recevoir', 'CommandeController@recevoir')->name('commande.recevoir')->middleware('can:manage-users');
+
+Route::get('/order/{commande}/horszone', 'CommandeController@outRange')->name('commande.outRange')->middleware('can:manage-users');
 
 
 Route::get('/receptions/filter', 'ReceptionController@filter')->name('reception.filter')->middleware('can:gestion-stock');

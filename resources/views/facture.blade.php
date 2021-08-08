@@ -254,7 +254,9 @@
                                     <div class="col-sm-8">
                                         <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
                                             <option value="" disabled selected>Choisissez le fournisseur</option>
-                                            @foreach ($clients as $client)
+                                            @foreach (App\User::whereHas('roles', function ($q) {
+                                                $q->whereIn('name', ['client', 'ecom']);
+                                            })->orderBy('name')->get() as $client)
                                         <option value="{{$client->id}}" class="rounded-circle">
                                             {{$client->name}}
                                         </option>

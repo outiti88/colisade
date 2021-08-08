@@ -209,7 +209,9 @@ class ProduitController extends Controller
         $stock = DB::table('stocks')->where('produit_id', $produit->id)->first();
         return view('produit.show', [
             'nouveau' => $nouveau, 'produit' => $produit,
-            'stock' => $stock
+            'stock' => $stock,
+            'commandes' => $produit->commandes()->get(),
+            'receptions' => $produit->receptions()->get(),
         ]);
     }
 

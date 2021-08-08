@@ -361,7 +361,7 @@ N: {{$commande->numero}}
         </div>
         @endif
 
-            <div class="col-md-10">
+            <div class="col-md-8">
                 <div class="row">
                     <h5>
                      Nombre de relance : {{$Rtotal}}
@@ -492,6 +492,12 @@ N: {{$commande->numero}}
             <div class="col-md-2">
                 <button type="button" class="btn btn-info text-white m-r-5" data-toggle="modal" data-target="#ticketPrint"><i class="fas fa-print"></i> Imprimer</button>
             </div>
+            @can('manage-users')
+            <div class="col-md-2">
+                <button type="button" style="background-color: #ffab01;" class="btn btn-secondary text-white m-r-5" data-toggle="modal" data-target="#horszone"><i class="fas fa-route"></i> Hors Zone</button>
+            </div>
+            @endcan
+
         </div>
 
         <div class="modal fade" id="ticketPrint" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -505,12 +511,50 @@ N: {{$commande->numero}}
                 </div>
 
                 <div class="modal-footer">
-                    <a target="_blank" class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}"">Format A6</a>
-                    <a target="_blank" class="btn btn-primary text-white m-r-5" href="{{ route('pdf.genA8',['id'=> $commande->id]) }}"">Format A8</a>
+                    <a target="_blank" class="btn btn-info text-white m-r-5" href="{{ route('pdf.gen',['id'=> $commande->id]) }}">Format A6</a>
+                    <a target="_blank" class="btn btn-primary text-white m-r-5" href="{{ route('pdf.genA8',['id'=> $commande->id]) }}">Format A8</a>
                 </div>
               </div>
             </div>
           </div>
+          @can('manage-users')
+        <div class="modal fade" id="horszone" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <form action="{{route('commande.outRange',['commande' => $commande])}}">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Veuillez mentionnez le prix de livraison sur cette zone</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body mx-3">
+                        <div class="form-group col-md-12" >
+                            <label for="horsZonePrice" class="col-md-12">Prix de livraison (DH) :</label>
+                            <div class="col-md-12">
+                                <input type="number" class="form-control form-control-line" name="horsZone" id="horsZonePrice">
+                            </div>
+                        </div>
+                      </div>
+                      <div class="modal-body mx-3">
+                        <div class="form-group col-md-12" >
+                            <label for="horsZoneLivreurPart" class="col-md-12">Part de livreur (DH) :</label>
+                            <div class="col-md-12">
+                                <input type="number" class="form-control form-control-line" name="horsZoneLivreurPart" id="horsZoneLivreurPart">
+                            </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="submit"class="btn btn-primary text-white m-r-5" >Valider</button>
+                      </div>
+                  </form>
+
+              </div>
+            </div>
+          </div>
+          @endcan
+
+
         <div class="row">
 
             <div class="col-md-12">
@@ -936,6 +980,7 @@ N: {{$commande->numero}}
                                                 <option>Reçue</option>
                                                 <option>Expidiée</option>
                                                 <option>En cours</option>
+                                                <option>Relancée</option>
                                             @endcan
                                                 <option>Livré</option>
                                                 <option>Injoignable</option>

@@ -427,7 +427,7 @@
                                                     <span style="font-size: 1.25em">{{$commande->statut}}</span>
                                             </a>
                                             <br>
-                                            @if ($commande->statut == "Reporté" || $commande->statut == "Relancée")
+                                            @if ($commande->statut == "Reporté")
                                                 Pour le: <br>{{$commande->postponed_at}}
                                             @else
                                             ({{\Carbon\Carbon::parse($commande->updated_at)->diffForHumans()}})
@@ -461,6 +461,7 @@
                                                                                     <option>Pas de Réponse</option>
                                                                                     <option>Refusée</option>
                                                                                     @cannot('livreur')
+                                                                                    <option>Relancée</option>
                                                                                     <option>Retour</option>
                                                                                     @endcannot
                                                                                     <option>Reporté</option>
@@ -612,6 +613,7 @@
                                     <option>Reçue</option>
                                     <option>Expidiée</option>
                                     <option>En cours</option>
+                                    <option>Relancée</option>
                                     @endcan
                                     <option>Livré</option>
                                     <option>Injoignable</option>

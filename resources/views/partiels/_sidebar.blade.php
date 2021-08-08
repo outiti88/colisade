@@ -93,7 +93,7 @@
                 <li class="sidebar-item">
                     <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{route('reception.index')}}" aria-expanded="false"><i class="mdi mdi-truck"></i>
                         <span class="hide-menu">
-                            Reception
+                            Envoie de Stock
                             @can('manage-users')
                             <span class="badge badge-danger">{{App\Reception::where('etat','Envoyé')->count()}}</span>
                             @endcan

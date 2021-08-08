@@ -19,7 +19,7 @@ class Produit extends Model
     }
 
     public function receptions(){
-        return $this->BelongsToMany('App\Reception');
+        return $this->BelongsToMany('App\Reception')->withPivot('qte');;
     }
       public function mouvements(){
         return $this->hasMany('App\Mouvement');
