@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mouvement;
+use App\Produit;
 use Illuminate\Http\Request;
 
 use App\Stock;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -29,14 +31,25 @@ class StockController extends Controller
     {
         //
     }
-    
-    
+
+
       public function corriger(Request $request, $id){
        if(!Gate::denies('manage-users')){
             $stock = DB::table('stocks')->where('produit_id',$id)->first();
+            $oldQte = $stock->qte;
+            $newQte = $request->qte;
                     $stock = Stock::findOrFail($stock->id);
                     $stock->qte = $request->qte ;
                     $stock->save();
+            $mouvement = new Mouvement();
+            $mouvement->type = 'inventaire';
+            $mouvement->avant = $oldQte;
+            $mouvement->apres = $newQte;
+            $mouvement->user_id = Auth::user()->id;
+            $mouvement->produit_id = $id;
+            $mouvement->save();
+
+
                     $request->session()->flash('corriger', $request->qte);
 
         }

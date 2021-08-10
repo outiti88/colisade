@@ -689,7 +689,7 @@ class CommandeController extends Controller
         $villes = DB::table('villes')->orderBy('name')->get();
         $fournisseur = User::find($commande->user_id);
         $client = false;
-        if ($fournisseur->hasRole('ecom')) $client = true;
+        if ($fournisseur != null && $fournisseur->hasRole('ecom')) $client = true;
 
         $nouveau =  User::whereHas('roles', function ($q) {
             $q->whereIn('name', ['nouveau']);

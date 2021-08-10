@@ -654,20 +654,15 @@
                                 @csrf
                                 @can('manage-users')
                                 <div class="form-group row">
-                                    <label for="client" class="col-sm-4">Fournisseur :</label>
+                                    <label for="mySelect" class="col-sm-4">Fournisseur :</label>
                                     <div class="col-sm-8">
-                                        <select name="client" id="client" class="form-control form-control-line" value="{{ old('client') }}">
+                                        <select onchange="fournisseurSelected()" name="client" id="mySelect" class="form-control form-control-line" >
                                             <option value="" selected >Choisissez le fournisseur</option>
                                             @foreach ($clients as $client)
-                                            @if(request()->get('client') == $client->id )
-                                            <option selected value="{{$client->id}}" class="rounded-circle">
+                                            <option value="{{$client->id}}" class="rounded-circle" @if(request()->get('client') == $client->id ) selected @endif>
                                                 {{$client->name}}
                                             </option>
-                                            @else
-                                            <option value="{{$client->id}}" class="rounded-circle">
-                                                {{$client->name}}
-                                            </option>
-                                            @endif
+
 
                                             @endforeach
 
@@ -703,14 +698,15 @@
                                 <div class="form-group row">
                                     <label for="produit" class="col-sm-4">Produit :</label>
                                     <div class="col-md-8">
-                                        <select name="produit" id="produit" class="form-control form-control-line" value="{{request()->get('produit')}}" >
+                                        <select name="produit" id="produit" class="form-control form-control-line" >
                                             <option value="" disabled selected>Produit</option>
 
-                                            @foreach ($produits as $produit)
-                                        <option value="{{$produit->id}}" class="rounded-circle" @if(request()->get('produit') == $produit->id) selected @endif>
-                                            {{$produit->libelle .'     (quantité: '. $produit->stock()->first()->qte.')'}}
-                                        </option>
-                                            @endforeach
+                                                @foreach ($produits as $produit)
+                                                <option value="{{$produit->id}}" class="rounded-circle product product{{$produit->user_id}}" @if(request()->get('produit') == $produit->id) selected @endif>
+                                                    {{$produit->libelle .'     (quantité: '. $produit->stock()->first()->qte.')'}}
+                                                </option>
+                                                @endforeach
+
 
                                         </select>
                                       </div>
@@ -1324,7 +1320,24 @@
 
 <script>
 
-
+function fournisseurSelected() {
+    var x = document.getElementById("mySelect").value;
+    var y = document.querySelectorAll(".product");
+    var z = document.querySelectorAll(".product"+x);
+    if(x){
+        y.forEach(product => {
+            product.hidden =true;
+        });
+        z.forEach(product => {
+            product.hidden = false;
+        });
+    }
+    else{
+        y.forEach(product => {
+            product.hidden =false;
+        });
+    }
+}
 
 function checkFunction(){
 

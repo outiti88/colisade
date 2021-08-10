@@ -152,108 +152,153 @@
         <!-- Column -->
     </div>
 
+    @can("manage-users")
     <div class="row">
-        <div class="col-lg-12 col-xlg-3 col-md-5">
-            <div class="card">
-                <div class="card-body">
-                <center class="m-t-30">
-                    <div class="row">
-                        <div class="col-12">
-                          <div class="card">
-                            <div class="card-header">
-                              <h2>Mouvement du stock</h2>
-                            </div>
-                            <div class="card-body">
-                              <div class="table-responsive" style="border-top: solid;padding-top: 10px;">
+      <div class="col-lg-12 col-xlg-3 col-md-5">
+          <div class="card">
+              <div class="card-body">
+              <center class="m-t-30">
+                  <div class="row">
+                      <div class="col-12">
+                        <div class="card">
+                          <div class="card-header">
+                            <h2>Mouvement du stock</h2>
+                          </div>
+                          <div class="card-body">
+                            <div class="table-responsive" style="border-top: solid;padding-top: 10px;">
                               <h4>Historique des Commandes</h4>
 
-                                <table class="table table-striped" id="table-1">
-                                  <thead>
-                                    <tr>
-                                      <th class="text-center">
-                                        #
-                                      </th>
-                                      <th>Commande</th>
-                                      <th>Quantité</th>
-                                      <th>Date</th>
-                                      <th>Status</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    @forelse ($commandes as $index => $commande)
-                                    <tr>
-                                      <td>
-                                        {{$index}}
-                                      </td>
-                                      <td>{{$commande->numero}}</td>
-                                      {{-- <td>{{$produit->commandes()->where('commande_id',$commande->id)->first()->pivot->qte }}</td> --}}
-                                      <td>{{$commande->produits()->where('produit_id',$produit->id)->first()->pivot->qte}}</td>
+                              <table class="table table-striped" id="table-1">
+                                <thead>
+                                  <tr>
+                                    <th class="text-center">
+                                      #
+                                    </th>
+                                    <th>Commande</th>
+                                    <th>Quantité</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  @forelse ($commandes as $index => $commande)
+                                  <tr>
+                                    <td>
+                                      {{$index}}
+                                    </td>
+                                    <td>{{$commande->numero}}</td>
+                                    <td>{{$commande->produits()->where('produit_id',$produit->id)->first()->pivot->qte}}</td>
 
-                                      <td>{{$commande->created_at}}</td>
-                                      <td>
-                                        @if ($commande->statut == 'Retour en stock')
-                                        <div class="badge badge-danger badge-shadow">{{$commande->statut}}</div>
-                                          @else
-                                        <div class="badge badge-success badge-shadow">{{$commande->statut}}</div>
-                                          @endif
-                                      </td>
-                                    </tr>
-                                    @empty
+                                    <td>{{$commande->created_at}}</td>
+                                    <td>
+                                      @if ($commande->statut == 'Retour en stock')
+                                      <div class="badge badge-danger badge-shadow">{{$commande->statut}}</div>
+                                        @else
+                                      <div class="badge badge-success badge-shadow">{{$commande->statut}}</div>
+                                        @endif
+                                    </td>
+                                  </tr>
+                                  @empty
 
-                                    @endforelse
+                                  @endforelse
 
-                                  </tbody>
-                                </table>
-                              </div>
-                              <div class="table-responsive" style="margin-top: 55px;border-top: solid;padding-top: 10px;">
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="table-responsive" style="margin-top: 55px;border-top: solid;padding-top: 10px;">
                               <h4>Historique des Receptions</h4>
 
-                                <table class="table table-striped" id="table-2">
-                                  <thead>
-                                    <tr>
-                                      <th class="text-center">
-                                        #
-                                      </th>
-                                      <th>Reception</th>
-                                      <th>Quantité</th>
-                                      <th>Date</th>
-                                      <th>Etat</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                        @forelse ($receptions as $index => $reception)
-                                    <tr>
-                                      <td>
-                                        {{$index}}
-                                      </td>
-                                      <td>{{$reception->reference}}</td>
-                                      <td>{{$reception->pivot->qte}}</td>
+                              <table class="table table-striped" id="table-2">
+                                <thead>
+                                  <tr>
+                                    <th class="text-center">
+                                      #
+                                    </th>
+                                    <th>Reception</th>
+                                    <th>Quantité</th>
+                                    <th>Date</th>
+                                    <th>Etat</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                      @forelse ($receptions as $index => $reception)
+                                  <tr>
+                                    <td>
+                                      {{$index}}
+                                    </td>
+                                    <td>{{$reception->reference}}</td>
+                                    <td>{{$reception->pivot->qte}}</td>
 
-                                      <td>{{$reception->created_at}}</td>
-                                      <td>
-                                        <div class="badge badge-success badge-shadow">{{$reception->etat}}</div>
-                                      </td>
-                                    </tr>
-                                    @empty
+                                    <td>{{$reception->created_at}}</td>
+                                    <td>
+                                      <div class="badge badge-success badge-shadow">{{$reception->etat}}</div>
+                                    </td>
+                                  </tr>
+                                  @empty
 
-                                    @endforelse
-                                    </tr>
+                                  @endforelse
+                                  </tr>
 
-                                  </tbody>
-                                </table>
-                              </div>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="table-responsive" style="margin-top: 55px;border-top: solid;padding-top: 10px;">
+                              <h4>Historique des Inventaires</h4>
+
+                              <table class="table table-striped" id="table-3">
+                                <thead>
+                                  <tr>
+                                    <th class="text-center">
+                                      #
+                                    </th>
+                                    <th>Type</th>
+                                    <th>Quantité Avant</th>
+                                    <th>Quantité Après</th>
+                                    <th>Date</th>
+                                    <th>Utilisateur</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                      @forelse ($produit->mouvements()->get() as $index => $mouvement)
+                                  <tr>
+                                    <td>
+                                      {{$index}}
+                                    </td>
+                                    <td>{{$mouvement->type}}</td>
+                                    <td>
+                                      <div class="badge badge-danger badge-shadow">{{$mouvement->avant}}</div>
+                                  </td>
+                                    <td>
+                                      <div class="badge badge-success badge-shadow">{{$mouvement->apres}}</div>
+                                  </td>
+                                    <td>{{$mouvement->created_at}}</td>
+                                    <td>
+                                      {{$mouvement->user()->first()->name}}
+                                    </td>
+                                  </tr>
+                                  @empty
+
+                                  @endforelse
+                                  </tr>
+
+                                </tbody>
+                              </table>
                             </div>
                           </div>
                         </div>
                       </div>
-                </center>
-                </div>
+                    </div>
+              </center>
+              </div>
 
-            </div>
-        </div>
+          </div>
+      </div>
 
-    </div>
+  </div>
+    @endcan
+
 
 
 </div>

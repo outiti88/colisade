@@ -86,7 +86,6 @@
     <script src="{{ url('/assets/libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ url('/js/app-style-switcher.js') }}" ></script>
     <!--Wave Effects -->
-    <script src="{{ url('/js/waves.js"') }}" ></script>
     <!--Menu sidebar -->
     <script src="{{ url('/js/sidebarmenu.js') }}" ></script>
     <!--Custom JavaScript -->
